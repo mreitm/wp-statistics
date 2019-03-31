@@ -78,7 +78,7 @@ $html .= '<br>';
 
                     <div class="inside">
 						<?php
-						include( WP_Statistics::$reg['plugin-dir'] . 'includes/log/widgets/page.php' );
+						include( WP_STATISTICS_DIR . 'includes/log/widgets/page.php' );
 						wp_statistics_generate_page_postbox_content(
 							$pageuri,
 							$pageid,

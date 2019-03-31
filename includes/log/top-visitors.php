@@ -5,13 +5,13 @@
 </script>
 <?php
 $ISOCountryCode = $WP_Statistics->get_country_codes();
-include( WP_Statistics::$reg['plugin-dir'] . 'includes/log/widgets/top.visitors.php' );
+include( WP_STATISTICS_DIR . 'includes/log/widgets/top.visitors.php' );
 ?>
 <div class="wrap wps-wrap">
 	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Top 100 Visitors Today', 'wp-statistics' ) ); ?>
 	<?php
 	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_register_style( 'jquery-ui-smoothness-css', WP_Statistics::$reg['plugin-url'] . 'assets/css/jquery-ui-smoothness.min.css' );
+	wp_register_style( 'jquery-ui-smoothness-css', WP_STATISTICS_URL . 'assets/css/jquery-ui-smoothness.min.css' );
 	wp_enqueue_style( 'jquery-ui-smoothness-css' );
 
 	$current = 0;

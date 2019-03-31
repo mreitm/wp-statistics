@@ -28,7 +28,7 @@ function wp_statistics_generate_users_online_postbox_content( $ISOCountryCode ) 
 			echo "<td style='text-align: left'><img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $item->location . '.png' ) . "' title='{$ISOCountryCode[$item->location]}'/></td>";
 			echo "<td style='text-align: left !important'>{$item->ip}</td>";
 			echo "<td style='text-align: left !important'>" . ( $page_info['link'] != '' ? '<a href="' . $page_info['link'] . '" target="_blank">' : '' ) . mb_substr( $page_info['title'], 0, 200, "utf-8" ) . ( $page_info['link'] != '' ? '</a>' : '' ) . "</td>";
-			echo "<td style='text-align: left !important'>" . $WP_Statistics->get_referrer_link( $item->referred ) . "</td>";
+			echo "<td style='text-align: left !important'>" . WP_STATISTICS\Helper::get_referrer_link( $item->referred ) . "</td>";
 			echo "</tr>";
 		}
 

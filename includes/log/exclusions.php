@@ -174,7 +174,7 @@ foreach ( $excluded_reasons as $reason ) {
                     <div class="inside">
                         <div class="inside">
                             <canvas id="hit-stats" height="80"></canvas>
-                            <script type='text/javascript' src='<?php echo WP_Statistics::$reg['plugin-url']; ?>assets/js/Chart.bundle.min.js'></script>
+                            <script type='text/javascript' src='<?php echo WP_STATISTICS_URL; ?>assets/js/Chart.bundle.min.js'></script>
                             <script>
                                 var ctx = document.getElementById("hit-stats").getContext('2d');
                                 <?php if(is_rtl()) { ?> Chart.defaults.global.defaultFontFamily = "tahoma"; <?php } ?>

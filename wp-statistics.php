@@ -10,8 +10,15 @@
  * Domain Path: /languages/
  */
 
-define( 'WP_STATISTICS_MAIN_FILE', __FILE__ );
-require_once plugin_dir_path( __FILE__ ) . 'includes/classes/class-wp-statistics.php';
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-$WP_Statistics = new WP_Statistics;
-$WP_Statistics->run();
+# Load Plugin Defines
+require_once 'includes/defines.php';
+
+# Load Plugin
+require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics.php';
+
+# Run WP-STATISTICS
+$GLOBALS['WP_Statistics'] = new WP_Statistics;

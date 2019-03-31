@@ -86,7 +86,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 					); ?></a>
             </li>|
             <li>
-                <a class="current" href="?page=<?php echo WP_Statistics::$page['referrers']; ?>&referr=<?php echo $WP_Statistics->html_sanitize_referrer( $referr ) . $date_args; ?>"> <?php echo htmlentities( $title, ENT_QUOTES ); ?>
+                <a class="current" href="?page=<?php echo WP_Statistics::$page['referrers']; ?>&referr=<?php echo WP_STATISTICS\Helper::html_sanitize_referrer( $referr ) . $date_args; ?>"> <?php echo htmlentities( $title, ENT_QUOTES ); ?>
                     <span class="count">(<?php echo number_format_i18n( $total ); ?>)</span></a></li>
 		<?php } else { ?>
             <li class="all"><a <?php if ( ! $referr ) {
@@ -105,7 +105,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 					<?php if ( $referr ) {
 						$paneltitle = sprintf(
 							__( 'Referring site: %s', 'wp-statistics' ),
-							$WP_Statistics->html_sanitize_referrer( $referr )
+							WP_STATISTICS\Helper::html_sanitize_referrer( $referr )
 						);
 					} else {
 						$paneltitle = __( 'Top Referring Sites', 'wp-statistics' );
@@ -233,7 +233,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 										$number = wp_statistics_get_number_referer_from_domain( $items->domain, array( $rangestartdate, $rangeenddate ) );
 
 										//Get Site Link
-										$referrer_html = $WP_Statistics->html_sanitize_referrer( $domain );
+										$referrer_html = WP_STATISTICS\Helper::html_sanitize_referrer( $domain );
 
 										//Get Site information if Not Exist
 										if ( ! array_key_exists( $domain, $referrer_list ) ) {
@@ -248,7 +248,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 
 										echo "<tr>";
 										echo "<td>" . number_format_i18n( $i ) . "</td>";
-										echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . $WP_Statistics->get_referrer_link( $domain, $referrer_list[ $domain ]['title'] ) . "</td>";
+										echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . WP_STATISTICS\Helper::get_referrer_link( $domain, $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['title'] ) == "" ? $unknown : $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['ip'] ) == "" ? $unknown : $referrer_list[ $domain ]['ip'] ) . "</td>";
 										if ( $WP_Statistics->get_option( 'geoip' ) ) {

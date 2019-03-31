@@ -198,7 +198,7 @@ $total = $search_result[ $referred ];
 									echo "</td>";
 
 									echo "<td style=\"text-align: left\">";
-									echo $WP_Statistics->get_referrer_link( $items->referred );
+									echo WP_STATISTICS\Helper::get_referrer_link( $items->referred );
 									echo "</td>";
 
 									echo "</tr>";
