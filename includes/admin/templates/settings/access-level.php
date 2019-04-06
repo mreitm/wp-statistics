@@ -15,7 +15,7 @@ if ( $wps_nonce_valid ) {
 		} else {
 			$value = '';
 		}
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 
@@ -40,7 +40,7 @@ if ( $wps_nonce_valid ) {
 		}
 
 		ksort( $all_caps );
-		$read_cap    = $WP_Statistics->get_option( 'read_capability', 'manage_options' );
+		$read_cap    = $WP_Statistics->option->get( 'read_capability', 'manage_options' );
 		$option_list = '';
 		foreach ( $all_caps as $key => $cap ) {
 			if ( $key == $read_cap ) {
@@ -61,7 +61,7 @@ if ( $wps_nonce_valid ) {
         </tr>
 
 		<?php
-		$manage_cap = $WP_Statistics->get_option( 'manage_capability', 'manage_options' );
+		$manage_cap = $WP_Statistics->option->get( 'manage_capability', 'manage_options' );
 		foreach ( $all_caps as $key => $cap ) {
 			if ( $key == $manage_cap ) {
 				$selected = " SELECTED";

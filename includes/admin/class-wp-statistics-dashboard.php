@@ -164,21 +164,21 @@ class WP_Statistics_Dashboard {
 		global $WP_Statistics;
 
 		//Load User Options
-		$WP_Statistics->load_user_options();
+		$WP_Statistics->option->load_user_options();
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.
-		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_option' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_option' ) ) ) ) {
 			return;
 		}
 
 		//Check Hidden User Dashboard Option
-		$user_dashboard = $WP_Statistics->get_user_option( self::$dashboard_set );
+		$user_dashboard = $WP_Statistics->option->user( self::$dashboard_set );
 		if ( $user_dashboard === false || $user_dashboard != WP_STATISTICS_VERSION ) {
 			self::set_user_hidden_dashboard_option();
 		}
 
 		// If the admin has disabled the widgets, don't display them.
-		if ( ! $WP_Statistics->get_option( 'disable_dashboard' ) ) {
+		if ( ! $WP_Statistics->option->get( 'disable_dashboard' ) ) {
 			self::register_dashboard_widget();
 		}
 
@@ -195,7 +195,7 @@ class WP_Statistics_Dashboard {
 		$hidden_opt     = 'metaboxhidden_dashboard';
 
 		//Create Empty Option and save in User meta
-		$WP_Statistics->update_user_option( self::$dashboard_set, WP_STATISTICS_VERSION );
+		$WP_Statistics->option->update_user_option( self::$dashboard_set, WP_STATISTICS_VERSION );
 
 		//Get Dashboard Option User Meta
 		$hidden_widgets = get_user_meta( $WP_Statistics->user_id, $hidden_opt, true );
@@ -223,7 +223,7 @@ class WP_Statistics_Dashboard {
 		wp_enqueue_style( 'wpstatistics-log-css', WP_STATISTICS_URL . 'assets/css/log.css', true, '1.2' );
 
 		// Load the map code.
-		if ( ! $WP_Statistics->get_option( 'disable_dashboard' ) ) {
+		if ( ! $WP_Statistics->option->get( 'disable_dashboard' ) ) {
 			wp_enqueue_style( 'jqvmap-css', WP_STATISTICS_URL . 'assets/jqvmap/jqvmap.css', true, '1.5.1' );
 			wp_enqueue_script( 'jquery-vmap', WP_STATISTICS_URL . 'assets/jqvmap/jquery.vmap.js', true, '1.5.1' );
 			wp_enqueue_script( 'jquery-vmap-world', WP_STATISTICS_URL . 'assets/jqvmap/maps/jquery.vmap.world.js', true, '1.5.1' );

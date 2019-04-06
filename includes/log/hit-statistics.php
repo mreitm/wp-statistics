@@ -62,7 +62,7 @@
                                 data: {
                                     labels: [<?php echo implode( ', ', $date ); ?>],
                                     datasets: [
-										<?php if ( $WP_Statistics->get_option( 'visitors' ) ) { ?>
+										<?php if ( $WP_Statistics->option->get( 'visitors' ) ) { ?>
                                         {
                                             label: '<?php _e( 'Visitors', 'wp-statistics' ); ?>',
                                             data: [<?php echo implode( ',', $visitors ); ?>],
@@ -72,7 +72,7 @@
                                             fill: true,
                                         },
 										<?php } ?>
-										<?php if ( $WP_Statistics->get_option( 'visits' ) ) { ?>
+										<?php if ( $WP_Statistics->option->get( 'visits' ) ) { ?>
                                         {
                                             label: '<?php _e( 'Visits', 'wp-statistics' ); ?>',
                                             data: [<?php echo implode( ',', $visits ); ?>],

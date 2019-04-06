@@ -6,7 +6,7 @@ if ( $wps_nonce_valid ) {
 	// We need to handle a change in the report schedule manually, so check to see it has been set.
 	if ( array_key_exists( 'wps_time_report', $_POST ) ) {
 		// If the report has been changed, we need to update the schedule.
-		if ( $WP_Statistics->get_option( 'time_report' ) != $_POST['wps_time_report'] ) {
+		if ( $WP_Statistics->option->get( 'time_report' ) != $_POST['wps_time_report'] ) {
 			// Remove the old schedule if it exists.
 			if ( wp_next_scheduled( 'report_hook' ) ) {
 				wp_unschedule_event( wp_next_scheduled( 'report_hook' ), 'report_hook' );
@@ -41,7 +41,7 @@ if ( $wps_nonce_valid ) {
 		$value = stripslashes( $value );
 
 		$new_option = str_replace( "wps_", "", $option );
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 
@@ -64,10 +64,10 @@ if ( $wps_nonce_valid ) {
             </td>
 
             <td>
-                <input dir="ltr" type="text" id="email_list" name="wps_email_list" size="30" value="<?php if ( $WP_Statistics->get_option( 'email_list' ) == '' ) {
-					$WP_Statistics->store_option( 'email_list', get_bloginfo( 'admin_email' ) );
+                <input dir="ltr" type="text" id="email_list" name="wps_email_list" size="30" value="<?php if ( $WP_Statistics->option->get( 'email_list' ) == '' ) {
+					$WP_Statistics->option->store( 'email_list', get_bloginfo( 'admin_email' ) );
 				}
-				echo htmlentities( $WP_Statistics->get_option( 'email_list' ), ENT_QUOTES ); ?>"/>
+				echo htmlentities( $WP_Statistics->option->get( 'email_list' ), ENT_QUOTES ); ?>"/>
 
                 <p class="description"><?php _e(
 						'A comma separated list of e-mail addresses to send reports to.',
@@ -86,7 +86,7 @@ if ( $wps_nonce_valid ) {
             </td>
 
             <td>
-                <input id="geoip-report" type="checkbox" value="1" name="wps_geoip_report" <?php echo $WP_Statistics->get_option( 'geoip_report' ) == true
+                <input id="geoip-report" type="checkbox" value="1" name="wps_geoip_report" <?php echo $WP_Statistics->option->get( 'geoip_report' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="geoip-report"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -103,7 +103,7 @@ if ( $wps_nonce_valid ) {
             </td>
 
             <td>
-                <input id="prune-report" type="checkbox" value="1" name="wps_prune_report" <?php echo $WP_Statistics->get_option( 'prune_report' ) == true
+                <input id="prune-report" type="checkbox" value="1" name="wps_prune_report" <?php echo $WP_Statistics->option->get( 'prune_report' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="prune-report"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -120,7 +120,7 @@ if ( $wps_nonce_valid ) {
             </td>
 
             <td>
-                <input id="upgrade-report" type="checkbox" value="1" name="wps_upgrade_report" <?php echo $WP_Statistics->get_option( 'upgrade_report' ) == true
+                <input id="upgrade-report" type="checkbox" value="1" name="wps_upgrade_report" <?php echo $WP_Statistics->option->get( 'upgrade_report' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="upgrade-report"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -141,7 +141,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="stats-report" type="checkbox" value="1" name="wps_stats_report" <?php echo $WP_Statistics->get_option( 'stats_report' ) == true
+                <input id="stats-report" type="checkbox" value="1" name="wps_stats_report" <?php echo $WP_Statistics->option->get( 'stats_report' ) == true
 					? "checked='checked'" : ''; ?> onClick='ToggleStatOptions();'>
                 <label for="stats-report"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -149,7 +149,7 @@ if ( $wps_nonce_valid ) {
             </td>
         </tr>
 
-		<?php if ( $WP_Statistics->get_option( 'stats_report' ) ) {
+		<?php if ( $WP_Statistics->option->get( 'stats_report' ) ) {
 			$hidden = "";
 		} else {
 			$hidden = " style='display: none;'";
@@ -161,7 +161,7 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <select name="wps_time_report" id="time-report">
-                    <option value="0" <?php selected( $WP_Statistics->get_option( 'time_report' ), '0' ); ?>><?php _e(
+                    <option value="0" <?php selected( $WP_Statistics->option->get( 'time_report' ), '0' ); ?>><?php _e(
 							'Please select',
 							'wp-statistics'
 						); ?></option>
@@ -181,7 +181,7 @@ if ( $wps_nonce_valid ) {
 
 					foreach ( $schedules as $key => $value ) {
 						if ( ! in_array( $value, $schedules_item ) ) {
-							echo '<option value="' . $key . '" ' . selected( $WP_Statistics->get_option( 'time_report' ), $key ) . '>' . $value['display'] . '</option>';
+							echo '<option value="' . $key . '" ' . selected( $WP_Statistics->option->get( 'time_report' ), $key ) . '>' . $value['display'] . '</option>';
 							$schedules_item[] = $value;
 						}
 					}
@@ -199,17 +199,17 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <select name="wps_send_report" id="send-report">
-                    <option value="0" <?php selected( $WP_Statistics->get_option( 'send_report' ), '0' ); ?>><?php _e(
+                    <option value="0" <?php selected( $WP_Statistics->option->get( 'send_report' ), '0' ); ?>><?php _e(
 							'Please select',
 							'wp-statistics'
 						); ?></option>
-                    <option value="mail" <?php selected( $WP_Statistics->get_option( 'send_report' ), 'mail' ); ?>><?php _e(
+                    <option value="mail" <?php selected( $WP_Statistics->option->get( 'send_report' ), 'mail' ); ?>><?php _e(
 							'Email',
 							'wp-statistics'
 						); ?></option>
 					<?php if ( is_plugin_active( 'wp-sms/wp-sms.php' ) || is_plugin_active( 'wp-sms-pro/wp-sms.php' ) ) { ?>
                         <option value="sms" <?php selected(
-							$WP_Statistics->get_option( 'send_report' ),
+							$WP_Statistics->option->get( 'send_report' ),
 							'sms'
 						); ?>><?php _e( 'SMS', 'wp-statistics' ); ?></option>
 					<?php } ?>
@@ -238,7 +238,7 @@ if ( $wps_nonce_valid ) {
 
             <td>
 				<?php wp_editor(
-					$WP_Statistics->get_option( 'content_report' ),
+					$WP_Statistics->option->get( 'content_report' ),
 					'content-report',
 					array(
 						'media_buttons' => false,
@@ -281,7 +281,7 @@ if ( $wps_nonce_valid ) {
             </td>
 
             <td>
-                <input id="admin-notices" type="checkbox" value="1" name="wps_admin_notices" <?php echo $WP_Statistics->get_option( 'admin_notices' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="admin-notices" type="checkbox" value="1" name="wps_admin_notices" <?php echo $WP_Statistics->option->get( 'admin_notices' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="admin-notices"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Show all notices and suggestion from WP-Statistics in the admin.', 'wp-statistics' ); ?></p>

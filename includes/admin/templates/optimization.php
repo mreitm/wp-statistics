@@ -89,9 +89,9 @@ if ( array_key_exists( 'index', $_GET ) ) {
 			$wpdb->query( "DROP INDEX `date_ip` ON {$wp_prefix}statistics_visitor" );
 
 			// Record in the options that we've done this update.
-			$dbupdates                  = $WP_Statistics->get_option( 'pending_db_updates' );
+			$dbupdates                  = $WP_Statistics->option->get( 'pending_db_updates' );
 			$dbupdates['date_ip_agent'] = false;
-			$WP_Statistics->update_option( 'pending_db_updates', $dbupdates );
+			$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
 		}
 	}
 }
@@ -136,9 +136,9 @@ if ( array_key_exists( 'visits', $_GET ) ) {
 			);
 
 			// Record in the options that we've done this update.
-			$dbupdates                = $WP_Statistics->get_option( 'pending_db_updates' );
+			$dbupdates                = $WP_Statistics->option->get( 'pending_db_updates' );
 			$dbupdates['unique_date'] = false;
-			$WP_Statistics->update_option( 'pending_db_updates', $dbupdates );
+			$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
 		}
 	}
 }
@@ -223,7 +223,7 @@ if ( array_key_exists( 'search', $_GET ) ) {
 		}
 	}
 
-	$WP_Statistics->update_option( 'search_converted', 1 );
+	$WP_Statistics->option->update( 'search_converted', 1 );
 	echo "<div class='updated settings-error'><p><strong>" . sprintf( __( 'Search table conversion complete, %d rows added.', 'wp-statistics' ), $total ) . "</strong></p></div>";
 }
 ?>

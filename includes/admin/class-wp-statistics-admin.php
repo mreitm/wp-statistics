@@ -56,7 +56,7 @@ class WP_Statistics_Admin {
 
 		//Add Column in Post Type Wp_List Table
 		add_action( 'load-edit.php', array( $this, 'load_edit_init' ) );
-		if ( $WP_Statistics->get_option( 'pages' ) && ! $WP_Statistics->get_option( 'disable_column' ) ) {
+		if ( $WP_Statistics->option->get( 'pages' ) && ! $WP_Statistics->option->get( 'disable_column' ) ) {
 			add_action( 'post_submitbox_misc_actions', array( $this, 'post_init' ) );
 		}
 
@@ -124,12 +124,12 @@ class WP_Statistics_Admin {
 		global $WP_Statistics;
 
 		// If the user had told us to be quite, do so.
-		if ( ! $WP_Statistics->get_option( 'hide_notices' ) ) {
+		if ( ! $WP_Statistics->option->get( 'hide_notices' ) ) {
 
 			// Check to make sure the current user can manage WP Statistics,
 			// if not there's no point displaying the warnings.
 			$manage_cap = wp_statistics_validate_capability(
-				$WP_Statistics->get_option(
+				$WP_Statistics->option->get(
 					'manage_capability',
 					'manage_options'
 				)
@@ -142,16 +142,16 @@ class WP_Statistics_Admin {
 			$get_bloginfo_url = WP_Statistics_Admin_Pages::admin_url( 'settings' );
 
 			$itemstoenable = array();
-			if ( ! $WP_Statistics->get_option( 'useronline' ) ) {
+			if ( ! $WP_Statistics->option->get( 'useronline' ) ) {
 				$itemstoenable[] = __( 'online user tracking', 'wp-statistics' );
 			}
-			if ( ! $WP_Statistics->get_option( 'visits' ) ) {
+			if ( ! $WP_Statistics->option->get( 'visits' ) ) {
 				$itemstoenable[] = __( 'hit tracking', 'wp-statistics' );
 			}
-			if ( ! $WP_Statistics->get_option( 'visitors' ) ) {
+			if ( ! $WP_Statistics->option->get( 'visitors' ) ) {
 				$itemstoenable[] = __( 'visitor tracking', 'wp-statistics' );
 			}
-			if ( ! $WP_Statistics->get_option( 'geoip' ) && wp_statistics_geoip_supported() ) {
+			if ( ! $WP_Statistics->option->get( 'geoip' ) && wp_statistics_geoip_supported() ) {
 				$itemstoenable[] = __( 'geoip collection', 'wp-statistics' );
 			}
 
@@ -163,12 +163,12 @@ class WP_Statistics_Admin {
 			$get_bloginfo_url = WP_Statistics_Admin_Pages::admin_url( 'optimization', array( 'tab' => 'database' ) );
 			$dbupdatestodo    = array();
 
-			if ( ! $WP_Statistics->get_option( 'search_converted' ) ) {
+			if ( ! $WP_Statistics->option->get( 'search_converted' ) ) {
 				$dbupdatestodo[] = __( 'search table', 'wp-statistics' );
 			}
 
 			// Check to see if there are any database changes the user hasn't done yet.
-			$dbupdates = $WP_Statistics->get_option( 'pending_db_updates', false );
+			$dbupdates = $WP_Statistics->option->get( 'pending_db_updates', false );
 
 			// The database updates are stored in an array so loop thorugh it and output some notices.
 			if ( is_array( $dbupdates ) ) {
@@ -245,7 +245,7 @@ class WP_Statistics_Admin {
 		if ( $screen->id == "toplevel_page_" . WP_Statistics::$page['overview'] or $screen->id == "statistics_page_" . WP_Statistics::$page['settings'] ) {
 			$plugin = self::user_is_use_cache_plugin();
 
-			if ( ! $WP_Statistics->get_option( 'use_cache_plugin' ) and $plugin['status'] === true ) {
+			if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) and $plugin['status'] === true ) {
 				echo '<div class="notice notice-warning is-dismissible"><p>';
 
 				$alert = sprintf( __( 'You Are Using %s Plugin in WordPress', 'wp-statistics' ), $plugin['plugin'] );
@@ -299,7 +299,7 @@ class WP_Statistics_Admin {
 	public function settings_links( $links, $file ) {
 		global $WP_Statistics;
 
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
 		if ( current_user_can( $manage_cap ) ) {
 			array_unshift( $links, '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'settings' ) . '">' . __( 'Settings', 'wp-statistics' ) . '</a>' );
 		}
@@ -333,9 +333,9 @@ class WP_Statistics_Admin {
 	public function load_edit_init() {
 		global $WP_Statistics;
 
-		$read_cap = wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_options' ) );
+		$read_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
 
-		if ( current_user_can( $read_cap ) && $WP_Statistics->get_option( 'pages' ) && ! $WP_Statistics->get_option( 'disable_column' ) ) {
+		if ( current_user_can( $read_cap ) && $WP_Statistics->option->get( 'pages' ) && ! $WP_Statistics->option->get( 'disable_column' ) ) {
 			$post_types = WP_Statistics_Editor::get_list_post_type();
 			foreach ( $post_types as $type ) {
 				add_action( 'manage_' . $type . '_posts_columns', 'WP_Statistics_Admin::add_column', 10, 2 );
@@ -386,8 +386,8 @@ class WP_Statistics_Admin {
 		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
-		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_options' ) );
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
 
 		/**
 		 * List of WP-Statistics Admin Menu
@@ -604,7 +604,7 @@ class WP_Statistics_Admin {
 		}
 
 		//Load in Post Page
-		if ( $pagenow == "post.php" and $WP_Statistics->get_option( 'hit_post_metabox' ) ) {
+		if ( $pagenow == "post.php" and $WP_Statistics->option->get( 'hit_post_metabox' ) ) {
 			$load_chart = true;
 		}
 
@@ -621,19 +621,19 @@ class WP_Statistics_Admin {
 		global $WP_Statistics;
 
 		// Check to see if the GeoIP database needs to be downloaded and do so if required.
-		if ( $WP_Statistics->get_option( 'update_geoip' ) ) {
+		if ( $WP_Statistics->option->get( 'update_geoip' ) ) {
 			foreach ( WP_Statistics_Updates::$geoip as $geoip_name => $geoip_array ) {
 				WP_Statistics_Updates::download_geoip( $geoip_name, "update" );
 			}
 		}
 
 		// Check to see if the referrer spam database needs to be downloaded and do so if required.
-		if ( $WP_Statistics->get_option( 'update_referrerspam' ) ) {
+		if ( $WP_Statistics->option->get( 'update_referrerspam' ) ) {
 			WP_Statistics_Updates::download_referrerspam();
 		}
 
-		if ( $WP_Statistics->get_option( 'send_upgrade_email' ) ) {
-			$WP_Statistics->update_option( 'send_upgrade_email', false );
+		if ( $WP_Statistics->option->get( 'send_upgrade_email' ) ) {
+			$WP_Statistics->option->update( 'send_upgrade_email', false );
 
 			$blogname  = get_bloginfo( 'name' );
 			$blogemail = get_bloginfo( 'admin_email' );
@@ -642,11 +642,11 @@ class WP_Statistics_Admin {
 			$headers[] = "MIME-Version: 1.0";
 			$headers[] = "Content-type: text/html; charset=utf-8";
 
-			if ( $WP_Statistics->get_option( 'email_list' ) == '' ) {
-				$WP_Statistics->update_option( 'email_list', $blogemail );
+			if ( $WP_Statistics->option->get( 'email_list' ) == '' ) {
+				$WP_Statistics->option->update( 'email_list', $blogemail );
 			}
 
-			wp_mail( $WP_Statistics->get_option( 'email_list' ), sprintf( __( 'WP Statistics %s installed on', 'wp-statistics' ), WP_STATISTICS_VERSION ) . ' ' . $blogname, __( 'Installation/upgrade complete!', 'wp-statistics' ), $headers );
+			wp_mail( $WP_Statistics->option->get( 'email_list' ), sprintf( __( 'WP Statistics %s installed on', 'wp-statistics' ), WP_STATISTICS_VERSION ) . ' ' . $blogname, __( 'Installation/upgrade complete!', 'wp-statistics' ), $headers );
 		}
 	}
 }

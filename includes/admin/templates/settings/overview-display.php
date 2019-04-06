@@ -11,7 +11,7 @@ if ( $wps_nonce_valid ) {
 			$value = '';
 		}
 
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 
@@ -38,7 +38,7 @@ if ( $wps_admin ) {
 
             <td>
                 <input id="disable-dashboard" type="checkbox" value="1"
-                       name="wps_disable_dashboard" <?php echo $WP_Statistics->get_option( 'disable_dashboard' ) == true
+                       name="wps_disable_dashboard" <?php echo $WP_Statistics->option->get( 'disable_dashboard' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="disable-dashboard"><?php _e( 'Disable', 'wp-statistics' ); ?></label>
 
@@ -64,7 +64,7 @@ if ( $wps_admin ) {
 
             <td>
                 <input id="disable-editor" type="checkbox" value="1"
-                       name="wps_disable_editor" <?php echo $WP_Statistics->get_option( 'disable_editor' ) == true
+                       name="wps_disable_editor" <?php echo $WP_Statistics->option->get( 'disable_editor' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="disable-editor"><?php _e( 'Disable', 'wp-statistics' ); ?></label>
 
@@ -90,7 +90,7 @@ if ( $wps_admin ) {
 
             <td>
                 <input id="disable-map" type="checkbox" value="1"
-                       name="wps_disable_map" <?php echo $WP_Statistics->get_option( 'disable_map' ) == true
+                       name="wps_disable_map" <?php echo $WP_Statistics->option->get( 'disable_map' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="disable-map"><?php _e( 'Disable', 'wp-statistics' ); ?></label>
 

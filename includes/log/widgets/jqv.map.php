@@ -3,7 +3,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 
 	global $wpdb, $WP_Statistics;
 
-	if ( $WP_Statistics->get_option( 'geoip' ) && ! $WP_Statistics->get_option( 'disable_map' ) ) { ?>
+	if ( $WP_Statistics->option->get( 'geoip' ) && ! $WP_Statistics->option->get( 'disable_map' ) ) { ?>
         <div id="map_canvas"></div>
 
 		<?php $result = $wpdb->get_row(
@@ -22,7 +22,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 
 				//Load City Geoip
 				$geoip_reader = false;
-				if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+				if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 					$geoip_reader = $WP_Statistics::geoip_loader( 'city' );
 				}
 

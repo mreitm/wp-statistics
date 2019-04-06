@@ -137,7 +137,7 @@ class Purge {
 				$result_string .= '<br>' . sprintf( __( 'No records found to purge from %s!', 'wp-statistics' ), '<code>' . $table_name . '</code>' );
 			}
 
-			if ( $WP_Statistics->get_option( 'prune_report' ) == true ) {
+			if ( $WP_Statistics->option->get( 'prune_report' ) == true ) {
 				$blogname  = get_bloginfo( 'name' );
 				$blogemail = get_bloginfo( 'admin_email' );
 
@@ -145,11 +145,11 @@ class Purge {
 				$headers[] = "MIME-Version: 1.0";
 				$headers[] = "Content-type: text/html; charset=utf-8";
 
-				if ( $WP_Statistics->get_option( 'email_list' ) == '' ) {
-					$WP_Statistics->update_option( 'email_list', $blogemail );
+				if ( $WP_Statistics->option->get( 'email_list' ) == '' ) {
+					$WP_Statistics->option->update( 'email_list', $blogemail );
 				}
 
-				wp_mail( $WP_Statistics->get_option( 'email_list' ), __( 'Database pruned on', 'wp-statistics' ) . ' ' .  $blogname , $result_string, $headers );
+				wp_mail( $WP_Statistics->option->get( 'email_list' ), __( 'Database pruned on', 'wp-statistics' ) . ' ' .  $blogname , $result_string, $headers );
 			}
 
 			return $result_string;
@@ -202,7 +202,7 @@ class Purge {
 			$result_string = __( 'Number of hits must be greater than or equal to 10!', 'wp-statistics' );
 		}
 
-		if ( $WP_Statistics->get_option( 'prune_report' ) == true ) {
+		if ( $WP_Statistics->option->get( 'prune_report' ) == true ) {
 			$blogname  = get_bloginfo( 'name' );
 			$blogemail = get_bloginfo( 'admin_email' );
 
@@ -210,12 +210,12 @@ class Purge {
 			$headers[] = "MIME-Version: 1.0";
 			$headers[] = "Content-type: text/html; charset=utf-8";
 
-			if ( $WP_Statistics->get_option( 'email_list' ) == '' ) {
-				$WP_Statistics->update_option( 'email_list', $blogemail );
+			if ( $WP_Statistics->option->get( 'email_list' ) == '' ) {
+				$WP_Statistics->option->update( 'email_list', $blogemail );
 			}
 
 			wp_mail(
-				$WP_Statistics->get_option( 'email_list' ),
+				$WP_Statistics->option->get( 'email_list' ),
 				__( 'Database pruned on', 'wp-statistics' ) . ' ' . $blogname,
 				$result_string,
 				$headers

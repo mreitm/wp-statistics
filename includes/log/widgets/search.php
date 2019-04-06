@@ -2,7 +2,7 @@
 function wp_statistics_generate_search_postbox_content( $search_engines, $size = "300", $days = 20 ) {
 	global $wpdb, $WP_Statistics;
 	$id          = 'search-stats-' . rand( 111, 999 );
-	$total_stats = $WP_Statistics->get_option( 'chart_totals' );
+	$total_stats = $WP_Statistics->option->get( 'chart_totals' );
 	$date        = array();
 	$stats       = array();
 	$total_daily = array();

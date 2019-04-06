@@ -12,8 +12,8 @@ class WP_Statistics_Network_Admin {
 		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
-		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_options' ) );
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
 
 		// Add the top level menu.
 		add_menu_page( __( 'Statistics', 'wp-statistics' ), __( 'Statistics', 'wp-statistics' ), $read_cap, WP_STATISTICS_MAIN_FILE, 'WP_Statistics_Network_Admin::overview', 'dashicons-chart-pie' );

@@ -135,7 +135,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 								echo "<td>" . __( 'Link', 'wp-statistics' ) . "</td>";
 								echo "<td>" . __( 'IP', 'wp-statistics' ) . "</td>";
 								echo "<td>" . __( 'Browser', 'wp-statistics' ) . "</td>";
-								if ( $WP_Statistics->get_option( 'geoip' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip' ) ) {
 									echo "<td>" . __( 'Country', 'wp-statistics' ) . "</td>";
 								}
 								echo "<td>" . __( 'Date', 'wp-statistics' ) . "</td>";
@@ -178,7 +178,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 										echo "</td>";
 
 										//Show Country
-										if ( $WP_Statistics->get_option( 'geoip' ) ) {
+										if ( $WP_Statistics->option->get( 'geoip' ) ) {
 											echo "<td style=\"text-align: left\">";
 											echo "<img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $items->location . '.png' ) . "' title='{$ISOCountryCode[$items->location]}' class='log-tools'/>";
 											echo "</td>";
@@ -209,7 +209,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 								echo "<td>" . __( 'Site Url', 'wp-statistics' ) . "</td>";
 								echo "<td>" . __( 'Site Title', 'wp-statistics' ) . "</td>";
 								echo "<td>" . __( 'Server IP', 'wp-statistics' ) . "</td>";
-								if ( $WP_Statistics->get_option( 'geoip' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip' ) ) {
 									echo "<td>" . __( 'Country', 'wp-statistics' ) . "</td>";
 								}
 								echo "<td>" . __( 'References', 'wp-statistics' ) . "</td>";
@@ -251,7 +251,7 @@ $ISOCountryCode = $WP_Statistics->get_country_codes();
 										echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . WP_STATISTICS\Helper::get_referrer_link( $domain, $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['title'] ) == "" ? $unknown : $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['ip'] ) == "" ? $unknown : $referrer_list[ $domain ]['ip'] ) . "</td>";
-										if ( $WP_Statistics->get_option( 'geoip' ) ) {
+										if ( $WP_Statistics->option->get( 'geoip' ) ) {
 											echo "<td>" . ( trim( $referrer_list[ $domain ]['country'] ) == "" ? $unknown : "<img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $referrer_list[ $domain ]['country'] . '.png' ) . "' title='{$ISOCountryCode[$referrer_list[ $domain ]['country']]}' class='log-tools'/>" ) . "</td>";
 										}
 										echo "<td><a class='wps-text-success' href='?page=" . WP_Statistics::$page['referrers'] . "&referr=" . $referrer_html . $date_args . "'>" . number_format_i18n( $number ) . "</a></td>";

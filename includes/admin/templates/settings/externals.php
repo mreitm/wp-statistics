@@ -30,7 +30,7 @@ if ( $wps_nonce_valid ) {
 		} else {
 			$value = '';
 		}
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 
 }
@@ -60,7 +60,7 @@ if ( $wps_nonce_valid ) {
                 </th>
 
                 <td>
-                    <input id="geoip-enable" type="checkbox" name="wps_geoip" <?php echo( $WP_Statistics->get_option( 'geoip' ) === 'on' ? "checked='checked'" : '' ); ?>>
+                    <input id="geoip-enable" type="checkbox" name="wps_geoip" <?php echo( $WP_Statistics->option->get( 'geoip' ) === 'on' ? "checked='checked'" : '' ); ?>>
                     <label for="geoip-enable">
 						<?php _e( 'Enable', 'wp-statistics' ); ?>
                         <form action="" method="post" style="display: inline;">
@@ -82,7 +82,7 @@ if ( $wps_nonce_valid ) {
                 </th>
 
                 <td>
-                    <input id="geoip-city" type="checkbox" name="wps_geoip_city" <?php echo( $WP_Statistics->get_option( 'geoip_city' ) == 'on' ? "checked='checked'" : '' ); ?>>
+                    <input id="geoip-city" type="checkbox" name="wps_geoip_city" <?php echo( $WP_Statistics->option->get( 'geoip_city' ) == 'on' ? "checked='checked'" : '' ); ?>>
                     <label for="geoip-city">
 						<?php _e( 'Enable', 'wp-statistics' ); ?>
                         <form action="" method="post" style="display: inline;">
@@ -104,12 +104,12 @@ if ( $wps_nonce_valid ) {
                 </th>
 
                 <td>
-                    <input id="geoip-schedule" type="checkbox" name="wps_schedule_geoip" <?php echo $WP_Statistics->get_option( 'schedule_geoip' ) == true ? "checked='checked'" : ''; ?>>
+                    <input id="geoip-schedule" type="checkbox" name="wps_schedule_geoip" <?php echo $WP_Statistics->option->get( 'schedule_geoip' ) == true ? "checked='checked'" : ''; ?>>
                     <label for="geoip-schedule"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 					<?php
-					if ( $WP_Statistics->get_option( 'schedule_geoip' ) ) {
+					if ( $WP_Statistics->option->get( 'schedule_geoip' ) ) {
 						echo '<p class="description">' . __( 'Next update will be', 'wp-statistics' ) . ': <code>';
-						$last_update = $WP_Statistics->get_option( 'last_geoip_dl' );
+						$last_update = $WP_Statistics->option->get( 'last_geoip_dl' );
 						$this_month  = strtotime( __( 'First Tuesday of this month', 'wp-statistics' ) );
 
 						if ( $last_update > $this_month ) {
@@ -155,7 +155,7 @@ if ( $wps_nonce_valid ) {
                 </th>
 
                 <td>
-                    <input id="geoip-auto-pop" type="checkbox" name="wps_auto_pop" <?php echo $WP_Statistics->get_option( 'auto_pop' ) == true
+                    <input id="geoip-auto-pop" type="checkbox" name="wps_auto_pop" <?php echo $WP_Statistics->option->get( 'auto_pop' ) == true
 						? "checked='checked'" : ''; ?>>
                     <label for="geoip-auto-pop"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -173,7 +173,7 @@ if ( $wps_nonce_valid ) {
 
                 <td>
                     <input type="text" size="3" id="geoip-private-country-code" name="wps_private_country_code" value="<?php echo htmlentities(
-						$WP_Statistics->get_option( 'private_country_code', '000' ),
+						$WP_Statistics->option->get( 'private_country_code', '000' ),
 						ENT_QUOTES
 					); ?>">
 
@@ -247,7 +247,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="referrerspam-enable" type="checkbox" name="wps_referrerspam" <?php echo $WP_Statistics->get_option( 'referrerspam' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="referrerspam-enable" type="checkbox" name="wps_referrerspam" <?php echo $WP_Statistics->option->get( 'referrerspam' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="referrerspam-enable"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e(
@@ -257,7 +257,7 @@ if ( $wps_nonce_valid ) {
             </td>
         </tr>
 
-        <tr valign="top" class="referrerspam_field"<?php if ( ! $WP_Statistics->get_option( 'referrerspam' ) ) { echo ' style="display:none;"';  }  ?>>
+        <tr valign="top" class="referrerspam_field"<?php if ( ! $WP_Statistics->option->get( 'referrerspam' ) ) { echo ' style="display:none;"';  }  ?>>
             <th scope="row">
                 <label for="geoip-update"><?php _e( 'Update Matomo Referrer Spam Blacklist Info:', 'wp-statistics' ); ?></label>
             </th>
@@ -268,20 +268,20 @@ if ( $wps_nonce_valid ) {
             </td>
         </tr>
 
-        <tr valign="top" class="referrerspam_field"<?php if ( ! $WP_Statistics->get_option( 'referrerspam' ) ) { echo ' style="display:none;"';  }  ?>>
+        <tr valign="top" class="referrerspam_field"<?php if ( ! $WP_Statistics->option->get( 'referrerspam' ) ) { echo ' style="display:none;"';  }  ?>>
             <th scope="row">
                 <label for="referrerspam-schedule"><?php _e( 'Schedule weekly update of Matomo Referrer Spam Blacklist DB:', 'wp-statistics' ); ?></label>
             </th>
 
             <td>
-                <input id="referrerspam-schedule" type="checkbox" name="wps_schedule_referrerspam" <?php echo $WP_Statistics->get_option(
+                <input id="referrerspam-schedule" type="checkbox" name="wps_schedule_referrerspam" <?php echo $WP_Statistics->option->get(
 					'schedule_referrerspam'
 				) == true ? "checked='checked'" : ''; ?>>
                 <label for="referrerspam-schedule"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 				<?php
-				if ( $WP_Statistics->get_option( 'schedule_referrerspam' ) ) {
+				if ( $WP_Statistics->option->get( 'schedule_referrerspam' ) ) {
 					echo '<p class="description">' . __( 'Next update will be', 'wp-statistics' ) . ': <code>';
-					$last_update = $WP_Statistics->get_option( 'schedule_referrerspam' );
+					$last_update = $WP_Statistics->option->get( 'schedule_referrerspam' );
 					if ( $last_update == 0 ) {
 						$last_update = time();
 					}

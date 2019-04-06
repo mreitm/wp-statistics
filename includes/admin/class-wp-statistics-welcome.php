@@ -9,17 +9,17 @@ class WP_Statistics_Welcome {
 	 */
 	public static function init() {
 		global $WP_Statistics;
-		if ( $WP_Statistics->get_option( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
+		if ( $WP_Statistics->option->get( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
 			// Disable show welcome page
-			$WP_Statistics->update_option( 'first_show_welcome_page', true );
-			$WP_Statistics->update_option( 'show_welcome_page', false );
+			$WP_Statistics->option->update( 'first_show_welcome_page', true );
+			$WP_Statistics->option->update( 'show_welcome_page', false );
 
 			// Redirect to welcome page
 			wp_redirect( WP_Statistics_Admin_Pages::admin_url( 'wps_welcome' ) );
 		}
 
-		if ( ! $WP_Statistics->get_option( 'first_show_welcome_page', false ) ) {
-			$WP_Statistics->update_option( 'show_welcome_page', true );
+		if ( ! $WP_Statistics->option->get( 'first_show_welcome_page', false ) ) {
+			$WP_Statistics->option->update( 'show_welcome_page', true );
 		}
 	}
 
@@ -66,7 +66,7 @@ class WP_Statistics_Welcome {
 					global $WP_Statistics;
 
 					// Enable welcome page in database
-					$WP_Statistics->update_option( 'show_welcome_page', true );
+					$WP_Statistics->option->update( 'show_welcome_page', true );
 
 					// Run the upgrader
 					WP_Statistics_Updates::do_upgrade();

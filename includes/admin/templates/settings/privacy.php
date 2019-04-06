@@ -19,7 +19,7 @@ if ( $wps_nonce_valid ) {
 			$value = '';
 		}
 		$new_option = str_replace( "wps_", "", $option );
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 ?>
@@ -39,7 +39,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="anonymize_ips" type="checkbox" value="1" name="wps_anonymize_ips" <?php echo $WP_Statistics->get_option( 'anonymize_ips' ) == true
+                <input id="anonymize_ips" type="checkbox" value="1" name="wps_anonymize_ips" <?php echo $WP_Statistics->option->get( 'anonymize_ips' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="anonymize_ips"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -53,7 +53,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="hash_ips" type="checkbox" value="1" name="wps_hash_ips" <?php echo $WP_Statistics->get_option( 'hash_ips' ) == true
+                <input id="hash_ips" type="checkbox" value="1" name="wps_hash_ips" <?php echo $WP_Statistics->option->get( 'hash_ips' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="hash_ips"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -76,7 +76,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="store_ua" type="checkbox" value="1" name="wps_store_ua" <?php echo $WP_Statistics->get_option( 'store_ua' ) == true
+                <input id="store_ua" type="checkbox" value="1" name="wps_store_ua" <?php echo $WP_Statistics->option->get( 'store_ua' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="store_ua"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 

@@ -8,7 +8,7 @@ class AdminBar {
 		global $WP_Statistics;
 
 		//Show Wordpress Admin Bar
-		if ( $WP_Statistics->get_option( 'menu_bar' ) ) {
+		if ( $WP_Statistics->option->get( 'menu_bar' ) ) {
 			add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 20 );
 		}
 	}
@@ -64,7 +64,4 @@ class AdminBar {
 			}
 		}
 	}
-
 }
-
-new AdminBar();

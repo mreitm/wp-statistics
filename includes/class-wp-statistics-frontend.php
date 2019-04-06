@@ -29,7 +29,7 @@ class WP_Statistics_Frontend {
 		}
 
 		// Check to show hits in posts/pages
-		if ( $WP_Statistics->get_option( 'show_hits' ) ) {
+		if ( $WP_Statistics->option->get( 'show_hits' ) ) {
 			add_filter( 'the_content', array( $this, 'show_hits' ) );
 		}
 	}
@@ -46,8 +46,8 @@ class WP_Statistics_Frontend {
 	 */
 	public function add_honeypot() {
 		global $WP_Statistics;
-		if ( $WP_Statistics->get_option( 'use_honeypot' ) && $WP_Statistics->get_option( 'honeypot_postid' ) > 0 ) {
-			$post_url = get_permalink( $WP_Statistics->get_option( 'honeypot_postid' ) );
+		if ( $WP_Statistics->option->get( 'use_honeypot' ) && $WP_Statistics->option->get( 'honeypot_postid' ) > 0 ) {
+			$post_url = get_permalink( $WP_Statistics->option->get( 'honeypot_postid' ) );
 			echo '<a href="' . $post_url . '" style="display: none;">&nbsp;</a>';
 		}
 	}
@@ -175,22 +175,22 @@ class WP_Statistics_Frontend {
 			$h = new WP_Statistics_GEO_IP_Hits;
 
 			// Call the online users tracking code.
-			if ( $WP_Statistics->get_option( 'useronline' ) ) {
+			if ( $WP_Statistics->option->get( 'useronline' ) ) {
 				$h->Check_online();
 			}
 
 			// Call the visitor tracking code.
-			if ( $WP_Statistics->get_option( 'visitors' ) ) {
+			if ( $WP_Statistics->option->get( 'visitors' ) ) {
 				$h->Visitors();
 			}
 
 			// Call the visit tracking code.
-			if ( $WP_Statistics->get_option( 'visits' ) ) {
+			if ( $WP_Statistics->option->get( 'visits' ) ) {
 				$h->Visits();
 			}
 
 			// Call the page tracking code.
-			if ( $WP_Statistics->get_option( 'pages' ) ) {
+			if ( $WP_Statistics->option->get( 'pages' ) ) {
 				$h->Pages();
 			}
 		}
@@ -217,9 +217,9 @@ class WP_Statistics_Frontend {
 		$hits_html = '<p>' . sprintf( __( 'Hits: %s', 'wp-statistics' ), $hits ) . '</p>';
 
 		// Check hits position
-		if ( $WP_Statistics->get_option( 'display_hits_position' ) == 'before_content' ) {
+		if ( $WP_Statistics->option->get( 'display_hits_position' ) == 'before_content' ) {
 			return $hits_html . $content;
-		} elseif ( $WP_Statistics->get_option( 'display_hits_position' ) == 'after_content' ) {
+		} elseif ( $WP_Statistics->option->get( 'display_hits_position' ) == 'after_content' ) {
 			return $content . $hits_html;
 		} else {
 			return $content;

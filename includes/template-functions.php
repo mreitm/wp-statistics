@@ -312,7 +312,7 @@ function wp_statistics_visitor( $time, $daily = null, $count_only = false, $opti
 	}
 
 	//Generate Base Sql
-	if ( $arg['type'] != "all" and $WP_Statistics->get_option( 'visitors_log' ) == true ) {
+	if ( $arg['type'] != "all" and $WP_Statistics->option->get( 'visitors_log' ) == true ) {
 		$sql = "SELECT {$selector} FROM `" . WP_STATISTICS\DB::table( 'visitor' ) . "` INNER JOIN `" . WP_STATISTICS\DB::table( "visitor_relationships" ) . "` ON `" . WP_STATISTICS\DB::table( "visitor_relationships" ) . "`.`visitor_id` = `" . WP_STATISTICS\DB::table( 'visitor' ) . "`.`ID`  INNER JOIN `" . WP_STATISTICS\DB::table( 'pages' ) . "` ON `" . WP_STATISTICS\DB::table( 'pages' ) . "`.`page_id` = `" . WP_STATISTICS\DB::table( "visitor_relationships" ) . "` . `page_id`";
 	} else {
 		$sql = "SELECT {$selector} FROM `" . WP_STATISTICS\DB::table( 'visitor' ) . "`";
@@ -872,7 +872,7 @@ function wp_statistics_searchengine_list( $all = false ) {
 
 	if ( $all == false ) {
 		foreach ( $engines as $key => $engine ) {
-			if ( $WP_Statistics->get_option( 'disable_se_' . $engine['tag'] ) ) {
+			if ( $WP_Statistics->option->get( 'disable_se_' . $engine['tag'] ) ) {
 				unset( $engines[ $key ] );
 			}
 		}
@@ -894,7 +894,7 @@ function wp_statistics_searchword_query( $search_engine = 'all' ) {
 	$searchengine_list = wp_statistics_searchengine_list();
 	$search_query      = '';
 
-	if ( $WP_Statistics->get_option( 'search_converted' ) ) {
+	if ( $WP_Statistics->option->get( 'search_converted' ) ) {
 		// Are we getting results for all search engines or a specific one?
 		if ( strtolower( $search_engine ) == 'all' ) {
 			// For all of them?  Ok, look through the search engine list and create a SQL query string to get them all from the database.
@@ -951,7 +951,7 @@ function wp_statistics_searchengine_query( $search_engine = 'all' ) {
 	$searchengine_list = wp_statistics_searchengine_list();
 	$search_query      = '';
 
-	if ( $WP_Statistics->get_option( 'search_converted' ) ) {
+	if ( $WP_Statistics->option->get( 'search_converted' ) ) {
 		// Are we getting results for all search engines or a specific one?
 		if ( strtolower( $search_engine ) == 'all' ) {
 			// For all of them?  Ok, look through the search engine list and create a SQL query string to get them all from the database.
@@ -1059,7 +1059,7 @@ function wp_statistics_get_search_engine_query( $search_engine = 'all', $time = 
 
 	//Prepare Table Name
 	$table_name = $wpdb->prefix . 'statistics_';
-	if ( $WP_Statistics->get_option( 'search_converted' ) ) {
+	if ( $WP_Statistics->option->get( 'search_converted' ) ) {
 		$table_name .= 'search';
 	} else {
 		$table_name .= 'visitor';
@@ -1716,14 +1716,14 @@ function wp_statistics_check_access_user( $type = 'both', $export = false ) {
 
 	//Check Export Cap name or Validation current_can_user
 	if ( $export == "cap" ) {
-		return wp_statistics_validate_capability( $WP_Statistics->get_option( $list[ $cap ][0], $list[ $cap ][1] ) );
+		return wp_statistics_validate_capability( $WP_Statistics->option->get( $list[ $cap ][0], $list[ $cap ][1] ) );
 	}
 
 	//Check Access
 	switch ( $type ) {
 		case "manage":
 		case "read":
-			return current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( $list[ $cap ][0], $list[ $cap ][1] ) ) );
+			return current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( $list[ $cap ][0], $list[ $cap ][1] ) ) );
 			break;
 		case "both":
 			foreach ( array( 'manage', 'read' ) as $c ) {
@@ -1962,7 +1962,7 @@ function wp_statistics_check_option_require( $item = array(), $condition_key = '
 	$condition = true;
 	if ( array_key_exists( 'require', $item ) ) {
 		foreach ( $item[ $condition_key ] as $if ) {
-			if ( ! $WP_Statistics->get_option( $if ) ) {
+			if ( ! $WP_Statistics->option->get( $if ) ) {
 				$condition = false;
 				break;
 			}
@@ -2075,7 +2075,7 @@ function wp_statistics_get_domain_server( $url ) {
 		if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 			$result['ip'] = $ip;
 			//Get country Code
-			if ( $WP_Statistics->get_option( 'geoip' ) ) {
+			if ( $WP_Statistics->option->get( 'geoip' ) ) {
 				$geoip_reader = $WP_Statistics::geoip_loader( 'country' );
 				if ( $geoip_reader != false ) {
 					try {

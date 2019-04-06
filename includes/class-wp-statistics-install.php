@@ -233,7 +233,7 @@ class Install {
 				$dbupdates['unique_date'] = true;
 			}
 
-			$WP_Statistics->update_option( 'pending_db_updates', $dbupdates );
+			$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
 
 			$default_options = $WP_Statistics->Default_Options();
 
@@ -243,7 +243,7 @@ class Install {
 				$WP_Statistics->Primary_Values();
 
 				// By default, on new installs, use the new search table.
-				$WP_Statistics->update_option( 'search_converted', 1 );
+				$WP_Statistics->option->update( 'search_converted', 1 );
 
 			} else {
 
@@ -320,7 +320,7 @@ class Install {
 					// Handle the core options, we're going to strip off the 'wps_' header as we store them in the new settings array.
 					foreach ( $core_options as $option ) {
 						$new_name = substr( $option, 4 );
-						$WP_Statistics->store_option( $new_name, get_option( $option ) );
+						$WP_Statistics->option->store( $new_name, get_option( $option ) );
 						delete_option( $option );
 					}
 
@@ -333,7 +333,7 @@ class Install {
 						delete_option( $option );
 					}
 
-					$WP_Statistics->store_option( 'widget', $widget );
+					$WP_Statistics->option->store( 'widget', $widget );
 
 					foreach ( $var_options as $option ) {
 						// Handle the special variables options.
@@ -341,19 +341,19 @@ class Install {
 
 						foreach ( $result as $opt ) {
 							$new_name = substr( $opt->option_name, 4 );
-							$WP_Statistics->store_option( $new_name, $opt->option_value );
+							$WP_Statistics->option->store( $new_name, $opt->option_value );
 							delete_option( $opt->option_name );
 						}
 					}
 
-					$WP_Statistics->save_options();
+					$WP_Statistics->option->save_options();
 				}
 
 				// If the robot list is empty, fill in the defaults.
-				$wps_temp_robotslist = $WP_Statistics->get_option( 'robotlist' );
+				$wps_temp_robotslist = $WP_Statistics->option->get( 'robotlist' );
 
-				if ( trim( $wps_temp_robotslist ) == "" || $WP_Statistics->get_option( 'force_robot_update' ) == true ) {
-					$WP_Statistics->update_option( 'robotlist', $default_options['robotlist'] );
+				if ( trim( $wps_temp_robotslist ) == "" || $WP_Statistics->option->get( 'force_robot_update' ) == true ) {
+					$WP_Statistics->option->update( 'robotlist', $default_options['robotlist'] );
 				}
 
 				// WP Statistics V4.2 and below automatically exclude the administrator for statistics collection
@@ -361,9 +361,9 @@ class Install {
 				// 4.2 behaviour when we upgrade, so see if the option exists in the database and if not, set it.
 				// This will not work correctly on a WordPress install that has removed the administrator role.
 				// However that seems VERY unlikely.
-				$exclude_admins = $WP_Statistics->get_option( 'exclude_administrator', '2' );
+				$exclude_admins = $WP_Statistics->option->get( 'exclude_administrator', '2' );
 				if ( $exclude_admins == '2' ) {
-					$WP_Statistics->update_option( 'exclude_administrator', '1' );
+					$WP_Statistics->option->update( 'exclude_administrator', '1' );
 				}
 
 				// WordPress 4.3 broke the diplay of the sidebar widget because it no longer accepted a null value
@@ -388,20 +388,20 @@ class Install {
 
 			// If this is a first time install or an upgrade and we've added options, set some intelligent defaults.
 			foreach ( $default_options as $key => $value ) {
-				if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->get_option( $key ) ) {
-					$WP_Statistics->store_option( $key, $value );
+				if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->option->get( $key ) ) {
+					$WP_Statistics->option->store( $key, $value );
 				}
 			}
 
 			if ( $installed_version == false ) {
-				$WP_Statistics->store_option( 'force_robot_update', true );
+				$WP_Statistics->option->store( 'force_robot_update', true );
 			}
 
 			// Save the settings now that we've set them.
-			$WP_Statistics->save_options();
+			$WP_Statistics->option->save_options();
 
-			if ( $WP_Statistics->get_option( 'upgrade_report' ) == true ) {
-				$WP_Statistics->update_option( 'send_upgrade_email', true );
+			if ( $WP_Statistics->option->get( 'upgrade_report' ) == true ) {
+				$WP_Statistics->option->update( 'send_upgrade_email', true );
 			}
 
 			// Handle multi site implementations

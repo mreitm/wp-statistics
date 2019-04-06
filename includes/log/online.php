@@ -28,17 +28,17 @@
 
 							// Load city name
 							$geoip_reader = false;
-							if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+							if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 								$geoip_reader = $WP_Statistics::geoip_loader( 'city' );
 							}
 
 							//Show Table
 							echo "<table width=\"100%\" class=\"widefat table-stats\" id=\"online-users\"><tr>";
 							echo "<td>" . __( 'Browser', 'wp-statistics' ) . "</td>";
-							if ( $WP_Statistics->get_option( 'geoip' ) ) {
+							if ( $WP_Statistics->option->get( 'geoip' ) ) {
 								echo "<td>" . __( 'Country', 'wp-statistics' ) . "</td>";
 							}
-							if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+							if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 								echo "<td>" . __( 'City', 'wp-statistics' ) . "</td>";
 							}
 							echo "<td>" . __( 'IP', 'wp-statistics' ) . "</td>";
@@ -83,7 +83,7 @@
 								echo "</td>";
 
 								//Show Country
-								if ( $WP_Statistics->get_option( 'geoip' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip' ) ) {
 									echo "<td style=\"text-align: left\">";
 									echo "<img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $items->location . '.png' ) . "' title='{$ISOCountryCode[$items->location]}' class='log-tools'/>";
 									echo "</td>";
@@ -91,7 +91,7 @@
 
 								//Show City
 								$city = '';
-								if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 									if ( $geoip_reader != false ) {
 										try {
 											$reader = $geoip_reader->city( $items->ip );
@@ -105,7 +105,7 @@
 									}
 								}
 
-								if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 									echo "<td style=\"text-align: left\">";
 									echo $city;
 									echo "</td>";

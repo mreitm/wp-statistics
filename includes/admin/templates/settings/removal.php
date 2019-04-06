@@ -31,16 +31,16 @@ if ( $wps_nonce_valid ) {
 					// Delete the user options.
 					$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
 
-					$WP_Statistics->load_options();
+					$WP_Statistics->option->load_options();
 
 					// Set some intelligent defaults.
 					foreach ( $default_options as $key => $value ) {
-						if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->get_option( $key ) ) {
-							$WP_Statistics->store_option( $key, $value );
+						if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->option->get( $key ) ) {
+							$WP_Statistics->option->store( $key, $value );
 						}
 					}
 
-					$WP_Statistics->save_options();
+					$WP_Statistics->option->save_options();
 				}
 
 				restore_current_blog();
@@ -50,16 +50,16 @@ if ( $wps_nonce_valid ) {
 				// Delete the user options.
 				$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
 
-				$WP_Statistics->load_options();
+				$WP_Statistics->option->load_options();
 
 				// Set some intelligent defaults.
 				foreach ( $default_options as $key => $value ) {
-					if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->get_option( $key ) ) {
-						$WP_Statistics->store_option( $key, $value );
+					if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->option->get( $key ) ) {
+						$WP_Statistics->option->store( $key, $value );
 					}
 				}
 
-				$WP_Statistics->save_options();
+				$WP_Statistics->option->save_options();
 			}
 
 			// We need to reload the page after we reset the options but it's too late to do it through a HTTP redirect so do a 

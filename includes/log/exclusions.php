@@ -4,7 +4,7 @@
     });
 </script>
 <?php
-if ( $WP_Statistics->get_option( 'record_exclusions' ) != 1 ) {
+if ( $WP_Statistics->option->get( 'record_exclusions' ) != 1 ) {
 	echo "<div class='updated settings-error'><p><strong>" .
 	     __(
 		     'Attention: Exclusion are not currently set to be recorded, the results below may not reflect current statistics!',
@@ -20,7 +20,7 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 	$rangestart,
 	$rangeend
 );
-$total_stats = $WP_Statistics->get_option( 'chart_totals' );
+$total_stats = $WP_Statistics->option->get( 'chart_totals' );
 
 $excluded_reasons          = array(
 	'Robot',

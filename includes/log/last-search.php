@@ -92,7 +92,7 @@ $total = $search_result[ $referred ];
 								// Determine if we're using the old or new method of storing search engine info and build the appropriate table name.
 								$tablename = $wpdb->prefix . 'statistics_';
 
-								if ( $WP_Statistics->get_option( 'search_converted' ) ) {
+								if ( $WP_Statistics->option->get( 'search_converted' ) ) {
 									$tabletwo  = $tablename . 'visitor';
 									$tablename .= 'search';
 									$result    = $wpdb->get_results(
@@ -112,10 +112,10 @@ $total = $search_result[ $referred ];
 								echo "<table width=\"100%\" class=\"widefat table-stats\" id=\"last-referrer\"><tr>";
 								echo "<td>" . __( 'Word', 'wp-statistics' ) . "</td>";
 								echo "<td>" . __( 'Browser', 'wp-statistics' ) . "</td>";
-								if ( $WP_Statistics->get_option( 'geoip' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip' ) ) {
 									echo "<td>" . __( 'Country', 'wp-statistics' ) . "</td>";
 								}
-								if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 									echo "<td>" . __( 'City', 'wp-statistics' ) . "</td>";
 								}
 								echo "<td>" . __( 'Date', 'wp-statistics' ) . "</td>";
@@ -125,7 +125,7 @@ $total = $search_result[ $referred ];
 
 								// Load city name
 								$geoip_reader = false;
-								if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+								if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 									$geoip_reader = $WP_Statistics::geoip_loader( 'city' );
 								}
 
@@ -135,7 +135,7 @@ $total = $search_result[ $referred ];
 										continue;
 									}
 
-									if ( $WP_Statistics->get_option( 'search_converted' ) ) {
+									if ( $WP_Statistics->option->get( 'search_converted' ) ) {
 										$this_search_engine = $WP_Statistics->Search_Engine_Info_By_Engine( $items->engine );
 										$words              = $items->words;
 									} else {
@@ -157,7 +157,7 @@ $total = $search_result[ $referred ];
 									echo "<a href='" . WP_Statistics_Admin_Pages::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 									echo "</td>";
 									$city = '';
-									if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+									if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 										if ( $geoip_reader != false ) {
 											try {
 												$reader = $geoip_reader->city( $items->ip );
@@ -172,13 +172,13 @@ $total = $search_result[ $referred ];
 										}
 									}
 
-									if ( $WP_Statistics->get_option( 'geoip' ) ) {
+									if ( $WP_Statistics->option->get( 'geoip' ) ) {
 										echo "<td style=\"text-align: left\">";
 										echo "<img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $items->location . '.png' ) . "' title='{$ISOCountryCode[$items->location]}' class='log-tools'/>";
 										echo "</td>";
 									}
 
-									if ( $WP_Statistics->get_option( 'geoip_city' ) ) {
+									if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
 										echo "<td style=\"text-align: left\">";
 										echo $city;
 										echo "</td>";

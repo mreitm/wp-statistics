@@ -15,7 +15,7 @@ class WP_Statistics_Admin_Pages {
 		global $WP_Statistics;
 
 		// Right side "wide" widgets
-		if ( $WP_Statistics->get_option( 'visits' ) ) {
+		if ( $WP_Statistics->option->get( 'visits' ) ) {
 			add_meta_box(
 				'wps_hits_postbox',
 				__( 'Hit Statistics', 'wp-statistics' ),
@@ -27,7 +27,7 @@ class WP_Statistics_Admin_Pages {
 			);
 		}
 
-		if ( $WP_Statistics->get_option( 'visitors' ) ) {
+		if ( $WP_Statistics->option->get( 'visitors' ) ) {
 			add_meta_box(
 				'wps_top_visitors_postbox',
 				__( 'Top Visitors', 'wp-statistics' ),
@@ -65,7 +65,7 @@ class WP_Statistics_Admin_Pages {
 				array( 'widget' => 'recent' )
 			);
 
-			if ( $WP_Statistics->get_option( 'geoip' ) ) {
+			if ( $WP_Statistics->option->get( 'geoip' ) ) {
 				add_meta_box(
 					'wps_map_postbox',
 					__( 'Today\'s Visitors Map', 'wp-statistics' ),
@@ -78,7 +78,7 @@ class WP_Statistics_Admin_Pages {
 			}
 		}
 
-		if ( $WP_Statistics->get_option( 'pages' ) ) {
+		if ( $WP_Statistics->option->get( 'pages' ) ) {
 			add_meta_box(
 				'wps_pages_postbox',
 				__( 'Top 10 Pages', 'wp-statistics' ),
@@ -91,7 +91,7 @@ class WP_Statistics_Admin_Pages {
 		}
 
 		// Left side "thin" widgets.
-		if ( $WP_Statistics->get_option( 'visitors' ) ) {
+		if ( $WP_Statistics->option->get( 'visitors' ) ) {
 			add_meta_box(
 				'wps_summary_postbox',
 				__( 'Summary', 'wp-statistics' ),
@@ -120,7 +120,7 @@ class WP_Statistics_Admin_Pages {
 				array( 'widget' => 'referring' )
 			);
 
-			if ( $WP_Statistics->get_option( 'geoip' ) ) {
+			if ( $WP_Statistics->option->get( 'geoip' ) ) {
 				add_meta_box(
 					'wps_countries_postbox',
 					__( 'Top 10 Countries', 'wp-statistics' ),
@@ -134,7 +134,7 @@ class WP_Statistics_Admin_Pages {
 		}
 
 		//Left Show User online table
-		if ( $WP_Statistics->get_option( 'useronline' ) ) {
+		if ( $WP_Statistics->option->get( 'useronline' ) ) {
 			add_meta_box( 'wps_users_online_postbox', __( 'Online Users', 'wp-statistics' ), 'wp_statistics_generate_overview_postbox_contents', $WP_Statistics->menu_slugs['overview'], 'side', null, array( 'widget' => 'users_online' ) );
 		}
 	}
@@ -278,13 +278,13 @@ class WP_Statistics_Admin_Pages {
 		global $wpdb, $WP_Statistics;
 
 		// Check the current user has the rights to be here.
-		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) ) ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
 		// When we create $WP_Statistics the user has not been authenticated yet so we cannot load the user preferences
 		// during the creation of the class.  Instead load them now that the user exists.
-		$WP_Statistics->load_user_options();
+		$WP_Statistics->option->load_user_options();
 
 		// Get the row count for each of the tables, we'll use this later on in the wps_optimization.php file.
 		$list_table = WP_STATISTICS\DB::table( 'all' );
@@ -303,25 +303,25 @@ class WP_Statistics_Admin_Pages {
 		global $WP_Statistics;
 
 		// Check the current user has the rights to be here.
-		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_options' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) ) ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
 		// When we create $WP_Statistics the user has not been authenticated yet so we cannot load the user preferences
 		// during the creation of the class.  Instead load them now that the user exists.
-		$WP_Statistics->load_user_options();
+		$WP_Statistics->option->load_user_options();
 
 		// Check admin notices.
-		if ( $WP_Statistics->get_option( 'admin_notices' ) == true ) {
-			$WP_Statistics->update_option( 'disable_donation_nag', false );
-			$WP_Statistics->update_option( 'disable_suggestion_nag', false );
+		if ( $WP_Statistics->option->get( 'admin_notices' ) == true ) {
+			$WP_Statistics->option->update( 'disable_donation_nag', false );
+			$WP_Statistics->option->update( 'disable_suggestion_nag', false );
 		}
 
 		require_once WP_STATISTICS_DIR . "includes/admin/templates/settings.php";
 
 		// We could let the download happen at the end of the page, but this way we get to give some
 		// feedback to the users about the result.
-		if ( $WP_Statistics->get_option( 'geoip' ) and isset( $_POST['update_geoip'] ) and isset( $_POST['geoip_name'] ) ) {
+		if ( $WP_Statistics->option->get( 'geoip' ) and isset( $_POST['update_geoip'] ) and isset( $_POST['geoip_name'] ) ) {
 
 			//Check Geo ip Exist in Database
 			if ( isset( WP_Statistics_Updates::$geoip[ $_POST['geoip_name'] ] ) ) {
@@ -488,7 +488,7 @@ class WP_Statistics_Admin_Pages {
 
 		// When we create $WP_Statistics the user has not been authenticated yet so we cannot load the user preferences
 		// during the creation of the class.  Instead load them now that the user exists.
-		$WP_Statistics->load_user_options();
+		$WP_Statistics->option->load_user_options();
 
 		// We allow for a get style variable to be passed to define which function to use.
 		if ( $log_type == "" && array_key_exists( 'type', $_GET ) ) {
@@ -498,7 +498,7 @@ class WP_Statistics_Admin_Pages {
 		// Verify the user has the rights to see the statistics.
 		if ( ! current_user_can(
 			wp_statistics_validate_capability(
-				$WP_Statistics->get_option(
+				$WP_Statistics->option->get(
 					'read_capability',
 					'manage_option'
 				)

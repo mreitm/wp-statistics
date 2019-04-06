@@ -17,7 +17,7 @@ if ( $wps_nonce_valid ) {
 			$value = '';
 		}
 		$new_option = str_replace( "wps_", "", $se_post );
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 
 	$wps_option_list = array(
@@ -54,7 +54,7 @@ if ( $wps_nonce_valid ) {
 			$value = '';
 		}
 		$new_option = str_replace( "wps_", "", $option );
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 ?>
@@ -76,7 +76,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="useronline" type="checkbox" value="1" name="wps_useronline" <?php echo $WP_Statistics->get_option( 'useronline' ) == true
+                <input id="useronline" type="checkbox" value="1" name="wps_useronline" <?php echo $WP_Statistics->option->get( 'useronline' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="useronline"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -90,11 +90,11 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input type="text" class="small-text code" id="check_online" name="wps_check_online" value="<?php echo htmlentities( $WP_Statistics->get_option( 'check_online' ), ENT_QUOTES ); ?>"/>
+                <input type="text" class="small-text code" id="check_online" name="wps_check_online" value="<?php echo htmlentities( $WP_Statistics->option->get( 'check_online' ), ENT_QUOTES ); ?>"/>
 				<?php _e( 'Seconds', 'wp-statistics' ); ?>
                 <p class="description"><?php echo sprintf(
 						__( 'Time for the check accurate online user in the site. Now: %s Seconds', 'wp-statistics' ),
-						$WP_Statistics->get_option( 'check_online' )
+						$WP_Statistics->option->get( 'check_online' )
 					); ?></p>
             </td>
         </tr>
@@ -105,7 +105,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="allonline" type="checkbox" value="1" name="wps_all_online" <?php echo $WP_Statistics->get_option( 'all_online' ) == true
+                <input id="allonline" type="checkbox" value="1" name="wps_all_online" <?php echo $WP_Statistics->option->get( 'all_online' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="allonline"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -126,7 +126,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="visits" type="checkbox" value="1" name="wps_visits" <?php echo $WP_Statistics->get_option( 'visits' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="visits" type="checkbox" value="1" name="wps_visits" <?php echo $WP_Statistics->option->get( 'visits' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="visits"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Enable or disable this feature', 'wp-statistics' ); ?></p>
@@ -143,20 +143,20 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="visitors" type="checkbox" value="1" name="wps_visitors" <?php echo $WP_Statistics->get_option( 'visitors' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="visitors" type="checkbox" value="1" name="wps_visitors" <?php echo $WP_Statistics->option->get( 'visitors' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="visitors"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Enable or disable this feature', 'wp-statistics' ); ?></p>
             </td>
         </tr>
 
-        <tr valign="top" id="visitors_log_tr" <?php echo( $WP_Statistics->get_option( 'visitors' ) == false ? 'style="display:none;"' : '' ) ?>>
+        <tr valign="top" id="visitors_log_tr" <?php echo( $WP_Statistics->option->get( 'visitors' ) == false ? 'style="display:none;"' : '' ) ?>>
             <th scope="row">
                 <label for="visitors_log"><?php _e( 'Visitors logs:', 'wp-statistics' ); ?></label>
             </th>
 
             <td>
-                <input id="visitors_log" type="checkbox" value="1" name="wps_visitors_log" <?php echo $WP_Statistics->get_option( 'visitors_log' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="visitors_log" type="checkbox" value="1" name="wps_visitors_log" <?php echo $WP_Statistics->option->get( 'visitors_log' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="visitors_log"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'If enabled, you will receive a report of each user\'s visit to the pages', 'wp-statistics' ); ?></p>
@@ -169,11 +169,11 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input type="text" class="small-text code" id="coefficient" name="wps_coefficient" value="<?php echo htmlentities( $WP_Statistics->get_option( 'coefficient' ), ENT_QUOTES ); ?>"/>
+                <input type="text" class="small-text code" id="coefficient" name="wps_coefficient" value="<?php echo htmlentities( $WP_Statistics->option->get( 'coefficient' ), ENT_QUOTES ); ?>"/>
 
                 <p class="description"><?php echo sprintf(
 						__( 'For each visit to account for several hits. Currently %s.', 'wp-statistics' ),
-						$WP_Statistics->get_option( 'coefficient' )
+						$WP_Statistics->option->get( 'coefficient' )
 					); ?></p>
             </td>
         </tr>
@@ -188,7 +188,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="pages" type="checkbox" value="1" name="wps_pages" <?php echo $WP_Statistics->get_option( 'pages' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="pages" type="checkbox" value="1" name="wps_pages" <?php echo $WP_Statistics->option->get( 'pages' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="pages"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Enable or disable this feature', 'wp-statistics' ); ?></p>
@@ -201,7 +201,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="all_pages" type="checkbox" value="1" name="wps_track_all_pages" <?php echo $WP_Statistics->get_option( 'track_all_pages' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="all_pages" type="checkbox" value="1" name="wps_track_all_pages" <?php echo $WP_Statistics->option->get( 'track_all_pages' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="all_pages"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Enable or disable this feature', 'wp-statistics' ); ?></p>
@@ -218,7 +218,7 @@ if ( $wps_nonce_valid ) {
                 </th>
 
                 <td>
-                    <input id="strip_uri_parameters" type="checkbox" value="1" name="wps_strip_uri_parameters" <?php echo $WP_Statistics->get_option( 'strip_uri_parameters' ) == true ? "checked='checked'" : ''; ?>>
+                    <input id="strip_uri_parameters" type="checkbox" value="1" name="wps_strip_uri_parameters" <?php echo $WP_Statistics->option->get( 'strip_uri_parameters' ) == true ? "checked='checked'" : ''; ?>>
                     <label for="strip_uri_parameters"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                     <p class="description"><?php _e( 'This will remove anything after the ? in a URL.', 'wp-statistics' ); ?></p>
@@ -233,7 +233,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="disable_column" type="checkbox" value="1" name="wps_disable_column" <?php echo $WP_Statistics->get_option( 'disable_column' ) == true
+                <input id="disable_column" type="checkbox" value="1" name="wps_disable_column" <?php echo $WP_Statistics->option->get( 'disable_column' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="disable_column"><?php _e( 'Disable', 'wp-statistics' ); ?></label>
 
@@ -248,7 +248,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="hit_post_metabox" type="checkbox" value="1" name="wps_hit_post_metabox" <?php echo $WP_Statistics->get_option( 'hit_post_metabox' ) == true ? "checked='checked'" : ''; ?>>
+                <input id="hit_post_metabox" type="checkbox" value="1" name="wps_hit_post_metabox" <?php echo $WP_Statistics->option->get( 'hit_post_metabox' ) == true ? "checked='checked'" : ''; ?>>
                 <label for="hit_post_metabox"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
                 <p class="description"><?php _e( 'Show hits meta box chart in the edit of all post types page.', 'wp-statistics' ); ?></p>
@@ -261,7 +261,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="show_hits" type="checkbox" value="1" name="wps_show_hits" <?php echo $WP_Statistics->get_option( 'show_hits' ) == true
+                <input id="show_hits" type="checkbox" value="1" name="wps_show_hits" <?php echo $WP_Statistics->option->get( 'show_hits' ) == true
 					? "checked='checked'" : ''; ?> onClick='ToggleShowHitsOptions();'>
                 <label for="show_hits"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -269,7 +269,7 @@ if ( $wps_nonce_valid ) {
             </td>
         </tr>
 
-		<?php if ( $WP_Statistics->get_option( 'show_hits' ) ) {
+		<?php if ( $WP_Statistics->option->get( 'show_hits' ) ) {
 			$hidden = "";
 		} else {
 			$hidden = " style='display: none;'";
@@ -281,16 +281,16 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <select name="wps_display_hits_position" id="display_hits_position">
-                    <option value="0" <?php selected( $WP_Statistics->get_option( 'display_hits_position' ), '0' ); ?>><?php _e(
+                    <option value="0" <?php selected( $WP_Statistics->option->get( 'display_hits_position' ), '0' ); ?>><?php _e(
 							'Please select',
 							'wp-statistics'
 						); ?></option>
-                    <option value="before_content" <?php selected( $WP_Statistics->get_option( 'display_hits_position' ), 'before_content' ); ?>><?php _e(
+                    <option value="before_content" <?php selected( $WP_Statistics->option->get( 'display_hits_position' ), 'before_content' ); ?>><?php _e(
 							'Before Content',
 							'wp-statistics'
 						); ?></option>
 
-                    <option value="after_content" <?php selected( $WP_Statistics->get_option( 'display_hits_position' ), 'after_content' ); ?>><?php _e(
+                    <option value="after_content" <?php selected( $WP_Statistics->option->get( 'display_hits_position' ), 'after_content' ); ?>><?php _e(
 							'After Content',
 							'wp-statistics'
 						); ?></option>
@@ -313,7 +313,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="use_cache_plugin" type="checkbox" value="1" name="wps_use_cache_plugin" <?php echo $WP_Statistics->get_option( 'use_cache_plugin' ) == true
+                <input id="use_cache_plugin" type="checkbox" value="1" name="wps_use_cache_plugin" <?php echo $WP_Statistics->option->get( 'use_cache_plugin' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="use_cache_plugin"><?php _e( 'Yes', 'wp-statistics' ); ?></label>
 
@@ -335,11 +335,11 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <select name="wps_menu_bar" id="menu-bar">
-                    <option value="0" <?php selected( $WP_Statistics->get_option( 'menu_bar' ), '0' ); ?>><?php _e(
+                    <option value="0" <?php selected( $WP_Statistics->option->get( 'menu_bar' ), '0' ); ?>><?php _e(
 							'No',
 							'wp-statistics'
 						); ?></option>
-                    <option value="1" <?php selected( $WP_Statistics->get_option( 'menu_bar' ), '1' ); ?>><?php _e(
+                    <option value="1" <?php selected( $WP_Statistics->option->get( 'menu_bar' ), '1' ); ?>><?php _e(
 							'Yes',
 							'wp-statistics'
 						); ?></option>
@@ -355,7 +355,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="hide_notices" type="checkbox" value="1" name="wps_hide_notices" <?php echo $WP_Statistics->get_option( 'hide_notices' ) == true
+                <input id="hide_notices" type="checkbox" value="1" name="wps_hide_notices" <?php echo $WP_Statistics->option->get( 'hide_notices' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="hide_notices"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -376,7 +376,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="addsearchwords" type="checkbox" value="1" name="wps_addsearchwords" <?php echo $WP_Statistics->get_option( 'addsearchwords' ) == true
+                <input id="addsearchwords" type="checkbox" value="1" name="wps_addsearchwords" <?php echo $WP_Statistics->option->get( 'addsearchwords' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="addsearchwords"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -409,7 +409,7 @@ if ( $wps_nonce_valid ) {
                     <label for="<?php echo $option_name; ?>"><?php _e( $se['name'], 'wp-statistics' ); ?>:</label>
                 </th>
                 <td>
-                    <input id="<?php echo $option_name; ?>" type="checkbox" value="1" name="<?php echo $option_name; ?>" <?php echo $WP_Statistics->get_option( $store_name ) == true
+                    <input id="<?php echo $option_name; ?>" type="checkbox" value="1" name="<?php echo $option_name; ?>" <?php echo $WP_Statistics->option->get( $store_name ) == true
 						? "checked='checked'" : ''; ?>><label for="<?php echo $option_name; ?>"><?php _e(
 							'Disable',
 							'wp-statistics'
@@ -433,7 +433,7 @@ if ( $wps_nonce_valid ) {
             </th>
 
             <td>
-                <input id="chart-totals" type="checkbox" value="1" name="wps_chart_totals" <?php echo $WP_Statistics->get_option( 'chart_totals' ) == true
+                <input id="chart-totals" type="checkbox" value="1" name="wps_chart_totals" <?php echo $WP_Statistics->option->get( 'chart_totals' ) == true
 					? "checked='checked'" : ''; ?>>
                 <label for="chart-totals"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 

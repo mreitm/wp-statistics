@@ -39,24 +39,7 @@ class WP_Statistics {
 	 * @var int
 	 */
 	public $coefficient = 1;
-	/**
-	 * Visitor User ID
-	 *
-	 * @var int
-	 */
-	public $user_id = 0;
-	/**
-	 * Plugin options (Recorded in database)
-	 *
-	 * @var array
-	 */
-	public $options = array();
-	/**
-	 * User Options
-	 *
-	 * @var array
-	 */
-	public $user_options = array();
+
 	/**
 	 * Menu Slugs
 	 *
@@ -81,12 +64,7 @@ class WP_Statistics {
 	 * @var array
 	 */
 	private $historical = array();
-	/**
-	 * is user options loaded?
-	 *
-	 * @var bool
-	 */
-	private $user_options_loaded = false;
+
 	/**
 	 * Country Codes
 	 *
@@ -321,11 +299,14 @@ class WP_Statistics {
 		# Set TimeZone
 		$GLOBALS['WP_Statistics']->timezone = new \WP_STATISTICS\TimeZone();
 
-		//Set Options
-		$this->load_options();
+		# User ID
+		$GLOBALS['WP_Statistics']->user_id = get_current_user_id();
+
+		# Set Options
+		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
 
 		// Check the cache option is enabled.
-		if ( $this->get_option( 'use_cache_plugin' ) == true ) {
+		if ( $GLOBALS['WP_Statistics']->option->get( 'use_cache_plugin' ) == true ) {
 			$this->use_cache = 1;
 		}
 
@@ -336,7 +317,7 @@ class WP_Statistics {
 		$this->get_IP();
 
 		// Check if the has IP is enabled.
-		if ( $this->get_option( 'hash_ips' ) == true ) {
+		if ( $GLOBALS['WP_Statistics']->option->get( 'hash_ips' ) == true ) {
 			$this->ip_hash = $this->get_hash_string();
 		}
 
@@ -354,6 +335,7 @@ class WP_Statistics {
 		//$GLOBALS['WP_Statistics']->timezone = $this->container['timezone']; //TODO Remove At last
 
 		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
+        new \WP_STATISTICS\AdminBar();
 	}
 
 	/**
@@ -436,17 +418,6 @@ class WP_Statistics {
 	}
 
 	/**
-	 * Loads the options from WordPress
-	 */
-	public function load_options() {
-		$this->options = get_option( 'wp_statistics' );
-
-		if ( ! is_array( $this->options ) ) {
-			$this->user_options = array();
-		}
-	}
-
-	/**
 	 * geo ip Loader
 	 *
 	 * @param $pack
@@ -467,210 +438,6 @@ class WP_Statistics {
 		}
 
 		return $reader;
-	}
-
-	/**
-	 * Loads the user options from WordPress.
-	 * It is NOT called during the class constructor.
-	 *
-	 * @param bool|false $force
-	 */
-	public function load_user_options( $force = false ) {
-		if ( $this->user_options_loaded == true && $force != true ) {
-			return;
-		}
-
-		if ( $this->user_id == 0 ) {
-			$this->user_id = get_current_user_id();
-		}
-
-		// Not sure why, but get_user_meta() is returning an array or array's unless $single is set to true.
-		$this->user_options = get_user_meta( $this->user_id, 'wp_statistics', true );
-
-		if ( ! is_array( $this->user_options ) ) {
-			$this->user_options = array();
-		}
-
-		$this->user_options_loaded = true;
-	}
-
-	/**
-	 * mimics WordPress's get_option() function but uses the array instead of individual options.
-	 *
-	 * @param      $option
-	 * @param null $default
-	 *
-	 * @return bool|null
-	 */
-	public function get_option( $option, $default = null ) {
-		// If no options array exists, return FALSE.
-		if ( ! is_array( $this->options ) ) {
-			return false;
-		}
-
-		// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
-		if ( ! array_key_exists( $option, $this->options ) ) {
-			if ( isset( $default ) ) {
-				return $default;
-			} else {
-				return false;
-			}
-		}
-
-		// Return the option.
-		return $this->options[ $option ];
-	}
-
-	/**
-	 * mimics WordPress's get_user_meta() function
-	 * But uses the array instead of individual options.
-	 *
-	 * @param      $option
-	 * @param null $default
-	 *
-	 * @return bool|null
-	 */
-	public function get_user_option( $option, $default = null ) {
-		// If the user id has not been set or no options array exists, return FALSE.
-		if ( $this->user_id == 0 ) {
-			return false;
-		}
-		if ( ! is_array( $this->user_options ) ) {
-			return false;
-		}
-
-		// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
-		if ( ! array_key_exists( $option, $this->user_options ) ) {
-			if ( isset( $default ) ) {
-				return $default;
-			} else {
-				return false;
-			}
-		}
-
-		// Return the option.
-		return $this->user_options[ $option ];
-	}
-
-	/**
-	 * Mimics WordPress's update_option() function
-	 * But uses the array instead of individual options.
-	 *
-	 * @param $option
-	 * @param $value
-	 */
-	public function update_option( $option, $value ) {
-		// Store the value in the array.
-		$this->options[ $option ] = $value;
-
-		// Write the array to the database.
-		update_option( 'wp_statistics', $this->options );
-	}
-
-	/**
-	 * Mimics WordPress's update_user_meta() function
-	 * But uses the array instead of individual options.
-	 *
-	 * @param $option
-	 * @param $value
-	 *
-	 * @return bool
-	 */
-	public function update_user_option( $option, $value ) {
-		// If the user id has not been set return FALSE.
-		if ( $this->user_id == 0 ) {
-			return false;
-		}
-
-		// Store the value in the array.
-		$this->user_options[ $option ] = $value;
-
-		// Write the array to the database.
-		update_user_meta( $this->user_id, 'wp_statistics', $this->user_options );
-	}
-
-	/**
-	 * This function is similar to update_option,
-	 * but it only stores the option in the array.
-	 * This save some writing to the database if you have multiple values to update.
-	 *
-	 * @param $option
-	 * @param $value
-	 */
-	public function store_option( $option, $value ) {
-		$this->options[ $option ] = $value;
-	}
-
-	/**
-	 * This function is similar to update_user_option,
-	 * but it only stores the option in the array.
-	 * This save some writing to the database if you have multiple values to update.
-	 *
-	 * @param $option
-	 * @param $value
-	 *
-	 * @return bool
-	 */
-	public function store_user_option( $option, $value ) {
-		// If the user id has not been set return FALSE.
-		if ( $this->user_id == 0 ) {
-			return false;
-		}
-
-		$this->user_options[ $option ] = $value;
-	}
-
-	/**
-	 * Saves the current options array to the database.
-	 */
-	public function save_options() {
-		update_option( 'wp_statistics', $this->options );
-	}
-
-	/**
-	 * Saves the current user options array to the database.
-	 *
-	 * @return bool
-	 */
-	public function save_user_options() {
-		if ( $this->user_id == 0 ) {
-			return false;
-		}
-
-		update_user_meta( $this->user_id, 'wp_statistics', $this->user_options );
-	}
-
-	/**
-	 * Check to see if an option is currently set or not.
-	 *
-	 * @param $option
-	 *
-	 * @return bool
-	 */
-	public function isset_option( $option ) {
-		if ( ! is_array( $this->options ) ) {
-			return false;
-		}
-
-		return array_key_exists( $option, $this->options );
-	}
-
-	/**
-	 * check to see if a user option is currently set or not.
-	 *
-	 * @param $option
-	 *
-	 * @return bool
-	 */
-	public function isset_user_option( $option ) {
-		if ( $this->user_id == 0 ) {
-			return false;
-		}
-		if ( ! is_array( $this->user_options ) ) {
-			return false;
-		}
-
-		return array_key_exists( $option, $this->user_options );
 	}
 
 	/**
@@ -1258,7 +1025,7 @@ class WP_Statistics {
 		global $WP_Statistics, $wpdb;
 
 		//Check User Online is Active in this Wordpress
-		if ( $WP_Statistics->get_option( 'useronline' ) ) {
+		if ( $WP_Statistics->option->get( 'useronline' ) ) {
 
 			//Get Not timestamp
 			$now = $WP_Statistics->timezone->Current_Date( 'U' );
@@ -1267,8 +1034,8 @@ class WP_Statistics {
 			$reset_time = 120;
 
 			// Get the user set value for seconds to check for users online.
-			if ( $WP_Statistics->get_option( 'check_online' ) ) {
-				$reset_time = $WP_Statistics->get_option( 'check_online' );
+			if ( $WP_Statistics->option->get( 'check_online' ) ) {
+				$reset_time = $WP_Statistics->option->get( 'check_online' );
 			}
 
 			// We want to delete users that are over the number of seconds set by the admin.

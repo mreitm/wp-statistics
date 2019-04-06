@@ -12,12 +12,12 @@ class WP_Statistics_Editor {
 		global $WP_Statistics;
 
 		//Load All User Options
-		$WP_Statistics->load_user_options();
+		$WP_Statistics->option->load_user_options();
 
 		// We need to fudge the display settings for first time users so not all of the widgets are displayed, we only want to do this on
 		// the first time they visit the dashboard though so check to see if we've been here before.
-		if ( ! $WP_Statistics->get_user_option( 'editor_set' ) ) {
-			$WP_Statistics->update_user_option( 'editor_set', WP_STATISTICS_VERSION );
+		if ( ! $WP_Statistics->option->user( 'editor_set' ) ) {
+			$WP_Statistics->option->update_user_option( 'editor_set', WP_STATISTICS_VERSION );
 
 			$hidden_widgets = get_user_meta( $WP_Statistics->user_id, 'metaboxhidden_post', true );
 			if ( ! is_array( $hidden_widgets ) ) {
@@ -43,17 +43,17 @@ class WP_Statistics_Editor {
 		}
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.
-		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( 'read_capability', 'manage_option' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_option' ) ) ) ) {
 			return;
 		}
 
 		// If the admin has disabled the widgets don't display them.
-		if ( $WP_Statistics->get_option( 'disable_editor' ) ) {
+		if ( $WP_Statistics->option->get( 'disable_editor' ) ) {
 			return;
 		}
 
 		// If the admin has disabled the Hit Post MetaBox.
-		if ( ! $WP_Statistics->get_option( 'hit_post_metabox' ) ) {
+		if ( ! $WP_Statistics->option->get( 'hit_post_metabox' ) ) {
 			return;
 		}
 

@@ -31,7 +31,7 @@ class WP_Statistics_Export {
 			}
 
 			//Check Current User Capability
-			$manage_cap = wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) );
+			$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
 			if ( current_user_can( $manage_cap ) ) {
 				$table = $_POST['table-to-export'];
 				$type  = $_POST['export-file-type'];

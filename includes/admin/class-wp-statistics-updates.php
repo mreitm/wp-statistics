@@ -57,7 +57,7 @@ class WP_Statistics_Updates {
 		// Also stop trying to update the database as it just won't work :)
 		if ( false === function_exists( 'gzopen' ) ) {
 			if ( $type == "enable" ) {
-				$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+				$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 			}
 
 			$result["notice"] = __( 'Error the gzopen() function do not exist!', 'wp-statistics' );
@@ -67,7 +67,7 @@ class WP_Statistics_Updates {
 		}
 
 		// If GeoIP is disabled, bail out.
-		if ( $type == "update" and $WP_Statistics->get_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'] ) == '' ) {
+		if ( $type == "update" and $WP_Statistics->option->get( WP_Statistics_Updates::$geoip[ $pack ]['opt'] ) == '' ) {
 			return '';
 		}
 
@@ -90,7 +90,7 @@ class WP_Statistics_Updates {
 		if ( ! file_exists( $upload_dir['basedir'] . '/wp-statistics' ) ) {
 			if ( ! @mkdir( $upload_dir['basedir'] . '/wp-statistics', 0755 ) ) {
 				if ( $type == "enable" ) {
-					$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+					$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 				}
 
 				$result["notice"] = sprintf( __( 'Error creating GeoIP database directory, make sure your web server has permissions to create directories in: %s', 'wp-statistics' ), $upload_dir['basedir'] );
@@ -102,7 +102,7 @@ class WP_Statistics_Updates {
 
 		if ( ! is_writable( $upload_dir['basedir'] . '/wp-statistics' ) ) {
 			if ( $type == "enable" ) {
-				$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+				$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 			}
 
 			$result["notice"] = sprintf( __( 'Error setting permissions of the GeoIP database directory, make sure your web server has permissions to write to directories in : %s', 'wp-statistics' ),
@@ -119,7 +119,7 @@ class WP_Statistics_Updates {
 		// If we failed, through a message, otherwise proceed.
 		if ( is_wp_error( $TempFile ) ) {
 			if ( $type == "enable" ) {
-				$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+				$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 			}
 
 			$result["notice"] = sprintf( __( 'Error downloading GeoIP database from: %s - %s', 'wp-statistics' ), $download_url, $TempFile->get_error_message() );
@@ -134,7 +134,7 @@ class WP_Statistics_Updates {
 			// If we failed to open the downloaded file, through an error and remove the temporary file.  Otherwise do the actual unzip.
 			if ( ! $ZipHandle ) {
 				if ( $type == "enable" ) {
-					$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+					$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 				}
 
 				$result["notice"] = sprintf(
@@ -148,7 +148,7 @@ class WP_Statistics_Updates {
 				// If we failed to open the new file, throw and error and remove the temporary file.  Otherwise actually do the unzip.
 				if ( ! $DBfh ) {
 					if ( $type == "enable" ) {
-						$WP_Statistics->update_option( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
+						$WP_Statistics->option->update( WP_Statistics_Updates::$geoip[ $pack ]['opt'], '' );
 					}
 
 					$result["notice"] = sprintf( __( 'Error could not open destination GeoIP database for writing %s', 'wp-statistics' ), $DBFile );
@@ -173,15 +173,15 @@ class WP_Statistics_Updates {
 
 					// Update the options to reflect the new download.
 					if ( $type == "update" ) {
-						$WP_Statistics->update_option( 'last_geoip_dl', time() );
-						$WP_Statistics->update_option( 'update_geoip', false );
+						$WP_Statistics->option->update( 'last_geoip_dl', time() );
+						$WP_Statistics->option->update( 'update_geoip', false );
 					}
 
 					// Populate any missing GeoIP information if the user has selected the option.
 					if ( $pack == "country" ) {
-						if ( $WP_Statistics->get_option( 'geoip' ) &&
+						if ( $WP_Statistics->option->get( 'geoip' ) &&
 						     wp_statistics_geoip_supported() &&
-						     $WP_Statistics->get_option( 'auto_pop' )
+						     $WP_Statistics->option->get( 'auto_pop' )
 						) {
 							WP_Statistics_Updates::populate_geoip_info();
 						}
@@ -191,7 +191,7 @@ class WP_Statistics_Updates {
 		}
 
 
-		if ( $WP_Statistics->get_option( 'geoip_report' ) == true ) {
+		if ( $WP_Statistics->option->get( 'geoip_report' ) == true ) {
 			$blogname  = get_bloginfo( 'name' );
 			$blogemail = get_bloginfo( 'admin_email' );
 
@@ -199,11 +199,11 @@ class WP_Statistics_Updates {
 			$headers[] = "MIME-Version: 1.0";
 			$headers[] = "Content-type: text/html; charset=utf-8";
 
-			if ( $WP_Statistics->get_option( 'email_list' ) == '' ) {
-				$WP_Statistics->update_option( 'email_list', $blogemail );
+			if ( $WP_Statistics->option->get( 'email_list' ) == '' ) {
+				$WP_Statistics->option->update( 'email_list', $blogemail );
 			}
 
-			wp_mail( $WP_Statistics->get_option( 'email_list' ), __( 'GeoIP update on', 'wp-statistics' ) . ' ' . $blogname , $result['notice'], $headers );
+			wp_mail( $WP_Statistics->option->get( 'email_list' ), __( 'GeoIP update on', 'wp-statistics' ) . ' ' . $blogname , $result['notice'], $headers );
 		}
 
 		// All of the messages displayed above are stored in a string, now it's time to actually output the messages.
@@ -218,7 +218,7 @@ class WP_Statistics_Updates {
 		global $WP_Statistics;
 
 		// If referrer spam is disabled, bail out.
-		if ( $WP_Statistics->get_option( 'referrerspam' ) == false ) {
+		if ( $WP_Statistics->option->get( 'referrerspam' ) == false ) {
 			return '';
 		}
 
@@ -235,8 +235,8 @@ class WP_Statistics_Updates {
 			return false;
 		}
 
-		if ( $referrerspamlist != '' || $WP_Statistics->get_option( 'referrerspamlist' ) != '' ) {
-			$WP_Statistics->update_option( 'referrerspamlist', $referrerspamlist );
+		if ( $referrerspamlist != '' || $WP_Statistics->option->get( 'referrerspamlist' ) != '' ) {
+			$WP_Statistics->option->update( 'referrerspamlist', $referrerspamlist );
 		}
 
 		return true;
@@ -258,7 +258,7 @@ class WP_Statistics_Updates {
 
 		// Try create a new reader instance.
 		$reader = false;
-		if ( $WP_Statistics->get_option( 'geoip' ) ) {
+		if ( $WP_Statistics->option->get( 'geoip' ) ) {
 			$reader = $WP_Statistics::geoip_loader( 'country' );
 		}
 

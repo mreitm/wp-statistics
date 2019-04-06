@@ -10,7 +10,7 @@ if ( array_key_exists( 'wp-statistics-nonce', $_POST ) ) {
 
 //Check User Access To Save Setting
 $wps_admin = false;
-if ( current_user_can( wp_statistics_validate_capability( $WP_Statistics->get_option( 'manage_capability', 'manage_options' ) ) ) ) {
+if ( current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) ) ) ) {
 	$wps_admin = true;
 }
 
@@ -86,7 +86,7 @@ if ( $wps_admin === false ) {
 <?php
 if ( $wps_nonce_valid ) {
 	if ( $wps_admin ) {
-		$WP_Statistics->save_options();
+		$WP_Statistics->option->save_options();
 	}
-	$WP_Statistics->save_user_options();
+	$WP_Statistics->option->save_user_options();
 }

@@ -35,7 +35,7 @@ class WP_Statistics_Hits {
 		}
 
 		// Check to see if the user wants us to record why we're excluding hits.
-		if ( $WP_Statistics->get_option( 'record_exclusions' ) ) {
+		if ( $WP_Statistics->option->get( 'record_exclusions' ) ) {
 			$this->exclusion_record = true;
 		}
 
@@ -48,8 +48,8 @@ class WP_Statistics_Hits {
 		}
 
 		// Let's check to see if our subnet matches a private IP address range, if so go ahead and set the location information now.
-		if ( $WP_Statistics->get_option( 'private_country_code' ) != '000' &&
-		     $WP_Statistics->get_option( 'private_country_code' ) != ''
+		if ( $WP_Statistics->option->get( 'private_country_code' ) != '000' &&
+		     $WP_Statistics->option->get( 'private_country_code' ) != ''
 		) {
 			$private_subnets = array( '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/24', 'fc00::/7' );
 
@@ -62,7 +62,7 @@ class WP_Statistics_Hits {
 				}
 
 				if ( $contains_ip ) {
-					$this->location = $WP_Statistics->get_option( 'private_country_code' );
+					$this->location = $WP_Statistics->option->get( 'private_country_code' );
 					break;
 				}
 			}
@@ -133,7 +133,7 @@ class WP_Statistics_Hits {
 				return;
 			} else {
 				// Pull the robots from the database.
-				$robots = explode( "\n", $WP_Statistics->get_option( 'robotlist' ) );
+				$robots = explode( "\n", $WP_Statistics->option->get( 'robotlist' ) );
 
 				// Check to see if we match any of the robots.
 				foreach ( $robots as $robot ) {
@@ -151,7 +151,7 @@ class WP_Statistics_Hits {
 				}
 
 				// Finally check to see if we have corrupt header information.
-				if ( ! $this->exclusion_match && $WP_Statistics->get_option( 'corrupt_browser_info' ) ) {
+				if ( ! $this->exclusion_match && $WP_Statistics->option->get( 'corrupt_browser_info' ) ) {
 					if ( $ua_string == '' || $WP_Statistics->ip == '' ) {
 						$this->exclusion_match  = true;
 						$this->exclusion_reason = 'robot';
@@ -183,7 +183,7 @@ class WP_Statistics_Hits {
 			}
 
 			// Pull the subnets from the database.
-			$subnets = explode( "\n", $WP_Statistics->get_option( 'exclude_ip' ) );
+			$subnets = explode( "\n", $WP_Statistics->option->get( 'exclude_ip' ) );
 
 			// Check to see if we match any of the excluded addresses.
 			foreach ( $subnets as $subnet ) {
@@ -219,7 +219,7 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding the login page.
-			if ( $WP_Statistics->get_option( 'exclude_loginpage' ) ) {
+			if ( $WP_Statistics->option->get( 'exclude_loginpage' ) ) {
 				$protocol = strpos( strtolower( $_SERVER['SERVER_PROTOCOL'] ), 'https' ) === false ? 'http' : 'https';
 				$host     = $_SERVER['HTTP_HOST'];
 				$script   = $_SERVER['SCRIPT_NAME'];
@@ -236,7 +236,7 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding the Admin page.
-			if ( $WP_Statistics->get_option( 'exclude_adminpage' ) ) {
+			if ( $WP_Statistics->option->get( 'exclude_adminpage' ) ) {
 				if ( stristr( $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'], "wp-admin" ) ) {
 					$this->exclusion_match  = true;
 					$this->exclusion_reason = 'admin page';
@@ -246,11 +246,11 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding referrer spam.
-			if ( $WP_Statistics->get_option( 'referrerspam' ) ) {
+			if ( $WP_Statistics->option->get( 'referrerspam' ) ) {
 				$referrer = $WP_Statistics->get_Referred();
 
 				// Pull the referrer spam list from the database.
-				$referrerspamlist = explode( "\n", $WP_Statistics->get_option( 'referrerspamlist' ) );
+				$referrerspamlist = explode( "\n", $WP_Statistics->option->get( 'referrerspamlist' ) );
 
 				// Check to see if we match any of the robots.
 				foreach ( $referrerspamlist as $item ) {
@@ -269,7 +269,7 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding RSS feeds.
-			if ( $WP_Statistics->get_option( 'exclude_feeds' ) ) {
+			if ( $WP_Statistics->option->get( 'exclude_feeds' ) ) {
 				if ( is_feed() ) {
 					$this->exclusion_match  = true;
 					$this->exclusion_reason = 'feed';
@@ -279,7 +279,7 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding 404 pages.
-			if ( $WP_Statistics->get_option( 'exclude_404s' ) ) {
+			if ( $WP_Statistics->option->get( 'exclude_404s' ) ) {
 				if ( is_404() ) {
 					$this->exclusion_match  = true;
 					$this->exclusion_reason = '404';
@@ -289,14 +289,14 @@ class WP_Statistics_Hits {
 			}
 
 			// Check to see if we're excluding the current page url.
-			if ( $WP_Statistics->get_option( 'excluded_urls' ) ) {
+			if ( $WP_Statistics->option->get( 'excluded_urls' ) ) {
 				$script    = $_SERVER['REQUEST_URI'];
 				$delimiter = strpos( $script, '?' );
 				if ( $delimiter > 0 ) {
 					$script = substr( $script, 0, $delimiter );
 				}
 
-				$excluded_urls = explode( "\n", $WP_Statistics->get_option( 'excluded_urls' ) );
+				$excluded_urls = explode( "\n", $WP_Statistics->option->get( 'excluded_urls' ) );
 
 				foreach ( $excluded_urls as $url ) {
 					$this_url = trim( $url );
@@ -318,7 +318,7 @@ class WP_Statistics_Hits {
 
 				foreach ( $current_user->roles as $role ) {
 					$option_name = 'exclude_' . str_replace( ' ', '_', strtolower( $role ) );
-					if ( $WP_Statistics->get_option( $option_name ) == true ) {
+					if ( $WP_Statistics->option->get( $option_name ) == true ) {
 						$this->exclusion_match  = true;
 						$this->exclusion_reason = 'user role';
 
@@ -329,7 +329,7 @@ class WP_Statistics_Hits {
 
 			// Check to see if we are excluded by the host name.
 			if ( ! $this->exclusion_match ) {
-				$excluded_host = explode( "\n", $WP_Statistics->get_option( 'excluded_hosts' ) );
+				$excluded_host = explode( "\n", $WP_Statistics->option->get( 'excluded_hosts' ) );
 
 				// If there's nothing in the excluded host list, don't do anything.
 				if ( count( $excluded_host ) > 0 ) {
@@ -428,7 +428,7 @@ class WP_Statistics_Hits {
 		$this->get_page_detail();
 
 		//Check honeypot Page
-		if ( $WP_Statistics->get_option( 'use_honeypot' ) && $WP_Statistics->get_option( 'honeypot_postid' ) > 0 && $WP_Statistics->get_option( 'honeypot_postid' ) == $this->current_page_id && $this->current_page_id > 0 ) {
+		if ( $WP_Statistics->option->get( 'use_honeypot' ) && $WP_Statistics->option->get( 'honeypot_postid' ) > 0 && $WP_Statistics->option->get( 'honeypot_postid' ) == $this->current_page_id && $this->current_page_id > 0 ) {
 			$this->exclusion_match  = true;
 			$this->exclusion_reason = 'honeypot';
 		}
@@ -457,7 +457,7 @@ class WP_Statistics_Hits {
 			if ( ! $this->result ) {
 
 				// If we've been told to store the entire user agent, do so.
-				if ( $WP_Statistics->get_option( 'store_ua' ) == true ) {
+				if ( $WP_Statistics->option->get( 'store_ua' ) == true ) {
 					if ( WP_Statistics_Rest::is_rest() ) {
 						$ua = WP_Statistics_Rest::params( 'ua' );
 					} else {
@@ -490,7 +490,7 @@ class WP_Statistics_Hits {
 
 				// Now parse the referrer and store the results in the search table if the database has been converted.
 				// Also make sure we actually inserted a row on the INSERT IGNORE above or we'll create duplicate entries.
-				if ( $WP_Statistics->get_option( 'search_converted' ) && $wpdb->insert_id ) {
+				if ( $WP_Statistics->option->get( 'search_converted' ) && $wpdb->insert_id ) {
 
 					$search_engines = wp_statistics_searchengine_list();
 					if ( WP_Statistics_Rest::is_rest() ) {
@@ -528,7 +528,7 @@ class WP_Statistics_Hits {
 			} else {
 
 				// Normally we've done all of our exclusion matching during the class creation, however for the robot threshold is calculated here to avoid another call the database.
-				if ( $WP_Statistics->get_option( 'robot_threshold' ) > 0 && $this->result->hits + 1 > $WP_Statistics->get_option( 'robot_threshold' ) ) {
+				if ( $WP_Statistics->option->get( 'robot_threshold' ) > 0 && $this->result->hits + 1 > $WP_Statistics->option->get( 'robot_threshold' ) ) {
 					$this->exclusion_match  = true;
 					$this->exclusion_reason = 'robot_threshold';
 				} else if ( $this->result->honeypot ) {
@@ -581,7 +581,7 @@ class WP_Statistics_Hits {
 		global $WP_Statistics;
 
 		//Check if Track All
-		if ( $WP_Statistics->get_option( 'track_all_pages' ) || is_single() || is_page() || is_front_page() ) {
+		if ( $WP_Statistics->option->get( 'track_all_pages' ) || is_single() || is_page() || is_front_page() ) {
 			return true;
 		}
 
@@ -639,7 +639,7 @@ class WP_Statistics_Hits {
 					}
 				}
 
-				if ( $WP_Statistics->get_option( 'strip_uri_parameters' ) and $is_search === false ) {
+				if ( $WP_Statistics->option->get( 'strip_uri_parameters' ) and $is_search === false ) {
 					$temp = explode( '?', $page_uri );
 					if ( $temp !== false ) {
 						$page_uri = $temp[0];
@@ -673,7 +673,7 @@ class WP_Statistics_Hits {
 				}
 
 				//Set Visitor Relationships
-				if ( $WP_Statistics->get_option( 'visitors' ) == true and $WP_Statistics->get_option( 'visitors_log' ) == true and $this->current_visitor_id > 0 ) {
+				if ( $WP_Statistics->option->get( 'visitors' ) == true and $WP_Statistics->option->get( 'visitors_log' ) == true and $this->current_visitor_id > 0 ) {
 					$this->visitors_relationships( $page_id, $this->current_visitor_id );
 				}
 
@@ -719,7 +719,7 @@ class WP_Statistics_Hits {
 		global $WP_Statistics;
 
 		// If we're a web crawler or referral from ourselves or an excluded address don't record the user as online, unless we've been told to anyway.
-		if ( ! $this->exclusion_match || $WP_Statistics->get_option( 'all_online' ) ) {
+		if ( ! $this->exclusion_match || $WP_Statistics->option->get( 'all_online' ) ) {
 
 			// If the current user exists in the database already,
 			// Just update them, otherwise add them

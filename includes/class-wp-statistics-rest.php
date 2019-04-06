@@ -68,22 +68,22 @@ class WP_Statistics_Rest {
 		$h = new WP_Statistics_GEO_IP_Hits;
 
 		// Call the online users tracking code.
-		if ( $WP_Statistics->get_option( 'useronline' ) ) {
+		if ( $WP_Statistics->option->get( 'useronline' ) ) {
 			$h->Check_online();
 		}
 
 		// Call the visitor tracking code.
-		if ( $WP_Statistics->get_option( 'visitors' ) ) {
+		if ( $WP_Statistics->option->get( 'visitors' ) ) {
 			$h->Visitors();
 		}
 
 		// Call the visit tracking code.
-		if ( $WP_Statistics->get_option( 'visits' ) ) {
+		if ( $WP_Statistics->option->get( 'visits' ) ) {
 			$h->Visits();
 		}
 
 		// Call the page tracking code.
-		if ( $WP_Statistics->get_option( 'pages' ) ) {
+		if ( $WP_Statistics->option->get( 'pages' ) ) {
 			$h->Pages();
 		}
 	}

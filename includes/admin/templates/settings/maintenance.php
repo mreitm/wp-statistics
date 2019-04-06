@@ -15,7 +15,7 @@ if ( $wps_nonce_valid ) {
 		} else {
 			$value = '';
 		}
-		$WP_Statistics->store_option( $new_option, $value );
+		$WP_Statistics->option->store( $new_option, $value );
 	}
 }
 
@@ -45,7 +45,7 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <input id="wps_schedule_dbmaint" type="checkbox"
-                       name="wps_schedule_dbmaint" <?php echo $WP_Statistics->get_option( 'schedule_dbmaint' ) == true
+                       name="wps_schedule_dbmaint" <?php echo $WP_Statistics->option->get( 'schedule_dbmaint' ) == true
 					? "checked='checked'" : ''; ?> onclick='DBMaintWarning();'>
                 <label for="wps_schedule_dbmaint"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
 
@@ -64,7 +64,7 @@ if ( $wps_nonce_valid ) {
             <td>
                 <input type="text" class="small-text code" id="wps_schedule_dbmaint_days"
                        name="wps_schedule_dbmaint_days" value="<?php echo htmlentities(
-					$WP_Statistics->get_option( 'schedule_dbmaint_days', "365" ),
+					$WP_Statistics->option->get( 'schedule_dbmaint_days', "365" ),
 					ENT_QUOTES
 				); ?>"/>
 				<?php _e( 'Days', 'wp-statistics' ); ?>
@@ -93,7 +93,7 @@ if ( $wps_nonce_valid ) {
 
             <td>
                 <input id="wps_schedule_dbmaint_visitor" type="checkbox"
-                       name="wps_schedule_dbmaint_visitor" <?php echo $WP_Statistics->get_option(
+                       name="wps_schedule_dbmaint_visitor" <?php echo $WP_Statistics->option->get(
 					'schedule_dbmaint_visitor'
 				) == true ? "checked='checked'" : ''; ?> onclick='DBMaintWarning();'>
                 <label for="wps_schedule_dbmaint_visitor"><?php _e( 'Enable', 'wp-statistics' ); ?></label>
@@ -116,7 +116,7 @@ if ( $wps_nonce_valid ) {
             <td>
                 <input type="text" class="small-text code" id="wps_schedule_dbmaint_visitor_hits"
                        name="wps_schedule_dbmaint_visitor_hits" value="<?php echo htmlentities(
-					$WP_Statistics->get_option( 'schedule_dbmaint_visitor_hits', '50' ),
+					$WP_Statistics->option->get( 'schedule_dbmaint_visitor_hits', '50' ),
 					ENT_QUOTES
 				); ?>"/>
 				<?php _e( 'Hits', 'wp-statistics' ); ?>
