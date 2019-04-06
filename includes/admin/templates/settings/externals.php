@@ -122,13 +122,13 @@ if ( $wps_nonce_valid ) {
 						$next_schedule = wp_next_scheduled( 'wp_statistics_geoip_hook' );
 
 						if ( $next_schedule ) {
-							echo $WP_Statistics->Local_Date( get_option( 'date_format' ), $next_update ) .
+							echo $WP_Statistics->timezone->Local_Date( get_option( 'date_format' ), $next_update ) .
 							     ' @ ' .
-							     $WP_Statistics->Local_Date( get_option( 'time_format' ), $next_schedule );
+							     $WP_Statistics->timezone->Local_Date( get_option( 'time_format' ), $next_schedule );
 						} else {
-							echo $WP_Statistics->Local_Date( get_option( 'date_format' ), $next_update ) .
+							echo $WP_Statistics->timezone->Local_Date( get_option( 'date_format' ), $next_update ) .
 							     ' @ ' .
-							     $WP_Statistics->Local_Date( get_option( 'time_format' ), time() );
+							     $WP_Statistics->timezone->Local_Date( get_option( 'time_format' ), time() );
 						}
 
 						echo '</code></p>';

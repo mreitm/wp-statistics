@@ -29,7 +29,7 @@ class WP_Statistics_Hits {
 		global $wp_version, $WP_Statistics;
 
 		// Set the timestamp value.
-		$this->timestamp = $WP_Statistics->current_date( 'U' );
+		$this->timestamp = $WP_Statistics->timezone->Current_Date( 'U' );
 		if ( WP_Statistics_Rest::is_rest() ) {
 			$this->timestamp = WP_Statistics_Rest::params( 'timestamp' );
 		}
@@ -378,14 +378,14 @@ class WP_Statistics_Hits {
 			$this->result = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}statistics_visit ORDER BY `{$wpdb->prefix}statistics_visit`.`ID` DESC" );
 
 			// If we're a returning visitor, update the current record in the database, otherwise, create a new one.
-			if ( $this->result->last_counter != $WP_Statistics->Current_Date( 'Y-m-d' ) ) {
+			if ( $this->result->last_counter != $WP_Statistics->timezone->Current_Date( 'Y-m-d' ) ) {
 
 				// We'd normally use the WordPress insert function, but since we may run in to a race condition where another hit to the site has already created a new entry in the database
 				// for this IP address we want to do an "INSERT ... ON DUPLICATE KEY" which WordPress doesn't support.
 				$sqlstring = $wpdb->prepare(
 					'INSERT INTO ' . $wpdb->prefix . 'statistics_visit (last_visit, last_counter, visit) VALUES ( %s, %s, %d) ON DUPLICATE KEY UPDATE visit = visit + ' . $WP_Statistics->coefficient,
-					$WP_Statistics->Current_Date(),
-					$WP_Statistics->Current_date( 'Y-m-d' ),
+					$WP_Statistics->timezone->Current_Date(),
+					$WP_Statistics->timezone->Current_Date( 'Y-m-d' ),
 					$WP_Statistics->coefficient
 				);
 
@@ -394,7 +394,7 @@ class WP_Statistics_Hits {
 				$sqlstring = $wpdb->prepare(
 					'UPDATE ' . $wpdb->prefix . 'statistics_visit SET `visit` = `visit` + %d, `last_visit` = %s WHERE `last_counter` = %s',
 					$WP_Statistics->coefficient,
-					$WP_Statistics->Current_Date(),
+					$WP_Statistics->timezone->Current_Date(),
 					$this->result->last_counter
 				);
 
@@ -445,7 +445,7 @@ class WP_Statistics_Hits {
 			}
 
 			//Check Exist This User in Current Day
-			$this->result = $wpdb->get_row( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE `last_counter` = '{$WP_Statistics->Current_Date('Y-m-d')}' AND `ip` = '{$check_ip_db}'" );
+			$this->result = $wpdb->get_row( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE `last_counter` = '{$WP_Statistics->timezone->Current_Date('Y-m-d')}' AND `ip` = '{$check_ip_db}'" );
 
 			// Check to see if this is a visit to the honey pot page, flag it when we create the new entry.
 			$honeypot = 0;
@@ -472,7 +472,7 @@ class WP_Statistics_Hits {
 				$wpdb->insert(
 					$wpdb->prefix . 'statistics_visitor',
 					array(
-						'last_counter' => $WP_Statistics->Current_date( 'Y-m-d' ),
+						'last_counter' => $WP_Statistics->timezone->Current_Date( 'Y-m-d' ),
 						'referred'     => $WP_Statistics->get_Referred(),
 						'agent'        => $WP_Statistics->agent['browser'],
 						'platform'     => $WP_Statistics->agent['platform'],
@@ -510,7 +510,7 @@ class WP_Statistics_Hits {
 							preg_match( '/' . $search_regex . '/', $parts['host'], $matches );
 
 							if ( isset( $matches[1] ) ) {
-								$data['last_counter'] = $WP_Statistics->Current_date( 'Y-m-d' );
+								$data['last_counter'] = $WP_Statistics->timezone->Current_Date( 'Y-m-d' );
 								$data['engine']       = $key;
 								$data['words']        = $WP_Statistics->Search_Engine_QueryString( $referred );
 								$data['host']         = $parts['host'];
@@ -563,12 +563,12 @@ class WP_Statistics_Hits {
 			return;
 		}
 
-		$this->result = $wpdb->query( "UPDATE {$wpdb->prefix}statistics_exclusions SET `count` = `count` + 1 WHERE `date` = '{$WP_Statistics->Current_Date( 'Y-m-d' )}' AND `reason` = '{$this->exclusion_reason}'" );
+		$this->result = $wpdb->query( "UPDATE {$wpdb->prefix}statistics_exclusions SET `count` = `count` + 1 WHERE `date` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d' )}' AND `reason` = '{$this->exclusion_reason}'" );
 		if ( ! $this->result ) {
 			$wpdb->insert(
 				$wpdb->prefix . 'statistics_exclusions',
 				array(
-					'date'   => $WP_Statistics->Current_date( 'Y-m-d' ),
+					'date'   => $WP_Statistics->timezone->Current_Date( 'Y-m-d' ),
 					'reason' => $this->exclusion_reason,
 					'count'  => 1,
 				)
@@ -650,9 +650,9 @@ class WP_Statistics_Hits {
 				$page_uri = substr( $page_uri, 0, 255 );
 
 				// If we have already been to this page today (a likely scenario), just update the count on the record.
-				$exist = $wpdb->get_row( "SELECT `page_id` FROM {$wpdb->prefix}statistics_pages WHERE `date` = '{$WP_Statistics->Current_Date( 'Y-m-d' )}' " . ( $is_search === true ? "AND `uri` = '" . $page_uri . "'" : "" ) . "AND `type` = '{$this->current_page_type}' AND `id` = {$this->current_page_id}", ARRAY_A );
+				$exist = $wpdb->get_row( "SELECT `page_id` FROM {$wpdb->prefix}statistics_pages WHERE `date` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d' )}' " . ( $is_search === true ? "AND `uri` = '" . $page_uri . "'" : "" ) . "AND `type` = '{$this->current_page_type}' AND `id` = {$this->current_page_id}", ARRAY_A );
 				if ( null !== $exist ) {
-					$sql          = $wpdb->prepare( "UPDATE {$wpdb->prefix}statistics_pages SET `count` = `count` + 1 WHERE `date` = '{$WP_Statistics->Current_Date( 'Y-m-d' )}' " . ( $is_search === true ? "AND `uri` = '" . $page_uri . "'" : "" ) . "AND `type` = '{$this->current_page_type}' AND `id` = %d", $this->current_page_id );
+					$sql          = $wpdb->prepare( "UPDATE {$wpdb->prefix}statistics_pages SET `count` = `count` + 1 WHERE `date` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d' )}' " . ( $is_search === true ? "AND `uri` = '" . $page_uri . "'" : "" ) . "AND `type` = '{$this->current_page_type}' AND `id` = %d", $this->current_page_id );
 					$this->result = $wpdb->query( $sql );
 					$page_id      = $exist['page_id'];
 
@@ -662,7 +662,7 @@ class WP_Statistics_Hits {
 						$wpdb->prefix . 'statistics_pages',
 						array(
 							'uri'   => $page_uri,
-							'date'  => $WP_Statistics->Current_date( 'Y-m-d' ),
+							'date'  => $WP_Statistics->timezone->Current_Date( 'Y-m-d' ),
 							'count' => 1,
 							'id'    => $this->current_page_id,
 							'type'  => $this->current_page_type
@@ -749,7 +749,7 @@ class WP_Statistics_Hits {
 					'ip'        => $WP_Statistics->ip_hash ? $WP_Statistics->ip_hash : $WP_Statistics->store_ip_to_db(),
 					'timestamp' => $this->timestamp,
 					'created'   => $this->timestamp,
-					'date'      => $WP_Statistics->Current_Date(),
+					'date'      => $WP_Statistics->timezone->Current_Date(),
 					'referred'  => $WP_Statistics->get_Referred(),
 					'agent'     => $WP_Statistics->agent['browser'],
 					'platform'  => $WP_Statistics->agent['platform'],
@@ -800,7 +800,7 @@ class WP_Statistics_Hits {
 				$wpdb->prefix . 'statistics_useronline',
 				array(
 					'timestamp' => $this->timestamp,
-					'date'      => $WP_Statistics->Current_Date(),
+					'date'      => $WP_Statistics->timezone->Current_Date(),
 					'referred'  => $WP_Statistics->get_Referred(),
 					'user_id'   => self::get_user_id(),
 					'page_id'   => $this->current_page_id,

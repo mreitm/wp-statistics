@@ -6,7 +6,7 @@ function wp_statistics_generate_hits_postbox_content( $size = '300', $days = 20 
 	$visits   = array();
 
 	for ( $i = $days; $i >= 0; $i -- ) {
-		$date[] = "'" . $WP_Statistics->Current_Date( 'M j', '-' . $i ) . "'";
+		$date[] = "'" . $WP_Statistics->timezone->Current_Date( 'M j', '-' . $i ) . "'";
 	}
 
 	for ( $i = $days; $i >= 0; $i -- ) {

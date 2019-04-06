@@ -83,8 +83,8 @@ if ( isset( $_REQUEST['country'] ) ) {
                                 </tr>
 
 								<?php
-								$rangestartdate = $WP_Statistics->real_current_date( 'Y-m-d', '-0', $rangestart_utime );
-								$rangeenddate   = $WP_Statistics->real_current_date( 'Y-m-d', '-0', $rangeend_utime );
+								$rangestartdate = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangestart_utime );
+								$rangeenddate   = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangeend_utime );
 
 								$result = $wpdb->get_results(
 									sprintf( "SELECT `location`, COUNT(`location`) AS `count` FROM `{$wpdb->prefix}statistics_visitor` WHERE `last_counter` BETWEEN '%s' AND '%s' GROUP BY `location` ORDER BY `count` DESC",

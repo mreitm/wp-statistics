@@ -11,7 +11,7 @@ class Purge {
 		if ( $purge_days > 30 ) {
 			// Purge the visit data.
 			$table_name  = $wpdb->prefix . 'statistics_visit';
-			$date_string = $WP_Statistics->current_date( 'Y-m-d', '-' . $purge_days );
+			$date_string = $WP_Statistics->timezone->Current_Date( 'Y-m-d', '-' . $purge_days );
 
 			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE `last_counter` < %s", $date_string ) );
 

@@ -88,12 +88,6 @@ class WP_Statistics {
 	 */
 	private $user_options_loaded = false;
 	/**
-	 * Timezone offset
-	 *
-	 * @var int|mixed|void
-	 */
-	private $tz_offset = 0;
-	/**
 	 * Country Codes
 	 *
 	 * @var bool|string
@@ -184,17 +178,17 @@ class WP_Statistics {
 		 */
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		/**
-		 * Run Plugin
+		 * instantiate Plugin
 		 */
 		//TODO PUSH TO INCLUDE METHOD
 		// third-party Libraries
 		require_once WP_STATISTICS_DIR . 'includes/vendor/autoload.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-rest.php';
-		$this->run();
 		/**
 		 * Include Require File
 		 */
 		$this->includes();
+		$this->instantiate();
 		/*
 		 * Load action
 		 */
@@ -217,7 +211,7 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-db.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-run.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geo-ip-hits.php';
@@ -313,17 +307,19 @@ class WP_Statistics {
 	 * @return void
 	 */
 	public static function uninstall() {
-		delete_option('wp_statistics_removal');
+		delete_option( 'wp_statistics_removal' );
 	}
 
 	/**
-	 * Run constructor.
+	 * Instantiate the classes
+	 *
+	 * @return void
 	 */
-	public function run() {
+	public function instantiate() {
 		//todo seperate all item to seperate class
 
-		//Set TimeZone
-		$this->set_timezone();
+		# Set TimeZone
+		$GLOBALS['WP_Statistics']->timezone = new \WP_STATISTICS\TimeZone();
 
 		//Set Options
 		$this->load_options();
@@ -355,6 +351,9 @@ class WP_Statistics {
 
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
+		//$GLOBALS['WP_Statistics']->timezone = $this->container['timezone']; //TODO Remove At last
+
+		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
 	}
 
 	/**
@@ -362,20 +361,6 @@ class WP_Statistics {
 	 */
 	public function init_rest_api() {
 		$this->restapi = new WP_Statistics_Rest();
-	}
-
-	/**
-	 * Set Time Zone
-	 */
-	public function set_timezone() {
-		if ( get_option( 'timezone_string' ) ) {
-			$this->tz_offset = timezone_offset_get(
-				timezone_open( get_option( 'timezone_string' ) ),
-				new DateTime()
-			);
-		} elseif ( get_option( 'gmt_offset' ) ) {
-			$this->tz_offset = get_option( 'gmt_offset' ) * 60 * 60;
-		}
 	}
 
 	/**
@@ -430,7 +415,6 @@ class WP_Statistics {
 			}
 		}
 	}
-
 
 	/**
 	 * Generate hash string
@@ -1020,99 +1004,9 @@ class WP_Statistics {
 		return $this->referrer;
 	}
 
-	/**
-	 * Returns a date string in the desired format with a passed in timestamp.
-	 *
-	 * @param $format
-	 * @param $timestamp
-	 *
-	 * @return bool|string
-	 */
-	public function Local_Date( $format, $timestamp ) {
-		return date( $format, $timestamp + $this->tz_offset );
-	}
 
-	// Returns a date string in the desired format.
 
-	/**
-	 * @param string $format
-	 * @param null $strtotime
-	 * @param null $relative
-	 *
-	 * @return bool|string
-	 */
-	public function Current_Date( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
 
-		if ( $strtotime ) {
-			if ( $relative ) {
-				return date( $format, strtotime( "{$strtotime} day", $relative ) + $this->tz_offset );
-			} else {
-				return date( $format, strtotime( "{$strtotime} day" ) + $this->tz_offset );
-			}
-		} else {
-			return date( $format, time() + $this->tz_offset );
-		}
-	}
-
-	/**
-	 * Returns a date string in the desired format.
-	 *
-	 * @param string $format
-	 * @param null $strtotime
-	 * @param null $relative
-	 *
-	 * @return bool|string
-	 */
-	public function Real_Current_Date( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
-
-		if ( $strtotime ) {
-			if ( $relative ) {
-				return date( $format, strtotime( "{$strtotime} day", $relative ) );
-			} else {
-				return date( $format, strtotime( "{$strtotime} day" ) );
-			}
-		} else {
-			return date( $format, time() );
-		}
-	}
-
-	/**
-	 * Returns an internationalized date string in the desired format.
-	 *
-	 * @param string $format
-	 * @param null $strtotime
-	 * @param string $day
-	 *
-	 * @return string
-	 */
-	public function Current_Date_i18n( $format = 'Y-m-d H:i:s', $strtotime = null, $day = ' day' ) {
-
-		if ( $strtotime ) {
-			return date_i18n( $format, strtotime( "{$strtotime}{$day}" ) + $this->tz_offset );
-		} else {
-			return date_i18n( $format, time() + $this->tz_offset );
-		}
-	}
-
-	/**
-	 * Adds the timezone offset to the given time string
-	 *
-	 * @param $timestring
-	 *
-	 * @return int
-	 */
-	public function strtotimetz( $timestring ) {
-		return strtotime( $timestring ) + $this->tz_offset;
-	}
-
-	/**
-	 * Adds current time to timezone offset
-	 *
-	 * @return int
-	 */
-	public function timetz() {
-		return time() + $this->tz_offset;
-	}
 
 	/**
 	 * Checks to see if a search engine exists in the current list of search engines.
@@ -1367,7 +1261,7 @@ class WP_Statistics {
 		if ( $WP_Statistics->get_option( 'useronline' ) ) {
 
 			//Get Not timestamp
-			$now = $WP_Statistics->current_date( 'U' );
+			$now = $WP_Statistics->timezone->Current_Date( 'U' );
 
 			// Set the default seconds a user needs to visit the site before they are considered offline.
 			$reset_time = 120;
@@ -1426,7 +1320,7 @@ class WP_Statistics {
 			);
 		} else {
 			$earlier = new \DateTime( $first_day );
-			$later   = new \DateTime( $WP_Statistics->Current_date( 'Y-m-d' ) );
+			$later   = new \DateTime( $WP_Statistics->timezone->Current_Date( 'Y-m-d' ) );
 			$result  = array(
 				'days'      => $later->diff( $earlier )->format( "%a" ),
 				'timestamp' => strtotime( $first_day ),

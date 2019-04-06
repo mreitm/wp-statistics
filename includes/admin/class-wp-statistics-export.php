@@ -48,7 +48,7 @@ class WP_Statistics_Export {
 				}
 
 				if ( $table && $type ) {
-					$file_name = 'wp-statistics' . '-' . $WP_Statistics->Current_Date( 'Y-m-d-H-i' );
+					$file_name = 'wp-statistics' . '-' . $WP_Statistics->timezone->Current_Date( 'Y-m-d-H-i' );
 
 					switch ( $type ) {
 						case 'xml':

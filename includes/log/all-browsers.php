@@ -12,8 +12,8 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 	$rangeend
 );
 
-$rangestartdate = $WP_Statistics->real_current_date( 'Y-m-d', '-0', $rangestart_utime );
-$rangeenddate   = $WP_Statistics->real_current_date( 'Y-m-d', '-0', $rangeend_utime );
+$rangestartdate = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangestart_utime );
+$rangeenddate   = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangeend_utime );
 
 // Browsers
 $Browsers = wp_statistics_ua_list();

@@ -201,7 +201,7 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
                 <th colspan="3"><?php echo sprintf(
 						__( 'Date: %s', 'wp-statistics' ),
 						'<code dir="ltr">' .
-						$WP_Statistics->Current_Date_i18n( get_option( 'date_format' ) ) .
+						$WP_Statistics->timezone->Current_Date_i18n( get_option( 'date_format' ) ) .
 						'</code>'
 					); ?></th>
             </tr>
@@ -210,7 +210,7 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
                 <th colspan="3"><?php echo sprintf(
 						__( 'Time: %s', 'wp-statistics' ),
 						'<code dir="ltr">' .
-						$WP_Statistics->Current_Date_i18n( get_option( 'time_format' ) ) .
+						$WP_Statistics->timezone->Current_Date_i18n( get_option( 'time_format' ) ) .
 						'</code>'
 					); ?></th>
             </tr>

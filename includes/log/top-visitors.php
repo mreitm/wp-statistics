@@ -15,8 +15,8 @@ include( WP_STATISTICS_DIR . 'includes/log/widgets/top.visitors.php' );
 	wp_enqueue_style( 'jquery-ui-smoothness-css' );
 
 	$current = 0;
-	$statsdate  = $WP_Statistics->Current_Date( get_option( "date_format" ), '-' . $current );
-	$rang_start = $WP_Statistics->Current_Date( "Y-m-d" );
+	$statsdate  = $WP_Statistics->timezone->Current_Date( get_option( "date_format" ), '-' . $current );
+	$rang_start = $WP_Statistics->timezone->Current_Date( "Y-m-d" );
 	if ( isset( $_GET['statsdate'] ) and strtotime( $_GET['statsdate'] ) != false ) {
 		$statsdate  = date( get_option( "date_format" ), strtotime( $_GET['statsdate'] ) );
 		$rang_start = date( "Y-m-d", strtotime( $_GET['statsdate'] ) );
