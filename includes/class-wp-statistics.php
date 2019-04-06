@@ -1,6 +1,20 @@
 <?php
 
+/**
+ * Main bootstrap class for WP Statistics
+ *
+ * @package WP Statistics
+ */
 class WP_Statistics {
+	/**
+	 * Holds various class instances
+	 *
+	 * @since 2.5.7
+	 *
+	 * @var array
+	 */
+	private $container = array();
+
 	/**
 	 * IP address of visitor
 	 *
@@ -140,12 +154,25 @@ class WP_Statistics {
 		/**
 		 * Install And Upgrade plugin
 		 */
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
-		register_activation_hook( WP_STATISTICS_MAIN_FILE, array( '\WP_STATISTICS\Install', 'install' ) );
+		register_activation_hook( __FILE__, array( $this, 'install' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'uninstall' ) );
 		/**
 		 * wp-statistics loaded
 		 */
 		do_action( 'wp_statistics_loaded' );
+	}
+
+	/**
+	 * Magic getter to bypass referencing plugin.
+	 *
+	 * @param string $prop
+	 * @return mixed
+	 */
+	public function __get( $prop ) {
+		if ( array_key_exists( $prop, $this->container ) ) {
+			return $this->container[ $prop ];
+		}
+		return $this->{$prop};
 	}
 
 	/**
@@ -178,8 +205,7 @@ class WP_Statistics {
 		} else {
 			new WP_Statistics_Frontend;
 		}
-		add_action( 'widgets_init', array( $this, 'widget' ) );
-		add_shortcode( 'wpstatistics', 'WP_Statistics_Shortcode::shortcodes' );
+		new WP_Statistics_Shortcode();
 	}
 
 	/**
@@ -192,12 +218,14 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-run.php';
-        //todo rest api
+		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geo-ip-hits.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-widget.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
 
 
 		if ( is_admin() ) {
@@ -212,7 +240,6 @@ class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-uninstall.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-updates.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-welcome.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-widget.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-network-admin.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
 
@@ -270,10 +297,30 @@ class WP_Statistics {
 	}
 
 	/**
+	 * Create tables on plugin activation
+	 *
+	 * @global object $wpdb
+	 */
+	public static function install() {
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
+		$installer = new \WP_STATISTICS\Install();
+		$installer->install();
+	}
+
+	/**
+	 * Manage task on plugin deactivation
+	 *
+	 * @return void
+	 */
+	public static function uninstall() {
+		delete_option('wp_statistics_removal');
+	}
+
+	/**
 	 * Run constructor.
 	 */
 	public function run() {
-	    //todo seperate all item to seperate class
+		//todo seperate all item to seperate class
 
 		//Set TimeZone
 		$this->set_timezone();
@@ -413,13 +460,6 @@ class WP_Statistics {
 		if ( ! is_array( $this->options ) ) {
 			$this->user_options = array();
 		}
-	}
-
-	/**
-	 * Registers Widget
-	 */
-	public function widget() {
-		register_widget( 'WP_Statistics_Widget' );
 	}
 
 	/**

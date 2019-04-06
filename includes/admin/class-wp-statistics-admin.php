@@ -81,7 +81,7 @@ class WP_Statistics_Admin {
 		add_action( 'admin_init', array( $this, 'register_visitors_log_tbl' ) );
 
 		//Check Require update page type in database
-		WP_STATISTICS\Install::_init_page_type_updater();
+		\WP_STATISTICS\Install::_init_page_type_updater();
 	}
 
 	/**

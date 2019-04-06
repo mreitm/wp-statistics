@@ -14,7 +14,7 @@ class Install {
 	 *
 	 * @internal param $WP_Statistics
 	 */
-	static function install( $network_wide ) {
+	public function install() {
 		global $WP_Statistics, $wpdb;
 
 		// Check installed plugin version

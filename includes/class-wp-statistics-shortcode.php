@@ -1,9 +1,11 @@
 <?php
 
-/**
- * Class WP_Statistics_Shortcode
- */
+
 class WP_Statistics_Shortcode {
+
+	public function __construct() {
+		add_shortcode( 'wpstatistics', array( $this, 'shortcodes' ) );
+	}
 
 	/**
 	 * @param $atts
@@ -18,7 +20,7 @@ class WP_Statistics_Shortcode {
 	 *
 	 * @return array|false|int|null|object|string|void
 	 */
-	static function shortcodes( $atts ) {
+	public static function shortcodes( $atts ) {
 
 		if ( ! is_array( $atts ) ) {
 			return;
@@ -63,9 +65,9 @@ class WP_Statistics_Shortcode {
 				$result = wp_statistics_searchengine( $atts['provider'], $atts['time'] );
 				break;
 
-            case 'referrer':
-                $result = wp_statistics_referrer(  $atts['time']  );
-                break;
+			case 'referrer':
+				$result = wp_statistics_referrer( $atts['time'] );
+				break;
 
 			case 'postcount':
 				$result = wp_statistics_countposts();
@@ -172,7 +174,7 @@ class WP_Statistics_Shortcode {
 								'commentaverage' => __( 'Comment Average', 'wp-statistics' ),
 								'useraverage'    => __( 'User Average', 'wp-statistics' ),
 								'lpd'            => __( 'Last Post Date', 'wp-statistics' ),
-								'referrer'            => __( 'Referrer', 'wp-statistics' ),
+								'referrer'       => __( 'Referrer', 'wp-statistics' ),
 							),
 						),
 						array(

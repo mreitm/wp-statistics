@@ -1,6 +1,6 @@
 <?php
 
-class WP_Statistics_Widget extends WP_Widget {
+class WP_Statistics_Widget extends \WP_Widget {
 
 	/**
 	 * Sets up the widgets name etc
@@ -433,3 +433,13 @@ class WP_Statistics_Widget extends WP_Widget {
 		<?php
 	}
 }
+
+/**
+ * Register WP_Statistics_Widget widget
+ *
+ * @return void
+ */
+function register_wp_statistics_widget() {
+	register_widget( 'WP_Statistics_Widget' );
+}
+add_action( 'widgets_init', 'register_wp_statistics_widget' );
