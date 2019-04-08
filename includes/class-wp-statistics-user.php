@@ -28,6 +28,7 @@ class User {
 		$user_id = 0;
 		if ( $this->is_login() === true ) {
 			$user_id = get_current_user_id();
+			$user_id = apply_filters( 'wp_statistics_user_id', $user_id );
 		}
 
 		return $user_id;
@@ -90,7 +91,7 @@ class User {
 	public static function exists( $user_id ) {
 		global $wpdb;
 		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->users WHERE ID = %d", $user_id ) );
-		if ( $count >0 ) {
+		if ( $count > 0 ) {
 			return true;
 		} else {
 			return false;
