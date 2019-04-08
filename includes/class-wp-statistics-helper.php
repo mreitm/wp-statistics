@@ -18,6 +18,38 @@ class Helper {
 	}
 
 	/**
+	 * What type of request is this?
+	 *
+	 * @param  string $type admin, ajax, cron or frontend.
+	 * @return bool
+	 */
+	public static function is_request( $type ) {
+		switch ( $type ) {
+			case 'admin':
+				return is_admin();
+			case 'ajax':
+				return defined( 'DOING_AJAX' );
+			case 'cron':
+				return defined( 'DOING_CRON' );
+			case 'frontend':
+				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' ) && ! self::is_rest_request();
+		}
+	}
+
+	/**
+	 * Returns true if the request is a non-legacy REST API request.
+	 *
+	 * @return bool
+	 */
+	public static function is_rest_request() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+		$rest_prefix = trailingslashit( rest_get_url_prefix() );
+		return ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+	}
+
+	/**
 	 * Sanitizes the referrer
 	 *
 	 * @param     $referrer
