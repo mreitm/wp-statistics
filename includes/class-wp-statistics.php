@@ -101,12 +101,6 @@ class WP_Statistics {
 	 * @var array
 	 */
 	public $restapi;
-	/**
-	 * Check Plugin Cache is enabled
-	 *
-	 * @var bool|string
-	 */
-	public $use_cache = false;
 
 	/**
 	 * WP_Statistics constructor.
@@ -306,11 +300,6 @@ class WP_Statistics {
 
 		# Set Options
 		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
-
-		// Check the cache option is enabled.
-		if ( $GLOBALS['WP_Statistics']->option->get( 'use_cache_plugin' ) == true ) {
-			$this->use_cache = 1;
-		}
 
 		//Load Rest Api
 		$this->init_rest_api();

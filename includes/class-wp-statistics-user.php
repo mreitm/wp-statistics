@@ -27,8 +27,7 @@ class User {
 	public function get_user_id() {
 		$user_id = 0;
 		if ( $this->is_login() === true ) {
-			$user_id = get_current_user_id();
-			$user_id = apply_filters( 'wp_statistics_user_id', $user_id );
+			$user_id = apply_filters( 'wp_statistics_user_id', get_current_user_id() );
 		}
 
 		return $user_id;

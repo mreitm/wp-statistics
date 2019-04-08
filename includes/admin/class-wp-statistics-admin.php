@@ -259,7 +259,7 @@ class WP_Statistics_Admin {
 		}
 
 		// Test Rest Api is Active for Cache
-		if ( $WP_Statistics->use_cache and $screen->id == "statistics_page_" . WP_Statistics::$page['settings'] ) {
+		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) and $screen->id == "statistics_page_" . WP_Statistics::$page['settings'] ) {
 
 			if ( false === ( $check_rest_api = get_transient( '_check_rest_api_wp_statistics' ) ) ) {
 

@@ -23,7 +23,7 @@ class WP_Statistics_Rest {
 		/*
 		 * add Router Rest Api
 		 */
-		if ( isset( $WP_Statistics ) and $WP_Statistics->use_cache ) {
+		if ( isset( $WP_Statistics ) and $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
 			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 	}
