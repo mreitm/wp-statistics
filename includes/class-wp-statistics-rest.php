@@ -94,10 +94,8 @@ class WP_Statistics_Rest {
 	static public function is_rest() {
 		global $WP_Statistics;
 
-		if ( isset( $WP_Statistics ) and $WP_Statistics->use_cache ) {
-			if ( isset( $_POST[ self::_POST ] ) ) {
+		if ( isset( $WP_Statistics ) and isset( $_POST[ self::_POST ] ) ) {
 				return true;
-			}
 		}
 
 		return false;

@@ -187,9 +187,11 @@ class WP_Statistics {
 
 		// Utility classes.
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-db.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
+
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geo-ip-hits.php';
@@ -299,8 +301,8 @@ class WP_Statistics {
 		# Set TimeZone
 		$GLOBALS['WP_Statistics']->timezone = new \WP_STATISTICS\TimeZone();
 
-		# User ID
-		$GLOBALS['WP_Statistics']->user_id = get_current_user_id();
+		# Get User Detail
+		$GLOBALS['WP_Statistics']->user = new \WP_STATISTICS\User();
 
 		# Set Options
 		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
@@ -335,7 +337,7 @@ class WP_Statistics {
 		//$GLOBALS['WP_Statistics']->timezone = $this->container['timezone']; //TODO Remove At last
 
 		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
-        new \WP_STATISTICS\AdminBar();
+		new \WP_STATISTICS\AdminBar();
 	}
 
 	/**
@@ -770,9 +772,6 @@ class WP_Statistics {
 
 		return $this->referrer;
 	}
-
-
-
 
 
 	/**

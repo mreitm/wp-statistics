@@ -10,10 +10,10 @@ if ( ! $WP_Statistics->option->get( 'disable_donation_nag', false ) ) {
 }
 
 // WP Statistics 10.0 had a bug which could corrupt  the metabox display if the user re-ordered the widgets.  Check to see if the meta data is corrupt and if so delete it.
-$widget_order = get_user_meta( $WP_Statistics->user_id, 'meta-box-order_toplevel_page_wps_overview_page', true );
+$widget_order = get_user_meta( $WP_Statistics->user->ID, 'meta-box-order_toplevel_page_wps_overview_page', true );
 
 if ( is_array( $widget_order ) && count( $widget_order ) > 2 ) {
-	delete_user_meta( $WP_Statistics->user_id, 'meta-box-order_toplevel_page_wps_overview_page' );
+	delete_user_meta( $WP_Statistics->user->ID, 'meta-box-order_toplevel_page_wps_overview_page' );
 }
 
 // Add the about box here as metaboxes added on the actual page load cannot be closed.

@@ -141,7 +141,7 @@ class WP_Statistics_Frontend {
 		$params['page_uri'] = wp_statistics_get_uri();
 
 		//Get User id
-		$params['user_id'] = 0;
+		$params['user_id'] = 0; //TODO Change For Cashe result and get from User Class
 		if ( is_user_logged_in() ) {
 			$params['user_id'] = get_current_user_id();
 		}
