@@ -10,9 +10,7 @@
  * Domain Path: /languages/
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
 
 # Load Plugin Defines
 require_once 'includes/defines.php';

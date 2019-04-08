@@ -185,6 +185,7 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
 
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
@@ -301,6 +302,9 @@ class WP_Statistics {
 		# Set Options
 		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
 
+		# User IP
+
+
 		//Load Rest Api
 		$this->init_rest_api();
 
@@ -341,7 +345,7 @@ class WP_Statistics {
 	 */
 	public function set_coefficient() {
 		// Set the default co-efficient.
-		$this->coefficient = $this->get_option( 'coefficient', 1 );
+		$this->coefficient = $GLOBALS['WP_Statistics']->option->get( 'coefficient', 1 );
 		// Double check the co-efficient setting to make sure it's not been set to 0.
 		if ( $this->coefficient <= 0 ) {
 			$this->coefficient = 1;
@@ -642,7 +646,7 @@ class WP_Statistics {
 		}
 
 		// If the anonymize IP enabled for GDPR.
-		if ( $this->get_option( 'anonymize_ips' ) == true ) {
+		if ( $GLOBALS['WP_Statistics']->option->get( 'anonymize_ips' ) == true ) {
 			$user_ip = substr( $user_ip, 0, strrpos( $user_ip, '.' ) ) . '.0';
 		}
 
@@ -733,7 +737,7 @@ class WP_Statistics {
 			$this->referrer = get_bloginfo( 'url' );
 		}
 
-		if ( $this->get_option( 'addsearchwords', false ) ) {
+		if ( $GLOBALS['WP_Statistics']->option->get( 'addsearchwords', false ) ) {
 			// Check to see if this is a search engine referrer
 			$SEInfo = $this->Search_Engine_Info( $this->referrer );
 

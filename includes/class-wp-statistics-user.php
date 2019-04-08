@@ -3,9 +3,16 @@
 namespace WP_STATISTICS;
 
 class User {
-
+	/**
+	 * Current User ID in WordPress
+	 *
+	 * @var int
+	 */
 	public $ID;
 
+	/**
+	 * User constructor.
+	 */
 	public function __construct() {
 		$this->ID = $this->get_user_id();
 	}
@@ -45,7 +52,14 @@ class User {
 		$user_id = $user_id ? $user_id : get_current_user_id();
 
 		# Get User Data
-		$user_info = get_object_vars( get_userdata( $user_id ) );
+		$user_data = get_userdata( $user_id );
+		$user_info = get_object_vars( $user_data->data );
+
+		# Get User roles
+		$user_info['role'] = $user_data->roles;
+
+		# Get User Caps
+		$user_info['cap'] = $user_data->caps;
 
 		# Get User Meta
 		$user_info['meta'] = array_map( function ( $a ) {
@@ -89,12 +103,9 @@ class User {
 	 */
 	public static function exists( $user_id ) {
 		global $wpdb;
-		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->users WHERE ID = %d", $user_id ) );
-		if ( $count > 0 ) {
-			return true;
-		} else {
-			return false;
-		}
+
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->users WHERE `ID` = %d", $user_id ) );
+		return $count > 0;
 	}
 
 }
