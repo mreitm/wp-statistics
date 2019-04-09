@@ -90,7 +90,7 @@ class WP_Statistics_Frontend {
 		$params['base'] = rtrim( get_rest_url(), "/" );
 
 		//Set Browser
-		$result             = $WP_Statistics->get_UserAgent();
+		$result             = \WP_STATISTICS\UserAgent::getUserAgent();
 		$params['browser']  = $result['browser'];
 		$params['platform'] = $result['platform'];
 		$params['version']  = $result['version'];

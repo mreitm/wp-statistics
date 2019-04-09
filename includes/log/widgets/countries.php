@@ -1,7 +1,7 @@
 <?php
 function wp_statistics_generate_countries_postbox_content() {
 	global $wpdb, $WP_Statistics;
-	$ISOCountryCode = $WP_Statistics->get_country_codes();
+	$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 	?>
     <table width="100%" class="widefat table-stats" id="last-referrer">
         <tr>

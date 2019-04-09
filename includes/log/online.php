@@ -18,7 +18,7 @@
                     <div class="inside">
 						<?php
 						//Get List ISO country
-						$ISOCountryCode = $WP_Statistics->get_country_codes();
+						$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 						//Get Total User Online
 						$sql   = "SELECT COUNT(*) FROM {$wpdb->prefix}statistics_useronline";

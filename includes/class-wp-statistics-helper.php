@@ -50,6 +50,20 @@ class Helper {
 	}
 
 	/**
+	 * Get country codes
+	 *
+	 * @return array|bool|string
+	 */
+	public static function get_country_codes() {
+		require_once WP_STATISTICS_DIR . "includes/defines/country-codes.php";
+		if ( isset( $ISOCountryCode ) ) {
+			return $ISOCountryCode;
+		}
+
+		return array();
+	}
+
+	/**
 	 * Sanitizes the referrer
 	 *
 	 * @param     $referrer

@@ -334,7 +334,7 @@ class WP_Statistics_Ajax {
 				wp_die();
 			}
 
-			$ISOCountryCode = $WP_Statistics->get_country_codes();
+			$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 			$search_engines = wp_statistics_searchengine_list();
 
 			require( WP_STATISTICS_DIR . 'includes/log/widgets/' . $widget . '.php' );

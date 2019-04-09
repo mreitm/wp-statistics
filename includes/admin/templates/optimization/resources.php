@@ -240,7 +240,7 @@
             </th>
 
             <td>
-                <strong><?php $agent = $WP_Statistics->get_UserAgent();
+                <strong><?php $agent = \WP_STATISTICS\UserAgent::getUserAgent();
 					echo $agent['browser'];
 					?></strong>
 

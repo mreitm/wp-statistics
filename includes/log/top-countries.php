@@ -13,7 +13,7 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 );
 
 //Load ISO
-$ISOCountryCode = $WP_Statistics->get_country_codes();
+$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 //Get Custom Country
 $country_name  = '';

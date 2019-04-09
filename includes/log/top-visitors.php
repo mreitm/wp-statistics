@@ -4,7 +4,7 @@
     });
 </script>
 <?php
-$ISOCountryCode = $WP_Statistics->get_country_codes();
+$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 include( WP_STATISTICS_DIR . 'includes/log/widgets/top.visitors.php' );
 ?>
 <div class="wrap wps-wrap">

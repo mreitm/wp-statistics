@@ -105,7 +105,7 @@ $total = $search_result[ $referred ];
 									);
 								}
 
-								$ISOCountryCode = $WP_Statistics->get_country_codes();
+								$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 								$dash_icon = wp_statistics_icons( 'dashicons-location-alt', 'map' );
 

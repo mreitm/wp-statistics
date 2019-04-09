@@ -6,21 +6,7 @@
  * @package WP Statistics
  */
 class WP_Statistics {
-	/**
-	 * Holds various class instances
-	 *
-	 * @since 2.5.7
-	 *
-	 * @var array
-	 */
-	private $container = array();
 
-	/**
-	 * Agent of visitor browser
-	 *
-	 * @var string
-	 */
-	public $agent;
 	/**
 	 * a coefficient to record number of visits
 	 *
@@ -53,12 +39,6 @@ class WP_Statistics {
 	 */
 	private $historical = array();
 
-	/**
-	 * Country Codes
-	 *
-	 * @var bool|string
-	 */
-	private $country_codes = false;
 	/**
 	 * Referrer
 	 *
@@ -114,19 +94,6 @@ class WP_Statistics {
 		 * wp-statistics loaded
 		 */
 		do_action( 'wp_statistics_loaded' );
-	}
-
-	/**
-	 * Magic getter to bypass referencing plugin.
-	 *
-	 * @param string $prop
-	 * @return mixed
-	 */
-	public function __get( $prop ) {
-		if ( array_key_exists( $prop, $this->container ) ) {
-			return $this->container[ $prop ];
-		}
-		return $this->{$prop};
 	}
 
 	/**
@@ -291,6 +258,11 @@ class WP_Statistics {
 		# User IP
 		$GLOBALS['WP_Statistics']->ip = \WP_STATISTICS\IP::getIP();
 
+		# User Agent
+		$GLOBALS['WP_Statistics']->agent = \WP_STATISTICS\UserAgent::getUserAgent();
+
+		# Get Country Codes
+		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
 
 
 
@@ -304,8 +276,6 @@ class WP_Statistics {
 		//Reset User Online Count
 		add_action( 'wp_loaded', array( $this, 'reset_user_online' ) );
 
-		//Get Current User Agent
-		$this->agent = $this->get_UserAgent();
 
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
@@ -510,39 +480,6 @@ class WP_Statistics {
 		return $options;
 	}
 
-	/**
-	 * Calls the user agent parsing code.
-	 *
-	 * @return array|\string[]
-	 */
-	public function get_UserAgent() {
-		//Check If Rest Request
-		if ( $this->restapi->is_rest() ) {
-			return array(
-				'browser'  => $this->restapi->params( 'browser' ),
-				'platform' => $this->restapi->params( 'platform' ),
-				'version'  => $this->restapi->params( 'version' )
-			);
-		}
-
-		// Check function exist.
-		if ( function_exists( 'getallheaders' ) ) {
-			$user_agent = getallheaders();
-		} elseif ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$user_agent = $_SERVER['HTTP_USER_AGENT'];
-		} else {
-			$user_agent = '';
-		}
-
-		$result = new WhichBrowser\Parser( $user_agent );
-		$agent  = array(
-			'browser'  => ( isset( $result->browser->name ) ) ? $result->browser->name : _x( 'Unknown', 'Browser', 'wp-statistics' ),
-			'platform' => ( isset( $result->os->name ) ) ? $result->os->name : _x( 'Unknown', 'Platform', 'wp-statistics' ),
-			'version'  => ( isset( $result->os->version->value ) ) ? $result->os->version->value : _x( 'Unknown', 'Version', 'wp-statistics' ),
-		);
-
-		return $agent;
-	}
 
 	/**
 	 * return the referrer link for the current user.
@@ -834,20 +771,7 @@ class WP_Statistics {
 		return $count;
 	}
 
-	/**
-	 * Get country codes
-	 *
-	 * @return array|bool|string
-	 */
-	public function get_country_codes() {
-		if ( $this->country_codes == false ) {
-			$ISOCountryCode = array();
-			require_once WP_STATISTICS_DIR . "includes/defines/country-codes.php";
-			$this->country_codes = $ISOCountryCode;
-		}
 
-		return $this->country_codes;
-	}
 
 
 	/**

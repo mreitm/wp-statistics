@@ -68,7 +68,7 @@ if ( $referr ) {
 }
 
 //Load country Code
-$ISOCountryCode = $WP_Statistics->get_country_codes();
+$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 ?>
 <div class="wrap wps-wrap">
