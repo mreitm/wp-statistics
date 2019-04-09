@@ -138,8 +138,8 @@ class WP_Statistics_Schedule {
 		$wpdb->insert(
 			$wpdb->prefix . 'statistics_visit',
 			array(
-				'last_visit'   => $WP_Statistics->timezone->Current_Date( null, '+1' ),
-				'last_counter' => $WP_Statistics->timezone->Current_Date( 'Y-m-d', '+1' ),
+				'last_visit'   => \WP_STATISTICS\TimeZone::getCurrentDate( null, '+1' ),
+				'last_counter' => \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', '+1' ),
 				'visit'        => 0,
 			),
 			array( '%s', '%s', '%d' )

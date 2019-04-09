@@ -49,7 +49,7 @@ function wp_statistics_generate_page_postbox_content(
 	$daysInThePast = round( ( time() - $rangeend_utime ) / 86400, 0 );
 
 	for ( $i = $days; $i >= 0; $i -- ) {
-		$date[] = "'" . $WP_Statistics->timezone->Current_Date( 'M j', '-' . $i ) . "'";
+		$date[] = "'" . \WP_STATISTICS\Timezone::getCurrentDate( 'M j', '-' . $i ) . "'";
 	}
 
 	for ( $i = $daysToDisplay; $i >= 0; $i -- ) {

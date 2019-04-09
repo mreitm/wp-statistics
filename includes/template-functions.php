@@ -136,12 +136,13 @@ function wp_statistics_mysql_time_conditions( $field = 'date', $time = 'total', 
 	global $WP_Statistics;
 
 	//Get Current Date From WP
-	$current_date = $WP_Statistics->timezone->Current_Date( 'Y-m-d' );
+	$current_date = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' );
 
 	//Create Field Sql
 	$field_sql = function ( $time ) use ( $current_date, $field, $WP_Statistics, $range ) {
-		$is_current = array_key_exists( 'current_date', $range );
-		return "`$field` " . ( $is_current === true ? '=' : 'BETWEEN' ) . " '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', (int) $time )}'" . ( $is_current === false ? " AND '{$current_date}'" : "" );
+		$is_current     = array_key_exists( 'current_date', $range );
+		$getCurrentDate = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', (int) $time );
+		return "`$field` " . ( $is_current === true ? '=' : 'BETWEEN' ) . " '{$getCurrentDate}'" . ( $is_current === false ? " AND '{$current_date}'" : "" );
 	};
 
 	//Check Time
@@ -150,7 +151,8 @@ function wp_statistics_mysql_time_conditions( $field = 'date', $time = 'total', 
 			$where = "`$field` = '{$current_date}'";
 			break;
 		case 'yesterday':
-			$where = "`$field` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', -1 )}'";
+			$getCurrentDate = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', - 1 );
+			$where          = "`$field` = '{$getCurrentDate}'";
 			break;
 		case 'week':
 			$where = $field_sql( - 7 );
@@ -167,10 +169,13 @@ function wp_statistics_mysql_time_conditions( $field = 'date', $time = 'total', 
 		default:
 			if ( array_key_exists( 'is_day', $range ) ) {
 				//Check a day
-				$where = "`$field` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d',  $time )}'";
+				$getCurrentDate = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', $time );
+				$where          = "`$field` = '{$getCurrentDate}'";
 			} elseif ( array_key_exists( 'start', $range ) and array_key_exists( 'end', $range ) ) {
 				//Check Between Two Time
-				$where = "`$field` BETWEEN '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', '-0', strtotime( $range['start'] ) )}' AND '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', '-0', strtotime( $range['end'] ) )}'";
+				$getCurrentDate    = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', '-0', strtotime( $range['start'] ) );
+				$getCurrentEndDate = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', '-0', strtotime( $range['end'] ) );
+				$where             = "`$field` BETWEEN '{$getCurrentDate}' AND '{$getCurrentEndDate}'";
 			} else {
 				//Check From a Date To Now
 				$where = $field_sql( $time );
@@ -209,7 +214,7 @@ function wp_statistics_visit( $time, $daily = null ) {
 	//Check if daily Report
 	if ( $daily == true ) {
 
-		$result = $wpdb->get_row( $sql . " WHERE `$date_column` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', $time )}'" );
+		$result = $wpdb->get_row( $sql . " WHERE `$date_column` = '" . \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', $time ) . "'" );
 		if ( null !== $result ) {
 			$sum = $result->visit;
 		}
@@ -348,7 +353,7 @@ function wp_statistics_visitor( $time, $daily = null, $count_only = false, $opti
 	if ( $daily == true ) {
 
 		//Get Only Current Day Visitors
-		$where[] = "`" . WP_STATISTICS\DB::table( 'visitor' ) . "`.`last_counter` = '" . $WP_Statistics->timezone->Current_Date( 'Y-m-d', $time ) . "'";
+		$where[] = "`" . WP_STATISTICS\DB::table( 'visitor' ) . "`.`last_counter` = '" . \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', $time ) . "'";
 	} else {
 
 		//Generate MySql Time Conditions
@@ -1115,11 +1120,11 @@ function wp_statistics_referrer( $time = null ) {
 	$sql      = "SELECT `referred` FROM `" . $wpdb->prefix . "statistics_visitor` WHERE referred <> ''";
 	if ( array_key_exists( $time, $timezone ) ) {
 		if ( $time != "total" ) {
-			$sql .= " AND (`last_counter` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', $timezone[$time] )}')";
+			$sql .= " AND (`last_counter` = '" . \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', $timezone[ $time ] ) . "')";
 		}
 	} else {
 		//Set Default
-		$sql .= " AND (`last_counter` = '{$WP_Statistics->timezone->Current_Date( 'Y-m-d', $time )}')";
+		$sql .= " AND (`last_counter` = '" . \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', $time ) . "')";
 	}
 	$result = $wpdb->get_results( $sql );
 
@@ -1202,7 +1207,7 @@ function wp_statistics_lastpostdate() {
 
 	$date_format = get_option( 'date_format' );
 
-	return $WP_Statistics->timezone->Current_Date_i18n( $date_format, $db_date, false );
+	return \WP_STATISTICS\TimeZone::getCurrentDate_i18n( $date_format, $db_date, false );
 }
 
 // This function will return the average number of posts per day that are published on your site.
@@ -1365,31 +1370,31 @@ function wp_statistics_date_range_selector( $page, $current, $range = array(), $
 	if ( isset( $_GET['rangestart'] ) and strtotime( $_GET['rangestart'] ) != false ) {
 		$rangestart = $_GET['rangestart'];
 	} else {
-		$rangestart = $WP_Statistics->timezone->Current_Date( 'm/d/Y', '-' . $current );
+		$rangestart = \WP_STATISTICS\TimeZone::getCurrentDate( 'm/d/Y', '-' . $current );
 	}
 	if ( isset( $_GET['rangeend'] ) and strtotime( $_GET['rangeend'] ) != false ) {
 		$rangeend = $_GET['rangeend'];
 	} else {
-		$rangeend = $WP_Statistics->timezone->Current_Date( 'm/d/Y' );
+		$rangeend = \WP_STATISTICS\TimeZone::getCurrentDate( 'm/d/Y' );
 	}
 
 	// Convert the text dates to unix timestamps and do some basic sanity checking.
-	$rangestart_utime = $WP_Statistics->timezone->strtotimetz( $rangestart );
+	$rangestart_utime = \WP_STATISTICS\TimeZone::strtotimetz( $rangestart );
 	if ( false === $rangestart_utime ) {
 		$rangestart_utime = time();
 	}
-	$rangeend_utime = $WP_Statistics->timezone->strtotimetz( $rangeend );
+	$rangeend_utime = \WP_STATISTICS\TimeZone::strtotimetz( $rangeend );
 	if ( false === $rangeend_utime || $rangeend_utime < $rangestart_utime ) {
 		$rangeend_utime = time();
 	}
 
 	// Now get the number of days in the range.
 	$daysToDisplay = (int) ( ( $rangeend_utime - $rangestart_utime ) / 24 / 60 / 60 );
-	$today         = $WP_Statistics->timezone->Current_Date( 'm/d/Y' );
+	$today         = \WP_STATISTICS\TimeZone::getCurrentDate( 'm/d/Y' );
 
 	// Re-create the range start/end strings from our utime's to make sure we get ride of any cruft and have them in the format we want.
-	$rangestart = $WP_Statistics->timezone->Local_Date( get_option( "date_format" ), $rangestart_utime );
-	$rangeend   = $WP_Statistics->timezone->Local_Date( get_option( "date_format" ), $rangeend_utime );
+	$rangestart = \WP_STATISTICS\TimeZone::getLocalDate( get_option( "date_format" ), $rangestart_utime );
+	$rangeend   = \WP_STATISTICS\TimeZone::getLocalDate( get_option( "date_format" ), $rangeend_utime );
 
 	//Calculate hit day if range is exist
 	if ( isset( $_GET['rangeend'] ) and isset( $_GET['rangestart'] ) and strtotime( $_GET['rangestart'] ) != false and strtotime( $_GET['rangeend'] ) != false ) {
@@ -1434,8 +1439,8 @@ function wp_statistics_date_range_selector( $page, $current, $range = array(), $
 	echo '<input type="text" size="18" name="rangestart" id="datestartpicker" value="' . $rangestart . '" placeholder="' . __( wp_statistics_dateformat_php_to_jqueryui( get_option( "date_format" ) ), 'wp-statistics' ) . '" autocomplete="off"> ' . __( 'to', 'wp-statistics' ) . ' <input type="text" size="18" name="rangeend" id="dateendpicker" value="' . $rangeend . '" placeholder="' . __( wp_statistics_dateformat_php_to_jqueryui( get_option( "date_format" ) ), 'wp-statistics' ) . '" autocomplete="off"> <input type="submit" value="' . __( 'Go', 'wp-statistics' ) . '" class="button-primary">' . "\r\n";
 
 	//Sanitize Time Request
-	echo '<input type="hidden" name="rangestart" id="rangestart" value="' . $WP_Statistics->timezone->Local_Date( "Y-m-d", $rangestart_utime ) . '">';
-	echo '<input type="hidden" name="rangeend" id="rangeend" value="' . $WP_Statistics->timezone->Local_Date( "Y-m-d", $rangeend_utime ) . '">';
+	echo '<input type="hidden" name="rangestart" id="rangestart" value="' . \WP_STATISTICS\TimeZone::getLocalDate( "Y-m-d", $rangestart_utime ) . '">';
+	echo '<input type="hidden" name="rangeend" id="rangeend" value="' . \WP_STATISTICS\TimeZone::getLocalDate( "Y-m-d", $rangeend_utime ) . '">';
 
 	// Output any extra HTML we've been passed after the date selector but before the submit button.
 	echo $post_extra;
@@ -1587,17 +1592,17 @@ function wp_statistics_date_range_calculator( $days, $start, $end ) {
 
 	//Check Not Exist day to display
 	if ( $daysToDisplay == - 1 ) {
-		$rangestart_utime = $WP_Statistics->timezone->strtotimetz( $rangestart );
-		$rangeend_utime   = $WP_Statistics->timezone->strtotimetz( $rangeend );
+		$rangestart_utime = \WP_STATISTICS\TimeZone::strtotimetz( $rangestart );
+		$rangeend_utime   = \WP_STATISTICS\TimeZone::strtotimetz( $rangeend );
 		$daysToDisplay    = (int) ( ( $rangeend_utime - $rangestart_utime ) / 24 / 60 / 60 );
 
 		if ( $rangestart_utime == false || $rangeend_utime == false ) {
 			$daysToDisplay    = 20;
-			$rangeend_utime   = $WP_Statistics->timezone->timetz();
+			$rangeend_utime   = \WP_STATISTICS\TimeZone::timetz();
 			$rangestart_utime = $rangeend_utime - ( $daysToDisplay * 24 * 60 * 60 );
 		}
 	} else {
-		$rangeend_utime   = $WP_Statistics->timezone->timetz();
+		$rangeend_utime   = \WP_STATISTICS\TimeZone::timetz();
 		$rangestart_utime = $rangeend_utime - ( $daysToDisplay * 24 * 60 * 60 );
 	}
 

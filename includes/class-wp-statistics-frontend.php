@@ -125,7 +125,7 @@ class WP_Statistics_Frontend {
 		}
 
 		//timestamp
-		$params['timestamp'] = $WP_Statistics->timezone->Current_Date( 'U' );
+		$params['timestamp'] = \WP_STATISTICS\Timezone::getCurrentDate( 'U' );
 
 		//Wp_query
 		$get_page_type               = WP_Statistics_Frontend::get_page_type();

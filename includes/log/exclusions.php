@@ -108,7 +108,7 @@ foreach ( $excluded_reasons as $reason ) {
 	for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
 
 		// We're looping through the days backwards, so let's fine out what date we want to look at.
-		$thisdate = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-' . $i, $rangeend_utime );
+		$thisdate = \WP_STATISTICS\TimeZone::getRealCurrentDate( 'Y-m-d', '-' . $i, $rangeend_utime );
 
 		// Create the SQL query string to get the data.
 		$query = $wpdb->prepare(
@@ -144,7 +144,7 @@ if ( $total_stats == 1 ) {
 }
 
 for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
-	$date[] = "'" . $WP_Statistics->timezone->Real_Current_Date( 'M j', '-' . $i, $rangeend_utime ) . "'";
+	$date[] = "'" . \WP_STATISTICS\TimeZone::getRealCurrentDate( 'M j', '-' . $i, $rangeend_utime ) . "'";
 }
 
 $stats = array();

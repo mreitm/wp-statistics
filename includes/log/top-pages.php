@@ -14,8 +14,8 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 $daysInThePast = round( ( time() - $rangeend_utime ) / 86400, 0 );
 
 list( $total, $uris ) = wp_statistics_get_top_pages(
-	$WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangestart_utime ),
-	$WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangeend_utime )
+	\WP_STATISTICS\TimeZone::getRealCurrentDate( 'Y-m-d', '-0', $rangestart_utime ),
+	\WP_STATISTICS\TimeZone::getRealCurrentDate( 'Y-m-d', '-0', $rangeend_utime )
 );
 $count = 0;
 
@@ -33,7 +33,7 @@ foreach ( $uris as $uri ) {
 }
 
 for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
-	$date[] = "'" . $WP_Statistics->timezone->Real_Current_Date( 'M j', '-' . $i, $rangeend_utime ) . "'";
+	$date[] = "'" . \WP_STATISTICS\TimeZone::getRealCurrentDate( 'M j', '-' . $i, $rangeend_utime ) . "'";
 }
 ?>
 <div class="wrap wps-wrap">

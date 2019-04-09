@@ -3,17 +3,10 @@
 namespace WP_STATISTICS;
 
 class TimeZone {
-
-	public $timezone_offset;
-
-	public function __construct() {
-		$this->timezone_offset = $this->set_timezone();
-	}
-
 	/**
 	 * Set WordPress TimeZone offset
 	 */
-	public function set_timezone() {
+	public static function set_timezone() {
 		if ( get_option( 'timezone_string' ) ) {
 			return timezone_offset_get( timezone_open( get_option( 'timezone_string' ) ), new \DateTime() );
 		} elseif ( get_option( 'gmt_offset' ) ) {
@@ -30,8 +23,8 @@ class TimeZone {
 	 *
 	 * @return int
 	 */
-	public function strtotimetz( $timestring ) {
-		return strtotime( $timestring ) + $this->timezone_offset;
+	public static function strtotimetz( $timestring ) {
+		return strtotime( $timestring ) + self::set_timezone();
 	}
 
 	/**
@@ -39,8 +32,8 @@ class TimeZone {
 	 *
 	 * @return int
 	 */
-	public function timetz() {
-		return time() + $this->timezone_offset;
+	public static function timetz() {
+		return time() + self::set_timezone();
 	}
 
 	/**
@@ -50,8 +43,8 @@ class TimeZone {
 	 * @param $timestamp
 	 * @return bool|string
 	 */
-	public function Local_Date( $format, $timestamp ) {
-		return date( $format, $timestamp + $this->timezone_offset );
+	public static function getLocalDate( $format, $timestamp ) {
+		return date( $format, $timestamp + self::set_timezone() );
 	}
 
 	/**
@@ -61,16 +54,16 @@ class TimeZone {
 	 *
 	 * @return bool|string
 	 */
-	public function Current_Date( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
+	public static function getCurrentDate( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
 
 		if ( $strtotime ) {
 			if ( $relative ) {
-				return date( $format, strtotime( "{$strtotime} day", $relative ) + $this->timezone_offset );
+				return date( $format, strtotime( "{$strtotime} day", $relative ) + self::set_timezone() );
 			} else {
-				return date( $format, strtotime( "{$strtotime} day" ) + $this->timezone_offset );
+				return date( $format, strtotime( "{$strtotime} day" ) + self::set_timezone() );
 			}
 		} else {
-			return date( $format, time() + $this->timezone_offset );
+			return date( $format, time() + self::set_timezone() );
 		}
 	}
 
@@ -83,8 +76,7 @@ class TimeZone {
 	 *
 	 * @return bool|string
 	 */
-	public function Real_Current_Date( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
-
+	public static function getRealCurrentDate( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
 		if ( $strtotime ) {
 			if ( $relative ) {
 				return date( $format, strtotime( "{$strtotime} day", $relative ) );
@@ -105,11 +97,11 @@ class TimeZone {
 	 *
 	 * @return string
 	 */
-	public function Current_Date_i18n( $format = 'Y-m-d H:i:s', $strtotime = null, $day = ' day' ) {
+	public static function getCurrentDate_i18n( $format = 'Y-m-d H:i:s', $strtotime = null, $day = ' day' ) {
 		if ( $strtotime ) {
-			return date_i18n( $format, strtotime( "{$strtotime}{$day}" ) + $this->timezone_offset );
+			return date_i18n( $format, strtotime( "{$strtotime}{$day}" ) + self::set_timezone() );
 		} else {
-			return date_i18n( $format, time() + $this->timezone_offset );
+			return date_i18n( $format, time() + self::set_timezone() );
 		}
 	}
 

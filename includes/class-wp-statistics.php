@@ -293,9 +293,6 @@ class WP_Statistics {
 	public function instantiate() {
 		//todo seperate all item to seperate class
 
-		# Set TimeZone
-		$GLOBALS['WP_Statistics']->timezone = new \WP_STATISTICS\TimeZone();
-
 		# Get User Detail
 		$GLOBALS['WP_Statistics']->user = new \WP_STATISTICS\User();
 
@@ -451,8 +448,8 @@ class WP_Statistics {
 				$wpdb->prefix . "statistics_useronline",
 				array(
 					'ip'        => $this->store_ip_to_db(),
-					'timestamp' => $this->Current_Date( 'U' ),
-					'date'      => $this->Current_Date(),
+					'timestamp' => \WP_STATISTICS\TimeZone::getCurrentDate( 'U' ),
+					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
 					'referred'  => $this->get_Referred(),
 					'agent'     => $this->agent['browser'],
 					'platform'  => $this->agent['platform'],
@@ -1020,7 +1017,7 @@ class WP_Statistics {
 		if ( $WP_Statistics->option->get( 'useronline' ) ) {
 
 			//Get Not timestamp
-			$now = $WP_Statistics->timezone->Current_Date( 'U' );
+			$now = \WP_STATISTICS\TimeZone::getCurrentDate( 'U' );
 
 			// Set the default seconds a user needs to visit the site before they are considered offline.
 			$reset_time = 120;
@@ -1079,7 +1076,7 @@ class WP_Statistics {
 			);
 		} else {
 			$earlier = new \DateTime( $first_day );
-			$later   = new \DateTime( $WP_Statistics->timezone->Current_Date( 'Y-m-d' ) );
+			$later   = new \DateTime( \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' ) );
 			$result  = array(
 				'days'      => $later->diff( $earlier )->format( "%a" ),
 				'timestamp' => strtotime( $first_day ),

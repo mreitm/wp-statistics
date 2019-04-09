@@ -6,9 +6,10 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 	if ( $WP_Statistics->option->get( 'geoip' ) && ! $WP_Statistics->option->get( 'disable_map' ) ) { ?>
         <div id="map_canvas"></div>
 
-		<?php $result = $wpdb->get_row(
-			"SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE last_counter = '{$WP_Statistics->timezone->Current_Date('Y-m-d')}'"
-		); ?>
+		<?php
+		$current_date = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' );
+		$result       = $wpdb->get_row( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE last_counter = '{$current_date}'" );
+		?>
         <script type="text/javascript">
             var country_pin = Array();
             var country_color = Array();
@@ -16,7 +17,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
             jQuery(document).ready(function () {
 
 				<?php
-				$result = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE last_counter = '{$WP_Statistics->timezone->Current_Date('Y-m-d')}'" );
+				$result = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE last_counter = '" . \WP_STATISTICS\Timezone::getCurrentDate( 'Y-m-d' ) . "'" );
 				$final_result = array();
 				$final_result['000'] = array();
 
@@ -109,8 +110,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
                     onLabelShow: function (element, label, code) {
                         if (country_pin[code] !== undefined) {
                             label.html(country_pin[code]);
-                        }
-                        else {
+                        } else {
                             label.html(label.html() + ' [0]<hr />');
                         }
                     },

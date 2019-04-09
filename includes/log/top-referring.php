@@ -20,8 +20,8 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 	$rangeend
 );
 
-$rangestartdate = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangestart_utime );
-$rangeenddate   = $WP_Statistics->timezone->Real_Current_Date( 'Y-m-d', '-0', $rangeend_utime );
+$rangestartdate = \WP_STATISTICS\TimeZone::getRealCurrentDate( 'Y-m-d', '-0', $rangestart_utime );
+$rangeenddate   = \WP_STATISTICS\TimeZone::getRealCurrentDate( 'Y-m-d', '-0', $rangeend_utime );
 
 if ( array_key_exists( 'referr', $_GET ) ) {
 	$referr       = $title = $_GET['referr'];

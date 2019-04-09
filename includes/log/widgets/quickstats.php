@@ -206,7 +206,7 @@ function wp_statistics_generate_quickstats_postbox_content( $search_engines, $se
                 <th colspan="3"><?php echo sprintf(
 						__( 'Date: %s', 'wp-statistics' ),
 						'<code dir="ltr">' .
-						$WP_Statistics->timezone->Current_Date_i18n( get_option( 'date_format' ) ) .
+						\WP_STATISTICS\TimeZone::getCurrentDate_i18n( get_option( 'date_format' ) ) .
 						'</code>'
 					); ?></th>
             </tr>
@@ -215,7 +215,7 @@ function wp_statistics_generate_quickstats_postbox_content( $search_engines, $se
                 <th colspan="3"><?php echo sprintf(
 						__( 'Time: %s', 'wp-statistics' ),
 						'<code dir="ltr">' .
-						$WP_Statistics->timezone->Current_Date_i18n( get_option( 'time_format' ) ) .
+						\WP_STATISTICS\TimeZone::getCurrentDate_i18n( get_option( 'time_format' ) ) .
 						'</code>'
 					); ?></th>
             </tr>

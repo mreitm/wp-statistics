@@ -9,7 +9,7 @@ function wp_statistics_generate_top_visitors_postbox_content(
 	global $wpdb, $WP_Statistics;
 
 	if ( $day == 'today' ) {
-		$sql_time = $WP_Statistics->timezone->Current_Date( 'Y-m-d' );
+		$sql_time = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' );
 	} else {
 		$sql_time = date( 'Y-m-d', strtotime( $day ) );
 	}

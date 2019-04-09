@@ -8,7 +8,7 @@ function wp_statistics_generate_search_postbox_content( $search_engines, $size =
 	$total_daily = array();
 
 	for ( $i = $days; $i >= 0; $i -- ) {
-		$date[] = "'" . $WP_Statistics->timezone->Current_Date( 'M j', '-' . $i ) . "'";
+		$date[] = "'" . \WP_STATISTICS\TimeZone::getCurrentDate( 'M j', '-' . $i ) . "'";
 	}
 
 	foreach ( $search_engines as $se ) {

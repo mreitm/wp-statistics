@@ -24,7 +24,7 @@ if ( $wps_nonce_valid ) {
 			'post_type'    => 'page',
 			'post_title'   => __( 'WP Statistics Honey Pot Page', 'wp-statistics' ) .
 			                  ' [' .
-			                  $WP_Statistics->timezone->Current_Date() .
+			                  \WP_STATISTICS\TimeZone::getCurrentDate() .
 			                  ']',
 			'post_content' => __( 'This is the Honey Pot for WP Statistics to use, do not delete.', 'wp-statistics' ),
 			'post_status'  => 'publish',
