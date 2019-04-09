@@ -16,18 +16,6 @@ class WP_Statistics {
 	private $container = array();
 
 	/**
-	 * IP address of visitor
-	 *
-	 * @var bool|string
-	 */
-	public $ip = false;
-	/**
-	 * Hash of visitors IP address
-	 *
-	 * @var bool|string
-	 */
-	public $ip_hash = false;
-	/**
 	 * Agent of visitor browser
 	 *
 	 * @var string
@@ -181,10 +169,11 @@ class WP_Statistics {
 
 		// Utility classes.
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-db.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-agent.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
 
 		//todo rest api
@@ -300,18 +289,14 @@ class WP_Statistics {
 		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
 
 		# User IP
+		$GLOBALS['WP_Statistics']->ip = \WP_STATISTICS\IP::getIP();
+
+
 
 
 		//Load Rest Api
 		$this->init_rest_api();
 
-		//Get user Ip
-		$this->get_IP();
-
-		// Check if the has IP is enabled.
-		if ( $GLOBALS['WP_Statistics']->option->get( 'hash_ips' ) == true ) {
-			$this->ip_hash = $this->get_hash_string();
-		}
 
 		//Set Pages
 		$this->set_pages();
@@ -348,7 +333,6 @@ class WP_Statistics {
 			$this->coefficient = 1;
 		}
 	}
-
 
 	/**
 	 * Set pages slugs
@@ -391,25 +375,6 @@ class WP_Statistics {
 	}
 
 	/**
-	 * Generate hash string
-	 */
-	public function get_hash_string() {
-		// Check If Rest Request
-		if ( $this->restapi->is_rest() ) {
-			return $this->restapi->params( 'hash_ip' );
-		}
-
-		// Check the user agent has exist.
-		if ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ) {
-			$key = $_SERVER['HTTP_USER_AGENT'];
-		} else {
-			$key = 'Unknown';
-		}
-
-		return '#hash#' . sha1( $this->ip . $key );
-	}
-
-	/**
 	 * geo ip Loader
 	 *
 	 * @param $pack
@@ -447,7 +412,7 @@ class WP_Statistics {
 			$wpdb->insert(
 				$wpdb->prefix . "statistics_useronline",
 				array(
-					'ip'        => $this->store_ip_to_db(),
+					'ip'        => \WP_STATISTICS\IP::StoreIP(),
 					'timestamp' => \WP_STATISTICS\TimeZone::getCurrentDate( 'U' ),
 					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
 					'referred'  => $this->get_Referred(),
@@ -484,7 +449,7 @@ class WP_Statistics {
 					'agent'        => $this->agent['browser'],
 					'platform'     => $this->agent['platform'],
 					'version'      => $this->agent['version'],
-					'ip'           => $this->store_ip_to_db(),
+					'ip'           => \WP_STATISTICS\IP::StoreIP(),
 					'location'     => '000',
 				)
 			);
@@ -543,126 +508,6 @@ class WP_Statistics {
 		}
 
 		return $options;
-	}
-
-	/**
-	 * Processes a string that represents an IP address and returns
-	 * either FALSE if it's invalid or a valid IP4 address.
-	 *
-	 * @param $ip
-	 *
-	 * @return bool|string
-	 */
-	private function get_ip_value( $ip ) {
-		// Reject anything that's not a string.
-		if ( ! is_string( $ip ) ) {
-			return false;
-		}
-
-		// Trim off any spaces.
-		$ip = trim( $ip );
-
-		// Process IPv4 and v6 addresses separately.
-		if ( $this->isValidIPv6( $ip ) ) {
-			// Reject any IPv6 addresses if IPv6 is not compiled in to this version of PHP.
-			if ( ! defined( 'AF_INET6' ) ) {
-				return false;
-			}
-		} else {
-			// Trim off any port values that exist.
-			if ( strstr( $ip, ':' ) !== false ) {
-				$temp = explode( ':', $ip );
-				$ip   = $temp[0];
-			}
-
-			// Check to make sure the http header is actually an IP address and not some kind of SQL injection attack.
-			$long = ip2long( $ip );
-
-			// ip2long returns either -1 or FALSE if it is not a valid IP address depending on the PHP version, so check for both.
-			if ( $long == - 1 || $long === false ) {
-				return false;
-			}
-		}
-
-		// If the ip address is blank, reject it.
-		if ( $ip == '' ) {
-			return false;
-		}
-
-		// We're got a real IP address, return it.
-		return $ip;
-	}
-
-	/**
-	 * Returns the current IP address of the remote client.
-	 *
-	 * @return bool|string
-	 */
-	public function get_IP() {
-
-		//Check If Rest Api Request
-		if ( $this->restapi->is_rest() ) {
-			$this->ip = $this->restapi->params( 'ip' );
-
-			return $this->ip;
-		}
-
-		// Check to see if we've already retrieved the IP address and if so return the last result.
-		if ( $this->ip !== false ) {
-			return $this->ip;
-		}
-
-		// Get User IP
-		$whip = new \Vectorface\Whip\Whip( \Vectorface\Whip\Whip::PROXY_HEADERS | \Vectorface\Whip\Whip::REMOTE_ADDR );
-		$whip->addCustomHeader( 'HTTP_CLIENT_IP' );
-		$whip->addCustomHeader( 'HTTP_X_REAL_IP' );
-		$user_ip = $whip->getValidIpAddress();
-		if ( $user_ip != false ) {
-			$this->ip = $user_ip;
-		}
-
-		// If no valid ip address has been found, use 127.0.0.1 (aka localhost).
-		if ( false === $this->ip ) {
-			$this->ip = '127.0.0.1';
-		}
-
-		return $this->ip;
-	}
-
-	/**
-	 * Store User IP To Database
-	 */
-	public function store_ip_to_db() {
-
-		//Get User ip
-		$user_ip = $this->ip;
-
-		// use 127.0.0.1 If no valid ip address has been found.
-		if ( false === $user_ip ) {
-			return '127.0.0.1';
-		}
-
-		// If the anonymize IP enabled for GDPR.
-		if ( $GLOBALS['WP_Statistics']->option->get( 'anonymize_ips' ) == true ) {
-			$user_ip = substr( $user_ip, 0, strrpos( $user_ip, '.' ) ) . '.0';
-		}
-
-		return $user_ip;
-	}
-
-	/**
-	 * Validate an IPv6 IP address
-	 *
-	 * @param  string $ip
-	 *
-	 * @return boolean - true/false
-	 */
-	private function isValidIPv6( $ip ) {
-		if ( false === filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	/**

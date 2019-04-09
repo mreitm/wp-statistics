@@ -439,9 +439,9 @@ class WP_Statistics_Hits {
 		if ( $this->exclusion_reason == 'honeypot' || ! $this->exclusion_match ) {
 
 			// Check to see if we already have an entry in the database.
-			$check_ip_db = $WP_Statistics->store_ip_to_db();
-			if ( $WP_Statistics->ip_hash != false ) {
-				$check_ip_db = $WP_Statistics->ip_hash;
+			$check_ip_db = \WP_STATISTICS\IP::StoreIP();
+			if ( \WP_STATISTICS\IP::getHashIP() != false ) {
+				$check_ip_db = \WP_STATISTICS\IP::getHashIP();
 			}
 
 			//Check Exist This User in Current Day
@@ -477,7 +477,7 @@ class WP_Statistics_Hits {
 						'agent'        => $WP_Statistics->agent['browser'],
 						'platform'     => $WP_Statistics->agent['platform'],
 						'version'      => $WP_Statistics->agent['version'],
-						'ip'           => $WP_Statistics->ip_hash ? $WP_Statistics->ip_hash : $WP_Statistics->store_ip_to_db(),
+						'ip'           => \WP_STATISTICS\IP::getHashIP() ? \WP_STATISTICS\IP::getHashIP() : \WP_STATISTICS\IP::StoreIP(),
 						'location'     => $this->location,
 						'UAString'     => $ua,
 						'hits'         => 1,
@@ -701,9 +701,9 @@ class WP_Statistics_Hits {
 		global $wpdb, $WP_Statistics;
 
 		// Check to see if we already have an entry in the database.
-		$check_ip_db = $WP_Statistics->store_ip_to_db();
-		if ( $WP_Statistics->ip_hash != false ) {
-			$check_ip_db = $WP_Statistics->ip_hash;
+		$check_ip_db = \WP_STATISTICS\IP::StoreIP();
+		if ( \WP_STATISTICS\IP::getHashIP() != false ) {
+			$check_ip_db = \WP_STATISTICS\IP::getHashIP();
 		}
 
 		//Check Exist
@@ -746,7 +746,7 @@ class WP_Statistics_Hits {
 			$wpdb->insert(
 				$wpdb->prefix . 'statistics_useronline',
 				array(
-					'ip'        => $WP_Statistics->ip_hash ? $WP_Statistics->ip_hash : $WP_Statistics->store_ip_to_db(),
+					'ip'        => \WP_STATISTICS\IP::getHashIP() ? \WP_STATISTICS\IP::getHashIP() : \WP_STATISTICS\IP::StoreIP(),
 					'timestamp' => $this->timestamp,
 					'created'   => $this->timestamp,
 					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
@@ -806,7 +806,7 @@ class WP_Statistics_Hits {
 					'page_id'   => $this->current_page_id,
 					'type'      => $this->current_page_type
 				),
-				array( 'ip' => $WP_Statistics->ip_hash ? $WP_Statistics->ip_hash : $WP_Statistics->store_ip_to_db() )
+				array( 'ip' => \WP_STATISTICS\IP::getHashIP() ? \WP_STATISTICS\IP::getHashIP() : \WP_STATISTICS\IP::StoreIP() )
 			);
 		}
 	}

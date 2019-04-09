@@ -102,10 +102,10 @@ class WP_Statistics_Frontend {
 		$params['api'] = rtrim( rest_get_url_prefix(), "/" );
 
 		//Set ip
-		$params['ip'] = $WP_Statistics->get_IP();
+		$params['ip'] = \WP_STATISTICS\IP::getIP();
 
 		//set hash ip
-		$params['hash_ip'] = $WP_Statistics->get_hash_string();
+		$params['hash_ip'] = \WP_STATISTICS\IP::getHashIP();
 
 		//exclude
 		$check_exclude            = new WP_Statistics_Hits();

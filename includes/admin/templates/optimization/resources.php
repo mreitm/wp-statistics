@@ -218,7 +218,7 @@
             </th>
 
             <td>
-                <strong><?php echo $WP_Statistics->get_IP(); ?></strong>
+                <strong><?php echo \WP_STATISTICS\IP::getIP(); ?></strong>
                 <p class="description"><?php _e( 'The client IP address.', 'wp-statistics' ); ?></p>
             </td>
         </tr>
