@@ -261,7 +261,6 @@ class WP_Statistics {
 		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
 
 
-
 		//Load Rest Api
 		$this->init_rest_api();
 

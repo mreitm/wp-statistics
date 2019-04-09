@@ -69,6 +69,14 @@ class Helper {
 	 * @return array|bool|string
 	 */
 	public static function get_country_codes() {
+		global $WP_Statistics;
+
+		# Load From global
+		if ( isset( $WP_Statistics->country_codes ) ) {
+			return $WP_Statistics->country_codes;
+		}
+
+		# Load From file
 		require_once WP_STATISTICS_DIR . "includes/defines/country-codes.php";
 		if ( isset( $ISOCountryCode ) ) {
 			return $ISOCountryCode;

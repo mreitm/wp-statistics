@@ -195,9 +195,8 @@
 
             <td>
                 <strong><?php
-                    $upload_dir = wp_upload_dir();
-					$GeoIP_filename       = $upload_dir['basedir'] . '/wp-statistics/GeoLite2-Country.mmdb';
-					$GeoIP_filedate       = @filemtime( $GeoIP_filename );
+					$GeoIP_filename = \WP_STATISTICS\GeoIP::get_geo_ip_path( 'Country' );
+					$GeoIP_filedate = @filemtime( $GeoIP_filename );
 
 					if ( $GeoIP_filedate === false ) {
 						_e( 'Database file does not exist.', 'wp-statistics' );
@@ -230,7 +229,7 @@
             </th>
 
             <td>
-                <strong><?php echo htmlentities( $_SERVER['HTTP_USER_AGENT'], ENT_QUOTES ); ?></strong>
+                <strong><?php echo htmlentities( \WP_STATISTICS\UserAgent::getHttpUserAgent(), ENT_QUOTES ); ?></strong>
                 <p class="description"><?php _e( 'The client user agent string.', 'wp-statistics' ); ?></p>
             </td>
         </tr>
