@@ -51,12 +51,7 @@ class WP_Statistics {
 	 * @var string
 	 */
 	public static $installed_version;
-	/**
-	 * Registry for plugin settings
-	 *
-	 * @var array
-	 */
-	public static $reg = array();
+
 	/**
 	 * Pages slugs
 	 *
@@ -142,6 +137,7 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-agent.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geoip.php';
 
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
@@ -342,29 +338,6 @@ class WP_Statistics {
 				WP_Statistics::$page[ $page_key ] = 'wps_' . $page_slug . '_page';
 			}
 		}
-	}
-
-	/**
-	 * geo ip Loader
-	 *
-	 * @param $pack
-	 * @return bool|\GeoIp2\Database\Reader
-	 */
-	static function geoip_loader( $pack ) {
-
-		$upload_dir = wp_upload_dir();
-		$geoip      = $upload_dir['basedir'] . '/wp-statistics/' . WP_Statistics_Updates::$geoip[ $pack ]['file'] . '.mmdb';
-		if ( file_exists( $geoip ) ) {
-			try {
-				$reader = new \GeoIp2\Database\Reader( $geoip );
-			} catch ( \MaxMind\Db\Reader\InvalidDatabaseException $e ) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-
-		return $reader;
 	}
 
 	/**
@@ -813,47 +786,6 @@ class WP_Statistics {
 			//Update Last run this Action
 			update_option( "wp_statistics_check_useronline", $now );
 		}
-	}
-
-	/**
-	 * Get Number Days From install this plugin
-	 * this method used for `ALL` Option in Time Range Pages
-	 */
-	public static function get_number_days_install_plugin() {
-		global $wpdb, $WP_Statistics;
-
-		//Create Empty default Option
-		$first_day = '';
-
-		//First Check Visitor Table , if not exist Web check Pages Table
-		$list_tbl = array(
-			'visitor' => array( 'order_by' => 'ID', 'column' => 'last_counter' ),
-			'pages'   => array( 'order_by' => 'page_id', 'column' => 'date' ),
-		);
-		foreach ( $list_tbl as $tbl => $val ) {
-			$first_day = $wpdb->get_var( "SELECT `" . $val['column'] . "` FROM `" . WP_STATISTICS\DB::table( $tbl ) . "` ORDER BY `" . $val['order_by'] . "` ASC LIMIT 1" );
-			if ( ! empty( $first_day ) ) {
-				break;
-			}
-		}
-
-		//Calculate hit day if range is exist
-		if ( empty( $first_day ) ) {
-			$result = array(
-				'days' => 1,
-				'date' => current_time( 'timestamp' )
-			);
-		} else {
-			$earlier = new \DateTime( $first_day );
-			$later   = new \DateTime( \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' ) );
-			$result  = array(
-				'days'      => $later->diff( $earlier )->format( "%a" ),
-				'timestamp' => strtotime( $first_day ),
-				'first_day' => $first_day,
-			);
-		}
-
-		return $result;
 	}
 
 }

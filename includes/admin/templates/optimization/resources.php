@@ -194,7 +194,8 @@
             </th>
 
             <td>
-                <strong><?php $upload_dir = wp_upload_dir();
+                <strong><?php
+                    $upload_dir = wp_upload_dir();
 					$GeoIP_filename       = $upload_dir['basedir'] . '/wp-statistics/GeoLite2-Country.mmdb';
 					$GeoIP_filedate       = @filemtime( $GeoIP_filename );
 

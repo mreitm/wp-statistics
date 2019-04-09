@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\Helper;
+
 /**
  * Get Current Users online
  *
@@ -1344,7 +1346,7 @@ function wp_statistics_date_range_selector( $page, $current, $range = array(), $
 		$range = array( 10, 20, 30, 60, 90, 180, 270, 365 );
 
 		//Added All time From installed plugin to now
-		$installed_date = WP_Statistics::get_number_days_install_plugin();
+		$installed_date = Helper::get_number_days_install_plugin();
 		array_push( $range, $installed_date['days'] );
 
 		//Get List Of Text Lang time Range
@@ -1468,7 +1470,7 @@ function wp_statistics_date_range_selector( $page, $current, $range = array(), $
 function wp_statistics_prepare_range_time_picker() {
 
 	//Get Default Number To display in All
-	$installed_date = WP_Statistics::get_number_days_install_plugin();
+	$installed_date = Helper::get_number_days_install_plugin();
 	$daysToDisplay  = $installed_date['days'];
 
 	//List Of Pages For show 20 Days as First Parameter
@@ -2081,7 +2083,7 @@ function wp_statistics_get_domain_server( $url ) {
 			$result['ip'] = $ip;
 			//Get country Code
 			if ( $WP_Statistics->option->get( 'geoip' ) ) {
-				$geoip_reader = $WP_Statistics::geoip_loader( 'country' );
+				$geoip_reader = \WP_STATISTICS\GeoIP::Loader( 'country' );
 				if ( $geoip_reader != false ) {
 					try {
 						$record            = $geoip_reader->country( $ip );

@@ -24,7 +24,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 				//Load City Geoip
 				$geoip_reader = false;
 				if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
-					$geoip_reader = $WP_Statistics::geoip_loader( 'city' );
+					$geoip_reader = \WP_STATISTICS\GeoIP::Loader( 'city' );
 				}
 
 				if ( $result ) {

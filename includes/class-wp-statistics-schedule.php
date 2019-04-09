@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\GeoIP;
+
 /**
  * Class WP_Statistics_Schedule
  */
@@ -163,8 +165,8 @@ class WP_Statistics_Schedule {
 		// We're also going to look to see if our filesize is to small, this means the plugin stub still exists and should
 		// be replaced with a proper file.
 		$is_require_update = false;
-		foreach ( WP_Statistics_Updates::$geoip as $geoip_name => $geoip_array ) {
-			$file_path = $upload_dir['basedir'] . '/wp-statistics/' . WP_Statistics_Updates::$geoip[ $geoip_name ]['file'] . '.mmdb';
+		foreach ( GeoIP::$library as $geoip_name => $geoip_array ) {
+			$file_path = $upload_dir['basedir'] . '/wp-statistics/' . GeoIP::$library[ $geoip_name ]['file'] . '.mmdb';
 			if ( file_exists( $file_path ) ) {
 				if ( $lastupdate < $thisupdate ) {
 					$is_require_update = true;

@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\GeoIP;
+
 /**
  * Class WP_Statistics_Admin_Pages
  */
@@ -324,7 +326,7 @@ class WP_Statistics_Admin_Pages {
 		if ( $WP_Statistics->option->get( 'geoip' ) and isset( $_POST['update_geoip'] ) and isset( $_POST['geoip_name'] ) ) {
 
 			//Check Geo ip Exist in Database
-			if ( isset( WP_Statistics_Updates::$geoip[ $_POST['geoip_name'] ] ) ) {
+			if ( isset( GeoIP::$library[ $_POST['geoip_name'] ] ) ) {
 				$result = WP_Statistics_Updates::download_geoip( $_POST['geoip_name'], "update" );
 
 				if ( isset( $result['status'] ) and $result['status'] === false ) {
@@ -345,7 +347,7 @@ class WP_Statistics_Admin_Pages {
 
 				//Check File Not Exist
 				$upload_dir = wp_upload_dir();
-				$file       = $upload_dir['basedir'] . '/wp-statistics/' . WP_Statistics_Updates::$geoip[ $geo_name ]['file'] . '.mmdb';
+				$file       = $upload_dir['basedir'] . '/wp-statistics/' . GeoIP::$library[ $geo_name ]['file'] . '.mmdb';
 				if ( ! file_exists( $file ) ) {
 					$result = WP_Statistics_Updates::download_geoip( $geo_name );
 					if ( isset( $result['status'] ) and $result['status'] === false ) {

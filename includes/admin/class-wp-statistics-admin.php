@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\GeoIP;
+
 /**
  * Class WP_Statistics_Admin
  */
@@ -622,7 +624,7 @@ class WP_Statistics_Admin {
 
 		// Check to see if the GeoIP database needs to be downloaded and do so if required.
 		if ( $WP_Statistics->option->get( 'update_geoip' ) ) {
-			foreach ( WP_Statistics_Updates::$geoip as $geoip_name => $geoip_array ) {
+			foreach ( GeoIP::$library as $geoip_name => $geoip_array ) {
 				WP_Statistics_Updates::download_geoip( $geoip_name, "update" );
 			}
 		}

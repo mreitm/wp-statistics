@@ -141,7 +141,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 							// Load city name
 							$geoip_reader = false;
 							if ( $WP_Statistics->option->get( 'geoip_city' ) ) {
-								$geoip_reader = $WP_Statistics::geoip_loader( 'city' );
+								$geoip_reader = \WP_STATISTICS\GeoIP::Loader( 'city' );
 							}
 
 							foreach ( $result as $items ) {

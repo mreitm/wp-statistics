@@ -2,6 +2,8 @@
 
 namespace WP_STATISTICS;
 
+use WP_STATISTICS;
+
 class Helper {
 	/**
 	 * Returns an array of site id's
@@ -47,6 +49,18 @@ class Helper {
 		}
 		$rest_prefix = trailingslashit( rest_get_url_prefix() );
 		return ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+	}
+
+	/**
+	 * Get WordPress Uploads DIR
+	 *
+	 * @param string $path
+	 * @return mixed
+	 * @default For WP-Statistics Plugin is 'wp-statistics' dir
+	 */
+	public static function get_uploads_dir( $path = '' ) {
+		$upload_dir = wp_upload_dir();
+		return path_join( $upload_dir['basedir'], $path );
 	}
 
 	/**
@@ -110,5 +124,46 @@ class Helper {
 		$base_url = parse_url( $html_nr_referrer );
 		$title    = ( trim( $title ) == "" ? $html_nr_referrer : $title );
 		return "<a href='{$html_nr_referrer}' title='{$title}'" . ( $is_blank === true ? ' target="_blank"' : '' ) . ">{$base_url['host']}</a>";
+	}
+
+	/**
+	 * Get Number Days From install this plugin
+	 * this method used for `ALL` Option in Time Range Pages
+	 */
+	public static function get_number_days_install_plugin() {
+		global $wpdb;
+
+		//Create Empty default Option
+		$first_day = '';
+
+		//First Check Visitor Table , if not exist Web check Pages Table
+		$list_tbl = array(
+			'visitor' => array( 'order_by' => 'ID', 'column' => 'last_counter' ),
+			'pages'   => array( 'order_by' => 'page_id', 'column' => 'date' ),
+		);
+		foreach ( $list_tbl as $tbl => $val ) {
+			$first_day = $wpdb->get_var( "SELECT `" . $val['column'] . "` FROM `" . WP_STATISTICS\DB::table( $tbl ) . "` ORDER BY `" . $val['order_by'] . "` ASC LIMIT 1" );
+			if ( ! empty( $first_day ) ) {
+				break;
+			}
+		}
+
+		//Calculate hit day if range is exist
+		if ( empty( $first_day ) ) {
+			$result = array(
+				'days' => 1,
+				'date' => current_time( 'timestamp' )
+			);
+		} else {
+			$earlier = new \DateTime( $first_day );
+			$later   = new \DateTime( WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' ) );
+			$result  = array(
+				'days'      => $later->diff( $earlier )->format( "%a" ),
+				'timestamp' => strtotime( $first_day ),
+				'first_day' => $first_day,
+			);
+		}
+
+		return $result;
 	}
 }
