@@ -149,7 +149,7 @@ class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-uninstall.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-updates.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-welcome.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-network-admin.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-network.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
 
 			//Admin Menu
@@ -259,10 +259,8 @@ class WP_Statistics {
 		//Reset User Online Count
 		add_action( 'wp_loaded', array( $this, 'reset_user_online' ) );
 
-
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
-		//$GLOBALS['WP_Statistics']->timezone = $this->container['timezone']; //TODO Remove At last
 
 		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
 		if ( is_admin() ) {
@@ -270,8 +268,13 @@ class WP_Statistics {
 			# Admin Menu
 			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
 
+			# MultiSite Admin
+			if ( is_multisite() ) {
+				$GLOBALS['WP_Statistics']->admin_network = new \WP_STATISTICS\Network;
+			}
+
 			# Admin Menu Bar
-			new \WP_STATISTICS\AdminBar;
+			$GLOBALS['WP_Statistics']->admin_bar = new \WP_STATISTICS\AdminBar;
 		}
 
 	}

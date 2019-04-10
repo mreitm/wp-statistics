@@ -253,7 +253,7 @@ class Menu {
 	}
 
 	/**
-	 * This function adds the primary menu to WordPress.
+	 * Load WordPress Admin Menu
 	 */
 	public function wp_admin_menu() {
 		global $WP_Statistics;
@@ -300,6 +300,5 @@ class Menu {
 		// TODO Push to OrverView Page Class
 		add_action( 'load-' . self::get_action_menu_slug( 'overview' ), 'WP_Statistics_Admin_Pages::overview' );
 	}
-
 
 }

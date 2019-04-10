@@ -24,12 +24,6 @@ class WP_Statistics_Admin {
 			return;
 		}
 
-		//Show Admin Menu
-
-		if ( is_multisite() ) {
-			add_action( 'network_admin_menu', 'WP_Statistics_Network_Admin::menu' );
-		}
-
 		//Load Script in Admin Area
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
