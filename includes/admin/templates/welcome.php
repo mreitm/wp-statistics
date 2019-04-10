@@ -137,7 +137,9 @@
         </div>
 
         <div data-content="changelog" class="tab-content">
-            <?php WP_Statistics_Welcome::show_change_log(); ?>
+
+
+            <?php WP_STATISTICS\Welcome::show_change_log(); ?>
         </div>
         <hr style="clear: both;">
         <div class="wps-return-to-dashboard">

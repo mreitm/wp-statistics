@@ -148,7 +148,7 @@ class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-export.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-uninstall.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-updates.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-welcome.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-welcome.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-network.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
 
@@ -272,6 +272,9 @@ class WP_Statistics {
 			if ( is_multisite() ) {
 				$GLOBALS['WP_Statistics']->admin_network = new \WP_STATISTICS\Network;
 			}
+
+			# Welcome Screen
+            new \WP_STATISTICS\Welcome;
 
 			# Admin Menu Bar
 			$GLOBALS['WP_Statistics']->admin_bar = new \WP_STATISTICS\AdminBar;

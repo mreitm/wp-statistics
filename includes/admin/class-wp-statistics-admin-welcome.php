@@ -1,21 +1,35 @@
 <?php
 
-/**
- * Class WP_Statistics_Welcome
- */
-class WP_Statistics_Welcome {
+namespace WP_STATISTICS;
+
+class Welcome {
+
+	public static $addone = 'https://wp-statistics.com/wp-json/plugin/addons';
+	public static $change_log = 'https://api.github.com/repos/wp-statistics/wp-statistics/releases/latest';
+
+	/**
+	 * Welcome constructor.
+	 */
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'menu' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'do_welcome' ), 10, 2 );
+		add_action( 'admin_init', array( $this, 'init' ) );
+	}
+
 	/**
 	 * Initial
 	 */
-	public static function init() {
+	public function init() {
 		global $WP_Statistics;
+
+
 		if ( $WP_Statistics->option->get( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
 			// Disable show welcome page
 			$WP_Statistics->option->update( 'first_show_welcome_page', true );
 			$WP_Statistics->option->update( 'show_welcome_page', false );
 
 			// Redirect to welcome page
-			wp_redirect( WP_Statistics_Admin_Pages::admin_url( 'wps_welcome' ) );
+			wp_redirect( \WP_Statistics_Admin_Pages::admin_url( 'wps_welcome' ) );
 		}
 
 		if ( ! $WP_Statistics->option->get( 'first_show_welcome_page', false ) ) {
@@ -26,15 +40,15 @@ class WP_Statistics_Welcome {
 	/**
 	 * Register menu
 	 */
-	public static function menu() {
-		add_submenu_page( __( 'WP-Statistics Welcome', 'wp-statistics' ), __( 'WP-Statistics Welcome', 'wp-statistics' ), __( 'WP-Statistics Welcome', 'wp-statistics' ), 'administrator', 'wps_welcome', 'WP_Statistics_Welcome::page_callback' );
+	public function menu() {
+		add_submenu_page( __( 'WP-Statistics Welcome', 'wp-statistics' ), __( 'WP-Statistics Welcome', 'wp-statistics' ), __( 'WP-Statistics Welcome', 'wp-statistics' ), 'administrator', 'wps_welcome', array( $this, 'page_callback' ) );
 	}
 
 	/**
 	 * Welcome page
 	 */
-	public static function page_callback() {
-		$response      = wp_remote_get( 'https://wp-statistics.com/wp-json/plugin/addons' );
+	public function page_callback() {
+		$response      = wp_remote_get( self::$addone );
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$error         = null;
 		$plugins       = array();
@@ -57,7 +71,7 @@ class WP_Statistics_Welcome {
 	 * @param $upgrader_object
 	 * @param $options
 	 */
-	public static function do_welcome( $upgrader_object, $options ) {
+	public function do_welcome( $upgrader_object, $options ) {
 		$current_plugin_path_name = 'wp-statistics/wp-statistics.php';
 
 		if ( isset( $options['action'] ) and $options['action'] == 'update' and isset( $options['type'] ) and $options['type'] == 'plugin' and isset( $options['plugins'] ) ) {
@@ -68,8 +82,8 @@ class WP_Statistics_Welcome {
 					// Enable welcome page in database
 					$WP_Statistics->option->update( 'show_welcome_page', true );
 
-					// Run the upgrader
-					WP_Statistics_Updates::do_upgrade();
+					// Run the upgrade
+					\WP_Statistics_Updates::do_upgrade();
 				}
 			}
 		}
@@ -79,20 +93,24 @@ class WP_Statistics_Welcome {
 	 * Show change log
 	 */
 	public static function show_change_log() {
-		$response = wp_remote_get( 'https://api.github.com/repos/wp-statistics/wp-statistics/releases/latest' );
 
-		// Check response
+		// Get Change Log From Github Api
+		$response = wp_remote_get( self::$change_log );
 		if ( is_wp_error( $response ) ) {
 			return;
 		}
-
 		$response_code = wp_remote_retrieve_response_code( $response );
-
 		if ( $response_code == '200' ) {
-			$data      = json_decode( $response['body'] );
-			$Parsedown = new Parsedown();
 
-			echo $Parsedown->text( nl2br( $data->body ) );
+			// Json Data To Array
+			$data = json_decode( $response['body'] );
+
+			// Load ParseDown
+			include( WP_STATISTICS_DIR . "includes/lib/Parsedown.php" );
+			$parse = new \Parsedown();
+
+			// convert MarkDown To Html
+			echo $parse->text( nl2br( $data->body ) );
 		}
 	}
 }
