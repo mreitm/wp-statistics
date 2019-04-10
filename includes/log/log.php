@@ -17,7 +17,7 @@ if ( is_array( $widget_order ) && count( $widget_order ) > 2 ) {
 }
 
 // Add the about box here as metaboxes added on the actual page load cannot be closed.
-add_meta_box( 'wps_about_postbox', sprintf( __( 'WP Statistics - Version %s', 'wp-statistics' ), WP_STATISTICS_VERSION ), 'wp_statistics_generate_overview_postbox_contents', $WP_Statistics->menu_slugs['overview'], 'side', null, array( 'widget' => 'about' ) );
+add_meta_box( 'wps_about_postbox', sprintf( __( 'WP Statistics - Version %s', 'wp-statistics' ), WP_STATISTICS_VERSION ), 'wp_statistics_generate_overview_postbox_contents', \WP_STATISTICS\Menu::get_action_menu_slug('overview'), 'side', null, array( 'widget' => 'about' ) );
 
 function wp_statistics_generate_overview_postbox_contents( $post, $args ) {
 	$widget       = $args['args']['widget'];
@@ -36,11 +36,11 @@ function wp_statistics_generate_overview_postbox_contents( $post, $args ) {
 
     <div class="metabox-holder" id="overview-widgets">
         <div class="postbox-container" id="wps-postbox-container-1">
-			<?php do_meta_boxes( $WP_Statistics->menu_slugs['overview'], 'side', '' ); ?>
+			<?php do_meta_boxes( \WP_STATISTICS\Menu::get_action_menu_slug('overview'), 'side', '' ); ?>
         </div>
 
         <div class="postbox-container" id="wps-postbox-container-2">
-			<?php do_meta_boxes( $WP_Statistics->menu_slugs['overview'], 'normal', '' ); ?>
+			<?php do_meta_boxes( \WP_STATISTICS\Menu::get_action_menu_slug('overview'), 'normal', '' ); ?>
         </div>
     </div>
 </div>
@@ -94,7 +94,7 @@ foreach ( array( 'exclusions' => 'exclusions', 'users_online' => 'online' ) as $
         jQuery('.if-js-closed').removeClass('if-js-closed').addClass('closed');
 
         // postboxes setup
-        postboxes.add_postbox_toggles('<?php echo $WP_Statistics->menu_slugs['overview']; ?>');
+        postboxes.add_postbox_toggles('<?php echo \WP_STATISTICS\Menu::get_action_menu_slug('overview'); ?>');
 
         jQuery('.wps-refresh').unbind('click').on('click', wp_statistics_refresh_widget);
         jQuery('.wps-more').unbind('click').on('click', wp_statistics_goto_more);

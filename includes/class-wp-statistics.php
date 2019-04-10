@@ -15,12 +15,6 @@ class WP_Statistics {
 	public $coefficient = 1;
 
 	/**
-	 * Menu Slugs
-	 *
-	 * @var array
-	 */
-	public $menu_slugs = array();
-	/**
 	 * is current request
 	 *
 	 * @var bool

@@ -20,7 +20,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_hits_postbox',
 				__( 'Hit Statistics', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'hits' )
@@ -32,7 +32,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_top_visitors_postbox',
 				__( 'Top Visitors', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'top.visitors' )
@@ -41,7 +41,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_search_postbox',
 				__( 'Search Engine Referrals', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'search' )
@@ -50,7 +50,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_words_postbox',
 				__( 'Latest Search Words', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'words' )
@@ -59,7 +59,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_recent_postbox',
 				__( 'Recent Visitors', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'recent' )
@@ -70,7 +70,7 @@ class WP_Statistics_Admin_Pages {
 					'wps_map_postbox',
 					__( 'Today\'s Visitors Map', 'wp-statistics' ),
 					'wp_statistics_generate_overview_postbox_contents',
-					$WP_Statistics->menu_slugs['overview'],
+					\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 					'normal',
 					null,
 					array( 'widget' => 'map' )
@@ -83,7 +83,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_pages_postbox',
 				__( 'Top 10 Pages', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'normal',
 				null,
 				array( 'widget' => 'pages' )
@@ -96,7 +96,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_summary_postbox',
 				__( 'Summary', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'side',
 				null,
 				array( 'widget' => 'summary' )
@@ -105,7 +105,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_browsers_postbox',
 				__( 'Browsers', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'side',
 				null,
 				array( 'widget' => 'browsers' )
@@ -114,7 +114,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_referring_postbox',
 				__( 'Top Referring Sites', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				$WP_Statistics->menu_slugs['overview'],
+				\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 				'side',
 				null,
 				array( 'widget' => 'referring' )
@@ -125,7 +125,7 @@ class WP_Statistics_Admin_Pages {
 					'wps_countries_postbox',
 					__( 'Top 10 Countries', 'wp-statistics' ),
 					'wp_statistics_generate_overview_postbox_contents',
-					$WP_Statistics->menu_slugs['overview'],
+					\WP_STATISTICS\Menu::get_action_menu_slug('overview'),
 					'side',
 					null,
 					array( 'widget' => 'countries' )
@@ -135,7 +135,7 @@ class WP_Statistics_Admin_Pages {
 
 		//Left Show User online table
 		if ( $WP_Statistics->option->get( 'useronline' ) ) {
-			add_meta_box( 'wps_users_online_postbox', __( 'Online Users', 'wp-statistics' ), 'wp_statistics_generate_overview_postbox_contents', $WP_Statistics->menu_slugs['overview'], 'side', null, array( 'widget' => 'users_online' ) );
+			add_meta_box( 'wps_users_online_postbox', __( 'Online Users', 'wp-statistics' ), 'wp_statistics_generate_overview_postbox_contents', \WP_STATISTICS\Menu::get_action_menu_slug('overview'), 'side', null, array( 'widget' => 'users_online' ) );
 		}
 	}
 
