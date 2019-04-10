@@ -55,20 +55,20 @@ class WP_Statistics_Network_Admin {
 				$i = 0;
 
 				$options = array(
-					__( 'Overview', 'wp-statistics' )           => WP_Statistics::$page['overview'],
-					__( 'Hits', 'wp-statistics' )               => WP_Statistics::$page['hits'],
-					__( 'Online', 'wp-statistics' )             => WP_Statistics::$page['online'],
-					__( 'Referrers', 'wp-statistics' )          => WP_Statistics::$page['referrers'],
-					__( 'Search Words', 'wp-statistics' )       => WP_Statistics::$page['words'],
-					__( 'Searches', 'wp-statistics' )           => WP_Statistics::$page['searches'],
-					__( 'Pages', 'wp-statistics' )              => WP_Statistics::$page['pages'],
-					__( 'Visitors', 'wp-statistics' )           => WP_Statistics::$page['visitors'],
-					__( 'Countries', 'wp-statistics' )          => WP_Statistics::$page['countries'],
-					__( 'Browsers', 'wp-statistics' )           => WP_Statistics::$page['browser'],
-					__( 'Top Visitors Today', 'wp-statistics' ) => WP_Statistics::$page['top-visitors'],
-					__( 'Exclusions', 'wp-statistics' )         => WP_Statistics::$page['exclusions'],
-					__( 'Optimization', 'wp-statistics' )       => WP_Statistics::$page['optimization'],
-					__( 'Settings', 'wp-statistics' )           => WP_Statistics::$page['settings'],
+					__( 'Overview', 'wp-statistics' )           => \WP_STATISTICS\Menu::get_page_slug('overview'),
+					__( 'Hits', 'wp-statistics' )               => \WP_STATISTICS\Menu::get_page_slug('hits'),
+					__( 'Online', 'wp-statistics' )             => \WP_STATISTICS\Menu::get_page_slug('online'),
+					__( 'Referrers', 'wp-statistics' )          => \WP_STATISTICS\Menu::get_page_slug('referrers'),
+					__( 'Search Words', 'wp-statistics' )       => \WP_STATISTICS\Menu::get_page_slug('words'),
+					__( 'Searches', 'wp-statistics' )           => \WP_STATISTICS\Menu::get_page_slug('searches'),
+					__( 'Pages', 'wp-statistics' )              => \WP_STATISTICS\Menu::get_page_slug('pages'),
+					__( 'Visitors', 'wp-statistics' )           => \WP_STATISTICS\Menu::get_page_slug('visitors'),
+					__( 'Countries', 'wp-statistics' )          => \WP_STATISTICS\Menu::get_page_slug('countries'),
+					__( 'Browsers', 'wp-statistics' )           => \WP_STATISTICS\Menu::get_page_slug('browser'),
+					__( 'Top Visitors Today', 'wp-statistics' ) => \WP_STATISTICS\Menu::get_page_slug('top-visitors'),
+					__( 'Exclusions', 'wp-statistics' )         => \WP_STATISTICS\Menu::get_page_slug('exclusions'),
+					__( 'Optimization', 'wp-statistics' )       => \WP_STATISTICS\Menu::get_page_slug('optimization'),
+					__( 'Settings', 'wp-statistics' )           => \WP_STATISTICS\Menu::get_page_slug('settings'),
 				);
 
 				$sites = WP_STATISTICS\Helper::get_wp_sites_list();
@@ -120,7 +120,7 @@ class WP_Statistics_Network_Admin {
 
 		$blog_id = str_replace( 'wp_statistics_blogid_', '', $plugin_page );
 		// Get the admin url for the current site.
-		$url = get_admin_url( $blog_id ) . '/admin.php?page=' . WP_Statistics::$page['overview'];
+		$url = get_admin_url( $blog_id ) . '/admin.php?page=' . \WP_STATISTICS\Menu::get_page_slug('overview');
 		echo "<script>window.location.href = '$url';</script>";
 	}
 

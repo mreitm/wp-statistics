@@ -73,25 +73,25 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 ?>
 <div class="wrap wps-wrap">
 	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Top Referring Sites', 'wp-statistics' ) ); ?>
-    <div><?php wp_statistics_date_range_selector( WP_Statistics::$page['referrers'], $daysToDisplay, null, null, $referr_field ); ?></div>
+    <div><?php wp_statistics_date_range_selector( \WP_STATISTICS\Menu::get_page_slug('referrers'), $daysToDisplay, null, null, $referr_field ); ?></div>
     <br class="clear"/>
 
     <ul class="subsubsub">
 		<?php if ( $referr ) { ?>
             <li class="all"><a <?php if ( ! $referr ) {
 					echo 'class="current"';
-				} ?>href="?page=<?php echo WP_Statistics::$page['referrers'] . $date_args; ?>"><?php _e(
+				} ?>href="?page=<?php echo \WP_STATISTICS\Menu::get_page_slug('referrers') . $date_args; ?>"><?php _e(
 						'All',
 						'wp-statistics'
 					); ?></a>
             </li>|
             <li>
-                <a class="current" href="?page=<?php echo WP_Statistics::$page['referrers']; ?>&referr=<?php echo WP_STATISTICS\Helper::html_sanitize_referrer( $referr ) . $date_args; ?>"> <?php echo htmlentities( $title, ENT_QUOTES ); ?>
+                <a class="current" href="?page=<?php echo \WP_STATISTICS\Menu::get_page_slug('referrers'); ?>&referr=<?php echo WP_STATISTICS\Helper::html_sanitize_referrer( $referr ) . $date_args; ?>"> <?php echo htmlentities( $title, ENT_QUOTES ); ?>
                     <span class="count">(<?php echo number_format_i18n( $total ); ?>)</span></a></li>
 		<?php } else { ?>
             <li class="all"><a <?php if ( ! $referr ) {
 					echo 'class="current"';
-				} ?>href="?page=<?php echo WP_Statistics::$page['referrers'] . $date_args; ?>"><?php _e(
+				} ?>href="?page=<?php echo \WP_STATISTICS\Menu::get_page_slug('referrers') . $date_args; ?>"><?php _e(
 						'All',
 						'wp-statistics'
 					); ?>
@@ -254,7 +254,7 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 										if ( $WP_Statistics->option->get( 'geoip' ) ) {
 											echo "<td>" . ( trim( $referrer_list[ $domain ]['country'] ) == "" ? $unknown : "<img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $referrer_list[ $domain ]['country'] . '.png' ) . "' title='{$ISOCountryCode[$referrer_list[ $domain ]['country']]}' class='log-tools'/>" ) . "</td>";
 										}
-										echo "<td><a class='wps-text-success' href='?page=" . WP_Statistics::$page['referrers'] . "&referr=" . $referrer_html . $date_args . "'>" . number_format_i18n( $number ) . "</a></td>";
+										echo "<td><a class='wps-text-success' href='?page=" . \WP_STATISTICS\Menu::get_page_slug('referrers') . "&referr=" . $referrer_html . $date_args . "'>" . number_format_i18n( $number ) . "</a></td>";
 										echo "</tr>";
 									}
 									$i ++;

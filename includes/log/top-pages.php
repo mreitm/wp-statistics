@@ -38,7 +38,7 @@ for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
 ?>
 <div class="wrap wps-wrap">
 	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Top Pages', 'wp-statistics' ) ); ?>
-	<?php wp_statistics_date_range_selector( WP_Statistics::$page['pages'], $daysToDisplay ); ?>
+	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Menu::get_page_slug('pages'), $daysToDisplay ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">
             <div class="meta-box-sortables">

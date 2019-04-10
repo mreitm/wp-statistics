@@ -55,7 +55,6 @@ class TimeZone {
 	 * @return bool|string
 	 */
 	public static function getCurrentDate( $format = 'Y-m-d H:i:s', $strtotime = null, $relative = null ) {
-
 		if ( $strtotime ) {
 			if ( $relative ) {
 				return date( $format, strtotime( "{$strtotime} day", $relative ) + self::set_timezone() );

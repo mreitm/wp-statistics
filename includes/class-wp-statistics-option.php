@@ -3,7 +3,11 @@
 namespace WP_STATISTICS;
 
 class Option {
-
+	/**
+	 * Get WP-Statistics Basic Option name
+	 *
+	 * @var string
+	 */
 	public static $opt_name = 'wp_statistics';
 
 	/**

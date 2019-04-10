@@ -19,7 +19,7 @@ class AdminBar {
 	public function admin_bar() {
 		global $wp_admin_bar;
 
-		if ( is_admin_bar_showing() && ( wp_statistics_check_access_user() ) ) {
+		if ( is_admin_bar_showing() and wp_statistics_check_access_user() ) {
 
 			/**
 			 * List Of Admin Bar Wordpress

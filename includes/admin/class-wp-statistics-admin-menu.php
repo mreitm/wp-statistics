@@ -33,6 +33,7 @@ class Menu {
 		'plugins'      => 'plugins',
 		'donate'       => 'donate',
 	);
+
 	/**
 	 * Admin Page Slug
 	 *
@@ -56,12 +57,21 @@ class Menu {
 		 * Get List Page
 		 */
 		foreach ( $list as $page_key => $page_slug ) {
-			$admin_list_page[ $page_key ] = str_ireplace( "[slug]", self::$admin_menu_slug, $page_slug );
+			$admin_list_page[ $page_key ] = self::get_page_slug( $page_slug );
 		}
 
 		return isset( $admin_list_page ) ? $admin_list_page : array();
 	}
 
+	/**
+	 * Get Menu Slug
+	 *
+	 * @param $page_slug
+	 * @return mixed
+	 */
+	public static function get_page_slug( $page_slug ) {
+		return str_ireplace( "[slug]", $page_slug, self::$admin_menu_slug );
+	}
 
 
 	public function __construct() {

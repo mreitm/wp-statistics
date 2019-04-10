@@ -1,7 +1,5 @@
 <?php
 
-use WP_STATISTICS\GeoIP;
-
 /**
  * Class WP_Statistics_Admin_Pages
  */
@@ -152,7 +150,7 @@ class WP_Statistics_Admin_Pages {
 		global $pagenow;
 
 		//Check is custom page
-		if ( $pagenow == "admin.php" and isset( $_REQUEST['page'] ) and $_REQUEST['page'] == WP_Statistics::$page[ $page ] ) {
+		if ( $pagenow == "admin.php" and isset( $_REQUEST['page'] ) and $_REQUEST['page'] == \WP_STATISTICS\Menu::get_page_slug( $page ) ) {
 			return true;
 		}
 
@@ -188,8 +186,8 @@ class WP_Statistics_Admin_Pages {
 	public static function admin_url( $page = null, $arg = array() ) {
 
 		//Check If Pages is in Wp-statistics
-		if ( array_key_exists( $page, WP_Statistics::$page ) ) {
-			$page = WP_Statistics::$page[ $page ];
+		if ( array_key_exists( $page, \WP_STATISTICS\Menu::get_admin_page_list() ) ) {
+			$page = \WP_STATISTICS\Menu::get_page_slug( $page );
 		}
 
 		return add_query_arg( array_merge( array( 'page' => $page ), $arg ), admin_url( 'admin.php' ) );
@@ -398,7 +396,7 @@ class WP_Statistics_Admin_Pages {
 		}
 
 		//Check referring Spam Update
-		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and $_GET['page'] == WP_Statistics::$page['settings'] and isset( $_GET['update-referrerspam'] ) ) {
+		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and $_GET['page'] == \WP_STATISTICS\Menu::get_page_slug('settings') and isset( $_GET['update-referrerspam'] ) ) {
 
 			// Update referrer spam
 			$update_spam = WP_Statistics_Updates::download_referrerspam();
@@ -428,59 +426,59 @@ class WP_Statistics_Admin_Pages {
 		global $wpdb, $WP_Statistics, $plugin_page;
 
 		switch ( $plugin_page ) {
-			case WP_Statistics::$page['browser']:
+			case \WP_STATISTICS\Menu::get_page_slug('browser'):
 				$log_type = 'all-browsers';
 
 				break;
-			case WP_Statistics::$page['countries']:
+			case \WP_STATISTICS\Menu::get_page_slug('countries'):
 				$log_type = 'top-countries';
 
 				break;
-			case WP_Statistics::$page['exclusions']:
+			case \WP_STATISTICS\Menu::get_page_slug('exclusions'):
 				$log_type = 'exclusions';
 
 				break;
-			case WP_Statistics::$page['hits']:
+			case \WP_STATISTICS\Menu::get_page_slug('hits'):
 				$log_type = 'hit-statistics';
 
 				break;
-			case WP_Statistics::$page['online']:
+			case \WP_STATISTICS\Menu::get_page_slug('online'):
 				$log_type = 'online';
 
 				break;
-			case WP_Statistics::$page['pages']:
+			case \WP_STATISTICS\Menu::get_page_slug('pages'):
 				$log_type = 'top-pages';
 
 				break;
-			case WP_Statistics::$page['categories']:
+			case \WP_STATISTICS\Menu::get_page_slug('categories'):
 				$log_type = 'categories';
 
 				break;
-			case WP_Statistics::$page['tags']:
+			case \WP_STATISTICS\Menu::get_page_slug('tags'):
 				$log_type = 'tags';
 
 				break;
-			case WP_Statistics::$page['authors']:
+			case \WP_STATISTICS\Menu::get_page_slug('authors'):
 				$log_type = 'authors';
 
 				break;
-			case WP_Statistics::$page['referrers']:
+			case \WP_STATISTICS\Menu::get_page_slug('referrers'):
 				$log_type = 'top-referring-site';
 
 				break;
-			case WP_Statistics::$page['searches']:
+			case \WP_STATISTICS\Menu::get_page_slug('searches'):
 				$log_type = 'search-statistics';
 
 				break;
-			case WP_Statistics::$page['words']:
+			case \WP_STATISTICS\Menu::get_page_slug('words'):
 				$log_type = 'last-all-search';
 
 				break;
-			case WP_Statistics::$page['top-visitors']:
+			case \WP_STATISTICS\Menu::get_page_slug('top-visitors'):
 				$log_type = 'top-visitors';
 
 				break;
-			case WP_Statistics::$page['visitors']:
+			case \WP_STATISTICS\Menu::get_page_slug('visitors'):
 				$log_type = 'last-all-visitor';
 
 				break;
@@ -616,7 +614,7 @@ class WP_Statistics_Admin_Pages {
 
 				break;
 			default:
-				if ( get_current_screen()->parent_base == WP_Statistics::$page['overview'] ) {
+				if ( get_current_screen()->parent_base == \WP_STATISTICS\Menu::get_page_slug('overview') ) {
 
 					wp_enqueue_style( 'wpstatistics-jqvmap-css', WP_STATISTICS_URL . 'assets/jqvmap/jqvmap.css', true, '1.5.1' );
 					wp_enqueue_script( 'wpstatistics-jquery-vmap', WP_STATISTICS_URL . 'assets/jqvmap/jquery.vmap.js', true, '1.5.1' );

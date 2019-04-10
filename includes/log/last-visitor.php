@@ -78,7 +78,7 @@ if ( $_get != '%' ) {
 				} else {
 					$current = "";
 				}
-				echo $spacer . "<li><a {$current} href='?page=" . WP_Statistics::$page['visitors'] . "&{$_var}={$_get}'>{$title} <span class='count'>({$total})</span></a></li>";
+				echo $spacer . "<li><a {$current} href='?page=" . \WP_STATISTICS\Menu::get_page_slug('visitors') . "&{$_var}={$_get}'>{$title} <span class='count'>({$total})</span></a></li>";
 			}
 		}
 		?>

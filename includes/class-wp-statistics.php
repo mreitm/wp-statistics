@@ -53,12 +53,6 @@ class WP_Statistics {
 	public static $installed_version;
 
 	/**
-	 * Pages slugs
-	 *
-	 * @var array
-	 */
-	public static $page = array();
-	/**
 	 * Rest Api init
 	 *
 	 * @var array
@@ -268,9 +262,6 @@ class WP_Statistics {
 		$this->init_rest_api();
 
 
-		//Set Pages
-		$this->set_pages();
-
 		//Reset User Online Count
 		add_action( 'wp_loaded', array( $this, 'reset_user_online' ) );
 
@@ -307,46 +298,6 @@ class WP_Statistics {
 		// Double check the co-efficient setting to make sure it's not been set to 0.
 		if ( $this->coefficient <= 0 ) {
 			$this->coefficient = 1;
-		}
-	}
-
-	/**
-	 * Set pages slugs
-	 */
-	public function set_pages() {
-		if ( ! isset( WP_Statistics::$page['overview'] ) ) {
-
-			/**
-			 * List Of Admin Page Slug WP-statistics
-			 *
-			 * -- Array Arg ---
-			 * key   : page key for using another methods
-			 * value : Admin Page Slug
-			 */
-			$list = array(
-				'overview'     => 'overview',
-				'browser'      => 'browsers',
-				'countries'    => 'countries',
-				'exclusions'   => 'exclusions',
-				'hits'         => 'hits',
-				'online'       => 'online',
-				'pages'        => 'pages',
-				'categories'   => 'categories',
-				'authors'      => 'authors',
-				'tags'         => 'tags',
-				'referrers'    => 'referrers',
-				'searches'     => 'searches',
-				'words'        => 'words',
-				'top-visitors' => 'top_visitors',
-				'visitors'     => 'visitors',
-				'optimization' => 'optimization',
-				'settings'     => 'settings',
-				'plugins'      => 'plugins',
-				'donate'       => 'donate',
-			);
-			foreach ( $list as $page_key => $page_slug ) {
-				WP_Statistics::$page[ $page_key ] = 'wps_' . $page_slug . '_page';
-			}
 		}
 	}
 

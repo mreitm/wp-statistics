@@ -33,7 +33,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 	//Show Time Range only in all list
 	if ( ! isset( $_REQUEST['country'] ) ) {
 		WP_Statistics_Admin_Pages::show_page_title( __( 'Top Countries', 'wp-statistics' ) );
-		wp_statistics_date_range_selector( WP_Statistics::$page['countries'], $daysToDisplay );
+		wp_statistics_date_range_selector(\WP_STATISTICS\Menu::get_page_slug('countries'), $daysToDisplay );
 	} else {
 		WP_Statistics_Admin_Pages::show_page_title( $country_name . ' ' . __( 'Visitors', 'wp-statistics' ) );
 		?>

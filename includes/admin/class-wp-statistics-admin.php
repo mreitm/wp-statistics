@@ -244,7 +244,7 @@ class WP_Statistics_Admin {
 
 		$screen = get_current_screen();
 
-		if ( $screen->id == "toplevel_page_" . WP_Statistics::$page['overview'] or $screen->id == "statistics_page_" . WP_Statistics::$page['settings'] ) {
+		if ( $screen->id == "toplevel_page_" . \WP_STATISTICS\Menu::get_page_slug('overview') or $screen->id == "statistics_page_" .\WP_STATISTICS\Menu::get_page_slug('settings') ) {
 			$plugin = self::user_is_use_cache_plugin();
 
 			if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) and $plugin['status'] === true ) {
@@ -261,7 +261,7 @@ class WP_Statistics_Admin {
 		}
 
 		// Test Rest Api is Active for Cache
-		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) and $screen->id == "statistics_page_" . WP_Statistics::$page['settings'] ) {
+		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) and $screen->id == "statistics_page_" . \WP_STATISTICS\Menu::get_page_slug('settings') ) {
 
 			if ( false === ( $check_rest_api = get_transient( '_check_rest_api_wp_statistics' ) ) ) {
 
@@ -555,15 +555,15 @@ class WP_Statistics_Admin {
 
 				//Check Conditions For Show Menu
 				if ( wp_statistics_check_option_require( $menu ) === true ) {
-					$WP_Statistics->menu_slugs[ $key ] = add_submenu_page( WP_Statistics::$page[ $menu['sub'] ], $menu['title'], $name, $capability, WP_Statistics::$page[ $menu['page_url'] ], 'WP_Statistics_Admin_Pages::' . $method );
+					$WP_Statistics->menu_slugs[ $key ] = add_submenu_page( \WP_STATISTICS\Menu::get_page_slug( $menu['sub'] ), $menu['title'], $name, $capability, \WP_STATISTICS\Menu::get_page_slug( $menu['page_url'] ), 'WP_Statistics_Admin_Pages::' . $method );
 				}
 
 				//Check if add Break Line
 				if ( array_key_exists( 'break', $menu ) ) {
-					$WP_Statistics->menu_slugs[ 'break_' . $key ] = add_submenu_page( WP_Statistics::$page[ $menu['sub'] ], '', '', $capability, 'wps_break_menu', 'WP_Statistics_Admin_Pages::' . $method );
+					$WP_Statistics->menu_slugs[ 'break_' . $key ] = add_submenu_page( \WP_STATISTICS\Menu::get_page_slug( $menu['sub'] ), '', '', $capability, 'wps_break_menu', 'WP_Statistics_Admin_Pages::' . $method );
 				}
 			} else {
-				$WP_Statistics->menu_slugs[ $key ] = add_menu_page( $menu['title'], $name, $capability, WP_Statistics::$page[ $menu['page_url'] ], "WP_Statistics_Admin_Pages::" . $method, $menu['icon'] );
+				$WP_Statistics->menu_slugs[ $key ] = add_menu_page( $menu['title'], $name, $capability, \WP_STATISTICS\Menu::get_page_slug( $menu['page_url'] ), "WP_Statistics_Admin_Pages::" . $method, $menu['icon'] );
 			}
 		}
 
