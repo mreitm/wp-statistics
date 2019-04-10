@@ -23,12 +23,7 @@ class AdminBar {
 		 *
 		 * @example add_filter('wp_statistics_show_admin_bar', function(){ return false; });
 		 */
-		$permit = apply_filters( 'wp_statistics_show_admin_bar', true );
-		if ( ! $permit ) {
-			return $permit;
-		} else {
-			return $WP_Statistics->option->get( 'menu_bar' ) ? true : false;
-		}
+		return ( has_filter( 'wp_statistics_show_admin_bar' ) ) ? apply_filters( 'wp_statistics_show_admin_bar', true ) : $WP_Statistics->option->get( 'menu_bar' );
 	}
 
 	/**
