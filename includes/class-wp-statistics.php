@@ -164,6 +164,9 @@ class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-network-admin.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
 
+			//Admin Menu
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menu.php';
+
 			//Admin Notice
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-notice.php';
 
@@ -277,7 +280,15 @@ class WP_Statistics {
 		//$GLOBALS['WP_Statistics']->timezone = $this->container['timezone']; //TODO Remove At last
 
 		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
-		new \WP_STATISTICS\AdminBar();
+		if ( is_admin() ) {
+
+			# Admin Menu
+			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
+
+			# Admin Menu Bar
+			new \WP_STATISTICS\AdminBar;
+		}
+
 	}
 
 	/**
@@ -742,8 +753,6 @@ class WP_Statistics {
 
 		return $count;
 	}
-
-
 
 
 	/**
