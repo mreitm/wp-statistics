@@ -3,23 +3,42 @@
 namespace WP_STATISTICS;
 
 class AdminBar {
-
+	/**
+	 * AdminBar constructor.
+	 */
 	public function __construct() {
+
+		# Show Wordpress Admin Bar
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 20 );
+	}
+
+	/**
+	 * Check Show WP-Statistics Admin Bar
+	 */
+	public static function show_admin_bar() {
 		global $WP_Statistics;
 
-		//Show Wordpress Admin Bar
-		if ( $WP_Statistics->option->get( 'menu_bar' ) ) {
-			add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 20 );
+		/**
+		 * Show/Hide Wp-Statistics Admin Bar
+		 *
+		 * @example add_filter('wp_statistics_show_admin_bar', function(){ return false; });
+		 */
+		$permit = apply_filters( 'wp_statistics_show_admin_bar', true );
+		if ( ! $permit ) {
+			return $permit;
+		} else {
+			return $WP_Statistics->option->get( 'menu_bar' ) ? true : false;
 		}
 	}
 
 	/**
-	 * Adds the admin bar menu if the user has selected it.
+	 * Show WordPress Admin Bar
 	 */
 	public function admin_bar() {
 		global $wp_admin_bar;
 
-		if ( is_admin_bar_showing() and wp_statistics_check_access_user() ) {
+		// Check Show WordPress Admin Bar
+		if ( $this->show_admin_bar() and is_admin_bar_showing() and wp_statistics_check_access_user() ) {
 
 			/**
 			 * List Of Admin Bar Wordpress
@@ -59,6 +78,15 @@ class AdminBar {
 					'href'   => \WP_Statistics_Admin_Pages::admin_url( 'overview' )
 				)
 			);
+
+			/**
+			 * WP-Statistics Admin Bar List
+			 *
+			 * @example add_filter('wp_statistics_admin_bar', function( $admin_bar_list ){ unset( $admin_bar_list['wp-statistics-menu-useronline'] ); return $admin_bar_list; });
+			 */
+			$admin_bar_list = apply_filters( 'wp_statistics_admin_bar', $admin_bar_list );
+
+			# Show Admin Bar
 			foreach ( $admin_bar_list as $id => $v_admin_bar ) {
 				$wp_admin_bar->add_menu( array_merge( array( 'id' => $id ), $v_admin_bar ) );
 			}
