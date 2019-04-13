@@ -234,7 +234,7 @@ function wp_statistics_visit( $time, $daily = null ) {
 
 		//Custom Action
 		if ( $time == "total" ) {
-			$result += $WP_Statistics->Get_Historical_Data( 'visits' );
+			$result += WP_STATISTICS\Historical::get( 'visits' );
 		}
 
 		$sum = $result;
@@ -372,7 +372,7 @@ function wp_statistics_visitor( $time, $daily = null, $count_only = false, $opti
 
 	//Custom Action
 	if ( $time == "total" and $arg['type'] == "all" ) {
-		$history = $WP_Statistics->Get_Historical_Data( 'visitors' );
+		$history = WP_STATISTICS\Historical::get( 'visitors' );
 	}
 
 	// Execute the SQL call, if we're only counting we can use get_var(), otherwise we use query().
@@ -432,7 +432,7 @@ function wp_statistics_pages( $time, $page_uri = '', $id = - 1, $rangestartdate 
 
 		//Custom Action
 		if ( $time == "total" ) {
-			$history = $WP_Statistics->Get_Historical_Data( $history_key, $history_id );
+			$history = WP_STATISTICS\Historical::get( $history_key, $history_id );
 		}
 	}
 

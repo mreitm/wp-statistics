@@ -1,9 +1,9 @@
 <?php
 // Get the historical number of visitors to the site
-$historical_visitors = $WP_Statistics->Get_Historical_Data( 'visitors' );
+$historical_visitors = WP_STATISTICS\Historical::get( 'visitors' );
 
 // Get the historical number of visits to the site
-$historical_visits = $WP_Statistics->Get_Historical_Data( 'visits' );
+$historical_visits = WP_STATISTICS\Historical::get( 'visits' );
 
 ?>
 <div class="wrap wps-wrap">
@@ -68,11 +68,7 @@ $historical_visits = $WP_Statistics->Get_Historical_Data( 'visits' );
                            value="<?php _e( 'Update Now!', 'wp-statistics' ); ?>" name="historical-submit"/>
                 </td>
             </tr>
-
             </tbody>
-
         </table>
-
     </form>
-
 </div>

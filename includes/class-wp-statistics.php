@@ -6,7 +6,7 @@
  * @package WP Statistics
  */
 class WP_Statistics {
-    
+
 	/**
 	 * is current request
 	 *
@@ -117,6 +117,7 @@ class WP_Statistics {
 		// Hits Class
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visitor.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-historical.php';
 
 
 		//todo rest api
@@ -247,14 +248,11 @@ class WP_Statistics {
 		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\UserOnline();
 
 		# Visitor
-		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\Visitor();
+		$GLOBALS['WP_Statistics']->visitor = new \WP_STATISTICS\Visitor();
 
 
 		//Load Rest Api
 		$this->init_rest_api();
-
-
-
 
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
@@ -624,72 +622,6 @@ class WP_Statistics {
 		// We should never actually get to this point, but let's make sure we return something
 		// just in case something goes terribly wrong.
 		return 'No search query found!';
-	}
-
-	/**
-	 * Get historical data
-	 *
-	 * @param        $type
-	 * @param string $id
-	 *
-	 * @return int|null|string
-	 */
-	public function Get_Historical_Data( $type, $id = '' ) {
-		global $wpdb;
-
-		$count = 0;
-		switch ( $type ) {
-			case 'visitors':
-				if ( array_key_exists( 'visitors', $this->historical ) ) {
-					return $this->historical['visitors'];
-				} else {
-					$result = $wpdb->get_var( "SELECT value FROM {$wpdb->prefix}statistics_historical WHERE category = 'visitors'" );
-					if ( $result > $count ) {
-						$count = $result;
-					}
-					$this->historical['visitors'] = $count;
-				}
-
-				break;
-			case 'visits':
-				if ( array_key_exists( 'visits', $this->historical ) ) {
-					return $this->historical['visits'];
-				} else {
-					$result = $wpdb->get_var( "SELECT value FROM {$wpdb->prefix}statistics_historical WHERE category = 'visits'" );
-					if ( $result > $count ) {
-						$count = $result;
-					}
-					$this->historical['visits'] = $count;
-				}
-
-				break;
-			case 'uri':
-				if ( array_key_exists( $id, $this->historical ) ) {
-					return $this->historical[ $id ];
-				} else {
-					$result = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}statistics_historical WHERE category = 'uri' AND uri = %s", $id ) );
-					if ( $result > $count ) {
-						$count = $result;
-					}
-					$this->historical[ $id ] = $count;
-				}
-
-				break;
-			case 'page':
-				if ( array_key_exists( $id, $this->historical ) ) {
-					return $this->historical[ $id ];
-				} else {
-					$result = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}statistics_historical WHERE category = 'uri' AND page_id = %d", $id ) );
-					if ( $result > $count ) {
-						$count = $result;
-					}
-					$this->historical[ $id ] = $count;
-				}
-
-				break;
-		}
-
-		return $count;
 	}
 
 
