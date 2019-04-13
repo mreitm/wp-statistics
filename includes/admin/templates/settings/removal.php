@@ -15,7 +15,7 @@ if ( $wps_nonce_valid ) {
 		if ( is_super_admin() ) {
 			GLOBAL $wpdb, $WP_Statistics;
 
-			$default_options   = $WP_Statistics->Default_Options();
+			$default_options   = \WP_STATISTICS\Option::Default_Option();
 			$excluded_defaults = array( 'force_robot_update', 'robot_list' );
 
 			// Handle multi site implementations

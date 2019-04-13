@@ -39,6 +39,47 @@ class Option {
 	}
 
 	/**
+	 * WP-Statistics Default Option
+	 *
+	 * @param null $option_name
+	 * @return array
+	 */
+	public static function Default_Option( $option_name = null ) {
+
+		$options                          = array();
+		$options['robotlist']             = Helper::get_robots_list();
+		$options['search_converted']      = 1; //TODO Check and Remvoe it
+		$options['anonymize_ips']         = false;
+		$options['geoip']                 = false;
+		$options['useronline']            = true;
+		$options['visits']                = true;
+		$options['visitors']              = true;
+		$options['pages']                 = true;
+		$options['check_online']          = UserOnline::$reset_user_time;
+		$options['menu_bar']              = false;
+		$options['coefficient']           = Visitor::$coefficient;
+		$options['stats_report']          = false;
+		$options['time_report']           = 'daily';
+		$options['send_report']           = 'mail';
+		$options['content_report']        = '';
+		$options['update_geoip']          = true;
+		$options['store_ua']              = false;
+		$options['exclude_administrator'] = true;
+		$options['disable_se_clearch']    = true;
+		$options['disable_se_qwant']      = true;
+		$options['disable_se_baidu']      = true;
+		$options['disable_se_ask']        = true;
+		$options['map_type']              = 'jqvmap';
+		$options['force_robot_update']    = true;
+
+		if ( $option_name and isset( $options[ $option_name ] ) ) {
+			return $options[ $option_name ];
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Loads the options from WordPress
 	 */
 	public function load_options() {

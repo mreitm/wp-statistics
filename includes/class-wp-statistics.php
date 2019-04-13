@@ -8,23 +8,11 @@
 class WP_Statistics {
 
 	/**
-	 * is current request
-	 *
-	 * @var bool
-	 */
-	public $is_ajax_logger_request = false;
-	/**
 	 * Result of queries
 	 *
 	 * @var
 	 */
 	private $result;
-	/**
-	 * Historical data
-	 *
-	 * @var array
-	 */
-	private $historical = array();
 
 	/**
 	 * Referrer
@@ -229,6 +217,9 @@ class WP_Statistics {
 	public function instantiate() {
 		//todo seperate all item to seperate class
 
+		# Get Country Codes
+		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
+
 		# Get User Detail
 		$GLOBALS['WP_Statistics']->user = new \WP_STATISTICS\User();
 
@@ -240,9 +231,6 @@ class WP_Statistics {
 
 		# User Agent
 		$GLOBALS['WP_Statistics']->agent = \WP_STATISTICS\UserAgent::getUserAgent();
-
-		# Get Country Codes
-		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
 
 		# User Online
 		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\UserOnline();
@@ -283,7 +271,6 @@ class WP_Statistics {
 	public function init_rest_api() {
 		$this->restapi = new WP_Statistics_Rest();
 	}
-
 
 
 	/**
@@ -344,61 +331,6 @@ class WP_Statistics {
 			);
 		}
 	}
-
-	/**
-	 * During installation of WP Statistics some initial options need to be set.
-	 * This function will save a set of default options for the plugin.
-	 *
-	 * @param null $option_name
-	 *
-	 * @return array
-	 */
-	public function Default_Options( $option_name = null ) {
-		$options = array();
-
-		if ( ! isset( $wps_robotarray ) ) {
-			// Get the robots list, we'll use this for both upgrades and new installs.
-			require_once WP_STATISTICS_DIR . 'includes/defines/robots-list.php';
-		}
-
-		$options['robotlist'] = trim( $wps_robotslist );
-
-		// By default, on new installs, use the new search table.
-		$options['search_converted'] = 1;
-
-		// If this is a first time install or an upgrade and we've added options, set some intelligent defaults.
-		$options['anonymize_ips']         = false;
-		$options['geoip']                 = false;
-		$options['useronline']            = true;
-		$options['visits']                = true;
-		$options['visitors']              = true;
-		$options['pages']                 = true;
-		$options['check_online']          = \WP_STATISTICS\UserOnline::$reset_user_time;
-		$options['menu_bar']              = false;
-		$options['coefficient']           = \WP_STATISTICS\Visitor::$coefficient;
-		$options['stats_report']          = false;
-		$options['time_report']           = 'daily';
-		$options['send_report']           = 'mail';
-		$options['content_report']        = '';
-		$options['update_geoip']          = true;
-		$options['store_ua']              = false;
-		$options['robotlist']             = $wps_robotslist;
-		$options['exclude_administrator'] = true;
-		$options['disable_se_clearch']    = true;
-		$options['disable_se_qwant']      = true;
-		$options['disable_se_baidu']      = true;
-		$options['disable_se_ask']        = true;
-		$options['map_type']              = 'jqvmap';
-
-		$options['force_robot_update'] = true;
-
-		if ( $option_name and isset( $options[ $option_name ] ) ) {
-			return $options[ $option_name ];
-		}
-
-		return $options;
-	}
-
 
 	/**
 	 * return the referrer link for the current user.
@@ -623,8 +555,6 @@ class WP_Statistics {
 		// just in case something goes terribly wrong.
 		return 'No search query found!';
 	}
-
-
 
 
 }

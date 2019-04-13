@@ -155,6 +155,32 @@ class Helper {
 	}
 
 	/**
+	 * Get Robots List
+	 *
+	 * @param string $type
+	 * @return array|bool|string
+	 */
+	public static function get_robots_list( $type = 'list' ) {
+		global $WP_Statistics;
+
+		# Set Default
+		$list = array();
+
+		# Load From global
+		if ( isset( $WP_Statistics->robots_list ) ) {
+			$list = $WP_Statistics->robots_list;
+		}
+
+		# Load From file
+		require_once WP_STATISTICS_DIR . "includes/defines/robots-list.php";
+		if ( isset( $wps_robots_list_array ) ) {
+			$list = $wps_robots_list_array;
+		}
+
+		return ( $type == "array" ? $list : implode( "\n", $list ) );
+	}
+
+	/**
 	 * Sanitizes the referrer
 	 *
 	 * @param     $referrer

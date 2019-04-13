@@ -235,7 +235,7 @@ class Install {
 
 			$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
 
-			$default_options = $WP_Statistics->Default_Options();
+			$default_options = Option::Default_Option();
 
 			if ( $installed_version == false ) {
 

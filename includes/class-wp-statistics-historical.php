@@ -50,5 +50,4 @@ class Historical {
 		return $result > $count ? $result : $count;
 	}
 
-
 }

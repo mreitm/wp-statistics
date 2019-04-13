@@ -1,8 +1,8 @@
 <?php
-
-global $wps_robotarray, $wps_robotslist;
-
-$wps_robotarray = array(
+/**
+ * List Of Default robots in Wp-Statistics
+ */
+$wps_robots_list_array = array(
 	'007ac9',
 	'5bot',
 	'A6-Indexer',
@@ -178,5 +178,3 @@ $wps_robotarray = array(
 	'ZyBorg',
 	'ZemlyaCrawl',
 );
-
-$wps_robotslist = implode("\n", $wps_robotarray);
