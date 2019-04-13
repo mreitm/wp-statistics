@@ -10,7 +10,8 @@
  * Domain Path: /languages/
  */
 
-defined( 'ABSPATH' ) || exit;
+# Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 # Load Plugin Defines
 require_once 'includes/defines.php';
@@ -20,3 +21,8 @@ require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics.php';
 
 # Run WP-STATISTICS
 $GLOBALS['WP_Statistics'] = new WP_Statistics;
+
+add_action('init', function(){
+
+
+});

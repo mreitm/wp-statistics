@@ -6,14 +6,6 @@
  * @package WP Statistics
  */
 class WP_Statistics {
-
-	/**
-	 * Result of queries
-	 *
-	 * @var
-	 */
-	private $result;
-
 	/**
 	 * Referrer
 	 *
@@ -118,7 +110,7 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
 
 
-		if ( is_admin() ) {
+		if ( \WP_STATISTICS\Helper::is_request('admin') ) {
 
 			// Admin classes.
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin.php';
@@ -148,7 +140,12 @@ class WP_Statistics {
 		}
 
 		// Front Class.
-		if ( ! is_admin() ) {
+		if ( ! \WP_STATISTICS\Helper::is_request('admin') ) {
+		}
+
+		// WP-Cli
+		if ( class_exists( 'WP_CLI' ) ) {
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-cli.php';
 		}
 
 		// Template functions.
@@ -245,8 +242,8 @@ class WP_Statistics {
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
 
-		//$GLOBALS['WP_Statistics'] = array_merge($this->container, $this);
-		if ( is_admin() ) {
+
+		if ( \WP_STATISTICS\Helper::is_request('admin') ) {
 
 			# Admin Menu
 			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
