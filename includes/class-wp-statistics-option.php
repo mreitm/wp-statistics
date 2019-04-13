@@ -91,8 +91,14 @@ class Option {
 			}
 		}
 
-		// Return the option.
-		return $this->options[ $option ];
+		/**
+		 * Filters a For Return WP-Statistics Option
+		 *
+		 * @param string $option Option name.
+		 * @param string $value Option Value.
+		 * @example add_filter('wp_statistics_option', function($name, $value){ if( $name =="coefficient" ) { return $value = 5; } });
+		 */
+		return apply_filters( 'wp_statistics_option', $option, $this->options[ $option ] );
 	}
 
 
