@@ -6,8 +6,7 @@
  * @package WP Statistics
  */
 class WP_Statistics {
-
-
+    
 	/**
 	 * is current request
 	 *
@@ -33,12 +32,6 @@ class WP_Statistics {
 	 * @var bool
 	 */
 	private $referrer = false;
-	/**
-	 * Installed Version
-	 *
-	 * @var string
-	 */
-	public static $installed_version;
 
 	/**
 	 * Rest Api init

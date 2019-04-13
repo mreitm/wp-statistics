@@ -383,17 +383,17 @@ class WP_Statistics_Hits {
 				// We'd normally use the WordPress insert function, but since we may run in to a race condition where another hit to the site has already created a new entry in the database
 				// for this IP address we want to do an "INSERT ... ON DUPLICATE KEY" which WordPress doesn't support.
 				$sqlstring = $wpdb->prepare(
-					'INSERT INTO ' . $wpdb->prefix . 'statistics_visit (last_visit, last_counter, visit) VALUES ( %s, %s, %d) ON DUPLICATE KEY UPDATE visit = visit + ' . WP_STATISTICS\Visitor::get_coefficient(),
+					'INSERT INTO ' . $wpdb->prefix . 'statistics_visit (last_visit, last_counter, visit) VALUES ( %s, %s, %d) ON DUPLICATE KEY UPDATE visit = visit + ' . WP_STATISTICS\Visitor::getCoefficient(),
 					\WP_STATISTICS\TimeZone::getCurrentDate(),
 					\WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' ),
-					\WP_STATISTICS\Visitor::get_coefficient()
+					\WP_STATISTICS\Visitor::getCoefficient()
 				);
 
 				$wpdb->query( $sqlstring );
 			} else {
 				$sqlstring = $wpdb->prepare(
 					'UPDATE ' . $wpdb->prefix . 'statistics_visit SET `visit` = `visit` + %d, `last_visit` = %s WHERE `last_counter` = %s',
-					\WP_STATISTICS\Visitor::get_coefficient(),
+					\WP_STATISTICS\Visitor::getCoefficient(),
 					\WP_STATISTICS\TimeZone::getCurrentDate(),
 					$this->result->last_counter
 				);

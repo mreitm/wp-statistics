@@ -20,7 +20,7 @@ class Visitor {
 	/**
 	 * Get Coefficient
 	 */
-	public static function get_coefficient() {
+	public static function getCoefficient() {
 		$coefficient = $GLOBALS['WP_Statistics']->option->get( 'coefficient', self::$coefficient );
 		return is_numeric( $coefficient ) and $coefficient > 0 ? $coefficient : self::$coefficient;
 	}
