@@ -49,7 +49,7 @@
 	);
 
 	wp_statistics_date_range_selector(
-		\WP_STATISTICS\Menu::get_page_slug('authors'),
+		\WP_STATISTICS\Admin_Menus::get_page_slug('authors'),
 		$daysToDisplay,
 		null,
 		null,

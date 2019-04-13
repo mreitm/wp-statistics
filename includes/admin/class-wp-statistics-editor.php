@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\Helper;
+
 /**
  * Class WP_Statistics_Editor
  */
@@ -58,7 +60,7 @@ class WP_Statistics_Editor {
 		}
 
 		//Show Hit Column in All Post Type in Wordpress
-		$screens = self::get_list_post_type();
+		$screens = Helper::get_list_post_type();
 		foreach ( $screens as $screen ) {
 			add_meta_box( 'wp_statistics_editor_meta_box', __( 'Hit Statistics', 'wp-statistics' ), 'WP_Statistics_Editor::meta_box', $screen, 'normal', 'high',
 				array(
@@ -82,7 +84,7 @@ class WP_Statistics_Editor {
 	}
 
 	static function generate_postbox_contents( $post, $args ) {
-		if ( self::is_gutenberg() ) {
+		if ( Helper::is_gutenberg() ) {
 			//If Gutenberg Editor
 			if ( isset( $_GET['post'] ) and ! empty( $_GET['post'] ) ) {
 				echo '<div class="wps-gutenberg-chart-js">';
@@ -103,7 +105,7 @@ class WP_Statistics_Editor {
 	static function inline_javascript() {
 		$screen = get_current_screen();
 
-		$screens = self::get_list_post_type();
+		$screens = Helper::get_list_post_type();
 		if ( ! in_array( $screen->id, $screens ) ) {
 			return;
 		}
@@ -113,7 +115,7 @@ class WP_Statistics_Editor {
 		$new_buttons = '</button>';
 
 		//If Classic Editor
-		if ( self::is_gutenberg() === false ) {
+		if ( Helper::is_gutenberg() === false ) {
 			$new_buttons .= '<button class="handlediv button-link wps-refresh" type="button" id="{{refreshid}}">' . wp_statistics_icons( 'dashicons-update' ) . '<span class="screen-reader-text">' . __( 'Reload', 'wp-statistics' ) . '</span></button>';
 		}
 		$new_buttons .= '<button class="handlediv button-link wps-more" type="button" id="{{moreid}}">' . wp_statistics_icons( 'dashicons-external' ) . '<span class="screen-reader-text">' . __( 'More Details', 'wp-statistics' ) . '</span></button>';
@@ -121,11 +123,11 @@ class WP_Statistics_Editor {
 
 		$admin_url                                              = get_admin_url() . "/admin.php?page=";
 		$page_urls                                              = array();
-		$page_urls['wp_statistics_editor_meta_box_more_button'] = $admin_url . \WP_STATISTICS\Menu::get_page_slug('pages') . '&page-id=';
+		$page_urls['wp_statistics_editor_meta_box_more_button'] = $admin_url . \WP_STATISTICS\Admin_Menus::get_page_slug('pages') . '&page-id=';
 
 		//Button for Gutenberg
 		$btn_more_action = 'wp_statistics_goto_more';
-		if ( self::is_gutenberg() ) {
+		if ( Helper::is_gutenberg() ) {
 			$btn_more_action = "function () { window.location.href = '" . wp_normalize_path( $page_urls['wp_statistics_editor_meta_box_more_button'] . ( isset( $_GET['post'] ) === true ? $_GET['post'] : '' ) ) . "';}";
 		}
 
@@ -174,28 +176,4 @@ class WP_Statistics_Editor {
 		<?php
 	}
 
-	/**
-	 * Get List Post Type
-	 * @return array
-	 */
-	public static function get_list_post_type() {
-		$post_types     = array( 'post', 'page' );
-		$get_post_types = get_post_types( array( 'public' => true, '_builtin' => false ), 'names', 'and' );
-		foreach ( $get_post_types as $name ) {
-			$post_types[] = $name;
-		}
-
-		return $post_types;
-	}
-
-	/**
-	 * Check Is Gutenberg Editor
-	 */
-	public static function is_gutenberg() {
-		$current_screen = get_current_screen();
-		if ( ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) || ( function_exists( 'is_gutenberg_page' ) ) && is_gutenberg_page() ) {
-			return true;
-		}
-		return false;
-	}
 }

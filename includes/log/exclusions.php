@@ -156,7 +156,7 @@ foreach ( $excluded_reasons as $reason ) {
 ?>
 <div class="wrap wps-wrap">
 	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Exclusions Statistics', 'wp-statistics' ) ); ?>
-	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Menu::get_page_slug('exclusions'), $daysToDisplay ); ?>
+	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('exclusions'), $daysToDisplay ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">
             <div class="meta-box-sortables">

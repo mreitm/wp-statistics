@@ -190,7 +190,7 @@ class WP_Statistics_Admin {
 
 		$screen = get_current_screen();
 
-		if ( $screen->id == "toplevel_page_" . \WP_STATISTICS\Menu::get_page_slug('overview') or $screen->id == "statistics_page_" .\WP_STATISTICS\Menu::get_page_slug('settings') ) {
+		if ( $screen->id == "toplevel_page_" . \WP_STATISTICS\Admin_Menus::get_page_slug('overview') or $screen->id == "statistics_page_" . \WP_STATISTICS\Admin_Menus::get_page_slug('settings') ) {
 			$plugin = Helper::is_active_cache_plugin();
 
 			if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) and $plugin['status'] === true ) {
@@ -207,7 +207,7 @@ class WP_Statistics_Admin {
 		}
 
 		// Test Rest Api is Active for Cache
-		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) and $screen->id == "statistics_page_" . \WP_STATISTICS\Menu::get_page_slug('settings') ) {
+		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) and $screen->id == "statistics_page_" . \WP_STATISTICS\Admin_Menus::get_page_slug('settings') ) {
 
 			if ( false === ( $check_rest_api = get_transient( '_check_rest_api_wp_statistics' ) ) ) {
 
@@ -284,7 +284,7 @@ class WP_Statistics_Admin {
 		$read_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
 
 		if ( current_user_can( $read_cap ) && $WP_Statistics->option->get( 'pages' ) && ! $WP_Statistics->option->get( 'disable_column' ) ) {
-			$post_types = WP_Statistics_Editor::get_list_post_type();
+			$post_types = Helper::get_list_post_type();
 			foreach ( $post_types as $type ) {
 				add_action( 'manage_' . $type . '_posts_columns', 'WP_Statistics_Admin::add_column', 10, 2 );
 				add_action( 'manage_' . $type . '_posts_custom_column', 'WP_Statistics_Admin::render_column', 10, 2 );

@@ -50,6 +50,8 @@ class Helper {
 				return defined( 'DOING_AJAX' );
 			case 'cron':
 				return defined( 'DOING_CRON' );
+			case 'wp-cli':
+				return defined( 'WP_CLI' ) && WP_CLI;
 			case 'frontend':
 				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' ) && ! self::is_rest_request();
 		}
@@ -236,6 +238,32 @@ class Helper {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Check User Is Using Gutenberg Editor
+	 */
+	public static function is_gutenberg() {
+		$current_screen = get_current_screen();
+		if ( ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) || ( function_exists( 'is_gutenberg_page' ) ) && is_gutenberg_page() ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Get List WordPress Post Type
+	 *
+	 * @return array
+	 */
+	public static function get_list_post_type() {
+		$post_types     = array( 'post', 'page' );
+		$get_post_types = get_post_types( array( 'public' => true, '_builtin' => false ), 'names', 'and' );
+		foreach ( $get_post_types as $name ) {
+			$post_types[] = $name;
+		}
+
+		return $post_types;
 	}
 
 

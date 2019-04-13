@@ -147,7 +147,7 @@ final class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
 
 			//Admin Menu
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menu.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menus.php';
 
 			//Admin Asset
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-assets.php';
@@ -167,7 +167,7 @@ final class WP_Statistics {
 		}
 
 		// WP-Cli
-		if ( class_exists( 'WP_CLI' ) ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-cli.php';
 		}
 
@@ -269,7 +269,7 @@ final class WP_Statistics {
 		if ( \WP_STATISTICS\Helper::is_request( 'admin' ) ) {
 
 			# Admin Menu
-			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
+			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Admin_Menus;
 
 			# Admin Asset
 			new \WP_STATISTICS\Admin_Assets;

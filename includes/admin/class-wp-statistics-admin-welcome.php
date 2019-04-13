@@ -3,8 +3,18 @@
 namespace WP_STATISTICS;
 
 class Welcome {
-
+	/**
+	 * List Of WP-Statistics AddOne API
+	 *
+	 * @var string
+	 */
 	public static $addone = 'https://wp-statistics.com/wp-json/plugin/addons';
+
+	/**
+	 * Get Change Log of Last Version Wp-Statistics
+	 *
+	 * @var string
+	 */
 	public static $change_log = 'https://api.github.com/repos/wp-statistics/wp-statistics/releases/latest';
 
 	/**
@@ -21,7 +31,6 @@ class Welcome {
 	 */
 	public function init() {
 		global $WP_Statistics;
-
 
 		if ( $WP_Statistics->option->get( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
 			// Disable show welcome page

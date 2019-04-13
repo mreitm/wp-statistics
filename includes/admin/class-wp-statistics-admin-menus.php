@@ -2,7 +2,7 @@
 
 namespace WP_STATISTICS;
 
-class Menu {
+class Admin_Menus {
 	/**
 	 * List Of Admin Page Slug WP-statistics
 	 *
