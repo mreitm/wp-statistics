@@ -7,12 +7,6 @@
  */
 class WP_Statistics {
 
-	/**
-	 * a coefficient to record number of visits
-	 *
-	 * @var int
-	 */
-	public $coefficient = 1;
 
 	/**
 	 * is current request
@@ -129,6 +123,7 @@ class WP_Statistics {
 
 		// Hits Class
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visitor.php';
 
 
 		//todo rest api
@@ -258,6 +253,9 @@ class WP_Statistics {
 		# User Online
 		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\UserOnline();
 
+		# Visitor
+		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\Visitor();
+
 
 		//Load Rest Api
 		$this->init_rest_api();
@@ -295,17 +293,7 @@ class WP_Statistics {
 		$this->restapi = new WP_Statistics_Rest();
 	}
 
-	/**
-	 * Set Coefficient
-	 */
-	public function set_coefficient() {
-		// Set the default co-efficient.
-		$this->coefficient = $GLOBALS['WP_Statistics']->option->get( 'coefficient', 1 );
-		// Double check the co-efficient setting to make sure it's not been set to 0.
-		if ( $this->coefficient <= 0 ) {
-			$this->coefficient = 1;
-		}
-	}
+
 
 	/**
 	 * During installation of WP Statistics some initial data needs to be loaded
@@ -396,7 +384,7 @@ class WP_Statistics {
 		$options['pages']                 = true;
 		$options['check_online']          = \WP_STATISTICS\UserOnline::$reset_user_time;
 		$options['menu_bar']              = false;
-		$options['coefficient']           = '1';
+		$options['coefficient']           = \WP_STATISTICS\Visitor::$coefficient;
 		$options['stats_report']          = false;
 		$options['time_report']           = 'daily';
 		$options['send_report']           = 'mail';
