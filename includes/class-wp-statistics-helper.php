@@ -52,6 +52,75 @@ class Helper {
 	}
 
 	/**
+	 * Show Admin Wordpress Ui Notice
+	 *
+	 * @param $text
+	 * @param string $model
+	 * @param bool $close_button
+	 * @param bool $echo
+	 * @param string $style_extra
+	 * @return string
+	 */
+	public static function wp_admin_notice( $text, $model = "info", $close_button = true, $echo = true, $style_extra = 'padding:12px;' ) {
+		$text = '
+        <div class="notice notice-' . $model . '' . ( $close_button === true ? " is-dismissible" : "" ) . '">
+           <div style="' . $style_extra . '">' . $text . '</div>
+        </div>
+        ';
+		if ( $echo ) {
+			echo $text;
+		} else {
+			return $text;
+		}
+	}
+
+	/**
+	 * Check User is Used Cache Plugin
+	 *
+	 * @return array
+	 */
+	public static function is_active_cache_plugin() {
+		$use = array( 'status' => false, 'plugin' => '' );
+
+		/* Wordpress core */
+		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+			return array( 'status' => true, 'plugin' => 'core' );
+		}
+
+		/* WP Rocket */
+		if ( function_exists( 'get_rocket_cdn_url' ) ) {
+			return array( 'status' => true, 'plugin' => 'WP Rocket' );
+		}
+
+		/* WP Super Cache */
+		if ( function_exists( 'wpsc_init' ) ) {
+			return array( 'status' => true, 'plugin' => 'WP Super Cache' );
+		}
+
+		/* Comet Cache */
+		if ( function_exists( '___wp_php_rv_initialize' ) ) {
+			return array( 'status' => true, 'plugin' => 'Comet Cache' );
+		}
+
+		/* WP Fastest Cache */
+		if ( class_exists( 'WpFastestCache' ) ) {
+			return array( 'status' => true, 'plugin' => 'WP Fastest Cache' );
+		}
+
+		/* Cache Enabler */
+		if ( defined( 'CE_MIN_WP' ) ) {
+			return array( 'status' => true, 'plugin' => 'Cache Enabler' );
+		}
+
+		/* W3 Total Cache */
+		if ( defined( 'W3TC' ) ) {
+			return array( 'status' => true, 'plugin' => 'W3 Total Cache' );
+		}
+
+		return $use;
+	}
+
+	/**
 	 * Get WordPress Uploads DIR
 	 *
 	 * @param string $path
@@ -174,4 +243,6 @@ class Helper {
 
 		return $result;
 	}
+
+
 }

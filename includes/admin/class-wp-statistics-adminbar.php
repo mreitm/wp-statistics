@@ -16,14 +16,12 @@ class AdminBar {
 	 * Check Show WP-Statistics Admin Bar
 	 */
 	public static function show_admin_bar() {
-		global $WP_Statistics;
-
 		/**
 		 * Show/Hide Wp-Statistics Admin Bar
 		 *
 		 * @example add_filter('wp_statistics_show_admin_bar', function(){ return false; });
 		 */
-		return ( has_filter( 'wp_statistics_show_admin_bar' ) ) ? apply_filters( 'wp_statistics_show_admin_bar', true ) : $WP_Statistics->option->get( 'menu_bar' );
+		return ( has_filter( 'wp_statistics_show_admin_bar' ) ) ? apply_filters( 'wp_statistics_show_admin_bar', true ) : $GLOBALS['WP_Statistics']->option->get( 'menu_bar' );
 	}
 
 	/**

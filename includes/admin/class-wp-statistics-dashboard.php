@@ -1,12 +1,10 @@
 <?php
 
-/**
- * Class WP_Statistics_Dashboard
- */
-class WP_Statistics_Dashboard {
 
+class WP_Statistics_Dashboard {
 	/**
 	 * User Meta Set Dashboard Option name
+     *
 	 * @var string
 	 */
 	public static $dashboard_set = 'dashboard_set';
@@ -21,7 +19,6 @@ class WP_Statistics_Dashboard {
 
 		//Add Inline Script in Admin Footer
 		add_action( 'admin_footer', array( $this, 'inline_javascript' ) );
-
 	}
 
 	/**

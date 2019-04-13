@@ -57,14 +57,14 @@ class WP_Statistics {
 	 * WP_Statistics constructor.
 	 */
 	public function __construct() {
-		/*
+		/**
 		 * Check PHP Support
 		 */
 		if ( ! $this->require_php_version() ) {
 			add_action( 'admin_notices', array( $this, 'php_version_notice' ) );
 			return;
 		}
-		/*
+		/**
 		 * Plugin Loaded Action
 		 */
 		add_action( 'plugins_loaded', array( $this, 'plugin_setup' ) );
@@ -126,6 +126,10 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geoip.php';
+
+		// Hits Class
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
+
 
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
@@ -251,13 +255,15 @@ class WP_Statistics {
 		# Get Country Codes
 		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
 
+		# User Online
+		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\UserOnline();
+
 
 		//Load Rest Api
 		$this->init_rest_api();
 
 
-		//Reset User Online Count
-		add_action( 'wp_loaded', array( $this, 'reset_user_online' ) );
+
 
 		//Set constant
 		$GLOBALS['WP_Statistics'] = $this;
@@ -274,7 +280,7 @@ class WP_Statistics {
 			}
 
 			# Welcome Screen
-            new \WP_STATISTICS\Welcome;
+			new \WP_STATISTICS\Welcome;
 
 			# Admin Menu Bar
 			$GLOBALS['WP_Statistics']->admin_bar = new \WP_STATISTICS\AdminBar;
@@ -388,7 +394,7 @@ class WP_Statistics {
 		$options['visits']                = true;
 		$options['visitors']              = true;
 		$options['pages']                 = true;
-		$options['check_online']          = '120';
+		$options['check_online']          = \WP_STATISTICS\UserOnline::$reset_user_time;
 		$options['menu_bar']              = false;
 		$options['coefficient']           = '1';
 		$options['stats_report']          = false;
@@ -706,45 +712,6 @@ class WP_Statistics {
 	}
 
 
-	/**
-	 * Reset Online User Process By Option time
-	 *
-	 * @return string
-	 */
-	public function reset_user_online() {
-		global $WP_Statistics, $wpdb;
 
-		//Check User Online is Active in this Wordpress
-		if ( $WP_Statistics->option->get( 'useronline' ) ) {
-
-			//Get Not timestamp
-			$now = \WP_STATISTICS\TimeZone::getCurrentDate( 'U' );
-
-			// Set the default seconds a user needs to visit the site before they are considered offline.
-			$reset_time = 120;
-
-			// Get the user set value for seconds to check for users online.
-			if ( $WP_Statistics->option->get( 'check_online' ) ) {
-				$reset_time = $WP_Statistics->option->get( 'check_online' );
-			}
-
-			// We want to delete users that are over the number of seconds set by the admin.
-			$time_diff = $now - $reset_time;
-
-			//Last check Time
-			$wps_run = get_option( "wp_statistics_check_useronline" );
-			if ( isset( $wps_run ) and is_numeric( $wps_run ) ) {
-				if ( ( $wps_run + $reset_time ) > $now ) {
-					return;
-				}
-			}
-
-			// Call the deletion query.
-			$wpdb->query( "DELETE FROM `" . WP_STATISTICS\DB::table( 'useronline' ) . "` WHERE timestamp < {$time_diff}" );
-
-			//Update Last run this Action
-			update_option( "wp_statistics_check_useronline", $now );
-		}
-	}
 
 }
