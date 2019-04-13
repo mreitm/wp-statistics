@@ -96,9 +96,9 @@ class Option {
 		 *
 		 * @param string $option Option name.
 		 * @param string $value Option Value.
-		 * @example add_filter('wp_statistics_option', function($name, $value){ if( $name =="coefficient" ) { return $value = 5; } });
+		 * @example add_filter('wp_statistics_option_coefficient', function(){ return 5; });
 		 */
-		return apply_filters( 'wp_statistics_option', $option, $this->options[ $option ] );
+		return apply_filters( "wp_statistics_option_{$option}", $this->options[ $option ] );
 	}
 
 
