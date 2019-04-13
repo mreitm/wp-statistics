@@ -1,4 +1,7 @@
 <?php
+
+use WP_STATISTICS\Referred;
+
 function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count = 10 ) {
 	global $wpdb, $WP_Statistics;
 
@@ -108,7 +111,7 @@ function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count =
 			}
 			echo $ip_string;
 			echo "</td>";
-			echo "<td style=\"text-align: left\">" . WP_STATISTICS\Helper::get_referrer_link( $items->referred ) . "</td>";;
+			echo "<td style=\"text-align: left\">" . Referred::get_referrer_link( $items->referred ) . "</td>";;
 			echo "</tr>";
 		}
 

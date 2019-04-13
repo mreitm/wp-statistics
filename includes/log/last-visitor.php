@@ -4,6 +4,9 @@
     });
 </script>
 <?php
+
+use WP_STATISTICS\Referred;
+
 $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 $_var  = 'agent';
@@ -187,7 +190,7 @@ if ( $_get != '%' ) {
 							echo "</td>";
 
 							echo "<td style=\"text-align: left\">";
-							echo WP_STATISTICS\Helper::get_referrer_link( $items->referred );
+							echo Referred::get_referrer_link( $items->referred );
 							echo "</td>";
 
 							echo "</tr>";

@@ -2,7 +2,7 @@
 
 namespace WP_STATISTICS;
 
-class AdminNotice {
+class Admin_Notices {
 	/**
 	 * Array of notices - name => callback.
 	 *
@@ -25,8 +25,4 @@ class AdminNotice {
 		}
 	}
 
-
-
 }
-
-new AdminNotice();

@@ -4,6 +4,9 @@
     });
 </script>
 <?php
+
+use WP_STATISTICS\Referred;
+
 $search_engines = wp_statistics_searchengine_list();
 
 $search_result['All'] = wp_statistics_searchword( 'all', 'total' );
@@ -198,7 +201,7 @@ $total = $search_result[ $referred ];
 									echo "</td>";
 
 									echo "<td style=\"text-align: left\">";
-									echo WP_STATISTICS\Helper::get_referrer_link( $items->referred );
+									echo Referred::get_referrer_link( $items->referred );
 									echo "</td>";
 
 									echo "</tr>";

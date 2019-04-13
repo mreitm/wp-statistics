@@ -1,4 +1,7 @@
 <?php
+
+use WP_STATISTICS\Referred;
+
 function wp_statistics_generate_referring_postbox_content( $count = 10 ) {
 	global $wpdb, $WP_Statistics;
 
@@ -39,7 +42,7 @@ function wp_statistics_generate_referring_postbox_content( $count = 10 ) {
 		foreach ( $get_urls as $domain => $number ) {
 
 			//Get Site Link
-			$referrer_html = WP_STATISTICS\Helper::html_sanitize_referrer( $domain );
+			$referrer_html = Referred::html_sanitize_referrer( $domain );
 
 			//Get Site information if Not Exist
 			if ( ! array_key_exists( $domain, $referrer_list ) ) {
@@ -53,7 +56,7 @@ function wp_statistics_generate_referring_postbox_content( $count = 10 ) {
 			}
 
 			echo "<tr>";
-			echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . WP_STATISTICS\Helper::get_referrer_link( $domain, $referrer_list[ $domain ]['title'], true ) . "</td>";
+			echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . Referred::get_referrer_link( $domain, $referrer_list[ $domain ]['title'], true ) . "</td>";
 			echo "<td><span class='wps-cursor-default' " . ( $referrer_list[ $domain ]['country'] != "" ? 'title="' . $ISOCountryCode[ $referrer_list[ $domain ]['country'] ] . '"' : '' ) . ">" . ( $referrer_list[ $domain ]['ip'] != "" ? $referrer_list[ $domain ]['ip'] : '-' ) . "</span></td>";
 			echo "<td><a href='" . WP_Statistics_Admin_Pages::admin_url( 'referrers', array( 'referr' => $referrer_html ) ) . "'>" . number_format_i18n( $number ) . "</a></td>";
 			echo "</tr>";

@@ -5,6 +5,8 @@
 </script>
 <?php
 //Set Default Time Picker Option
+use WP_STATISTICS\Referred;
+
 list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();
 list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_range_calculator(
 	$daysToDisplay,
@@ -196,7 +198,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 								echo "</td>";
 
 								echo "<td style=\"text-align: left\">";
-								echo WP_STATISTICS\Helper::get_referrer_link( $items->referred );
+								echo Referred::get_referrer_link( $items->referred );
 								echo "</td>";
 
 								echo "</tr>";

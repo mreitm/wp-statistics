@@ -98,6 +98,10 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visitor.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-historical.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visit.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-referred.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-search-engine.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-exclusion.php';
 
 
 		//todo rest api
@@ -128,14 +132,17 @@ class WP_Statistics {
 			//Admin Menu
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menu.php';
 
+			//Admin Asset
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-assets.php';
+
 			//Admin Notice
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-notice.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-notices.php';
 
 			//TinyMCE Editor
 			require_once WP_STATISTICS_DIR . 'includes/admin/TinyMCE/class-wp-statistics-tinymce.php';
 
 			//Admin Bar
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-adminbar.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-bar.php';
 
 		}
 
@@ -247,6 +254,9 @@ class WP_Statistics {
 
 			# Admin Menu
 			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
+
+			# Admin Asset
+            new \WP_STATISTICS\Admin_Assets;
 
 			# MultiSite Admin
 			if ( is_multisite() ) {

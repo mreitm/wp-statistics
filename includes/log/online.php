@@ -4,7 +4,9 @@
     });
 </script>
 <div class="wrap wps-wrap">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Online Users', 'wp-statistics' ) ); ?>
+	<?php use WP_STATISTICS\Referred;
+
+	WP_Statistics_Admin_Pages::show_page_title( __( 'Online Users', 'wp-statistics' ) ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">
             <div class="meta-box-sortables">
@@ -137,7 +139,7 @@
 
 								//Show Referrer
 								echo "<td style=\"text-align: left\">";
-								echo WP_STATISTICS\Helper::get_referrer_link( $items->referred );
+								echo Referred::get_referrer_link( $items->referred );
 								echo "</td>";
 
 								//Show Link View IP
