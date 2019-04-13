@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Class WP_Statistics_Uninstall
  */
@@ -11,7 +10,6 @@ class WP_Statistics_Uninstall {
 	 */
 	function __construct() {
 		if ( is_admin() ) {
-			global $WP_Statistics;
 
 			// Handle multi site implementations
 			if ( is_multisite() ) {
@@ -43,6 +41,7 @@ class WP_Statistics_Uninstall {
 		delete_option( 'wp_statistics' );
 		delete_option( 'wp_statistics_db_version' );
 		delete_option( 'wp_statistics_plugin_version' );
+		delete_option( 'wp_statistics_referrals_detail' );
 
 		// Delete the transients.
 		delete_transient( 'wps_top_referring' );
@@ -52,6 +51,8 @@ class WP_Statistics_Uninstall {
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
 
 		// Drop the tables
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}statistics_useronline, {$wpdb->prefix}statistics_visit, {$wpdb->prefix}statistics_visitor, {$wpdb->prefix}statistics_exclusions, {$wpdb->prefix}statistics_pages, {$wpdb->prefix}statistics_historical, {$wpdb->prefix}statistics_search" );
+		foreach ( \WP_STATISTICS\DB::table() as $tbl ) {
+			$wpdb->query( "DROP TABLE IF EXISTS {$tbl}" );
+		}
 	}
 }

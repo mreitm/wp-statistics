@@ -211,7 +211,7 @@ class WP_Statistics_Ajax {
 				echo wp_statitiscs_empty_table( WP_STATISTICS\DB::table( $table_name ) );
 			}
 
-			$WP_Statistics->Primary_Values();
+			\WP_STATISTICS\Install::Primary_Values();
 		} else {
 			_e( 'Access denied!', 'wp-statistics' );
 		}

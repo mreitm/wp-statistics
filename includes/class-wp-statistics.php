@@ -1,11 +1,19 @@
 <?php
+/**
+ * WP-Statistics Setup
+ *
+ * @package WP-Statistics
+ * @since   13.0
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Main bootstrap class for WP Statistics
  *
  * @package WP Statistics
  */
-class WP_Statistics {
+final class WP_Statistics {
 	/**
 	 * Referrer
 	 *
@@ -44,6 +52,15 @@ class WP_Statistics {
 		 * wp-statistics loaded
 		 */
 		do_action( 'wp_statistics_loaded' );
+	}
+
+	/**
+	 * Cloning is forbidden.
+	 *
+	 * @since 13.0
+	 */
+	public function __clone() {
+		\WP_STATISTICS\Helper::doing_it_wrong( __CLASS__, esc_html__( 'Cloning is forbidden.', 'wp-statisitcs' ), '13.0' );
 	}
 
 	/**
@@ -114,7 +131,7 @@ class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
 
 
-		if ( \WP_STATISTICS\Helper::is_request('admin') ) {
+		if ( is_admin() ) {
 
 			// Admin classes.
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin.php';
@@ -143,11 +160,10 @@ class WP_Statistics {
 
 			//Admin Bar
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-bar.php';
-
 		}
 
 		// Front Class.
-		if ( ! \WP_STATISTICS\Helper::is_request('admin') ) {
+		if ( ! is_admin() ) {
 		}
 
 		// WP-Cli
@@ -250,13 +266,13 @@ class WP_Statistics {
 		$GLOBALS['WP_Statistics'] = $this;
 
 
-		if ( \WP_STATISTICS\Helper::is_request('admin') ) {
+		if ( \WP_STATISTICS\Helper::is_request( 'admin' ) ) {
 
 			# Admin Menu
 			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Menu;
 
 			# Admin Asset
-            new \WP_STATISTICS\Admin_Assets;
+			new \WP_STATISTICS\Admin_Assets;
 
 			# MultiSite Admin
 			if ( is_multisite() ) {
@@ -279,65 +295,6 @@ class WP_Statistics {
 		$this->restapi = new WP_Statistics_Rest();
 	}
 
-
-	/**
-	 * During installation of WP Statistics some initial data needs to be loaded
-	 * in to the database so errors are not displayed.
-	 * This function will add some initial data if the tables are empty.
-	 */
-	public function Primary_Values() {
-		global $wpdb;
-
-		$this->result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_useronline" );
-
-		if ( ! $this->result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_useronline",
-				array(
-					'ip'        => \WP_STATISTICS\IP::StoreIP(),
-					'timestamp' => \WP_STATISTICS\TimeZone::getCurrentDate( 'U' ),
-					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
-					'referred'  => $this->get_Referred(),
-					'agent'     => $this->agent['browser'],
-					'platform'  => $this->agent['platform'],
-					'version'   => $this->agent['version'],
-				)
-			);
-		}
-
-		$this->result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visit" );
-
-		if ( ! $this->result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_visit",
-				array(
-					'last_visit'   => $this->Current_Date(),
-					'last_counter' => $this->Current_date( 'Y-m-d' ),
-					'visit'        => 1,
-				)
-			);
-		}
-
-		$this->result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visitor" );
-
-		if ( ! $this->result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_visitor",
-				array(
-					'last_counter' => $this->Current_date( 'Y-m-d' ),
-					'referred'     => $this->get_Referred(),
-					'agent'        => $this->agent['browser'],
-					'platform'     => $this->agent['platform'],
-					'version'      => $this->agent['version'],
-					'ip'           => \WP_STATISTICS\IP::StoreIP(),
-					'location'     => '000',
-				)
-			);
-		}
-	}
 
 	/**
 	 * return the referrer link for the current user.

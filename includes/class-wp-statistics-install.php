@@ -240,7 +240,7 @@ class Install {
 			if ( $installed_version == false ) {
 
 				// If this is a first time install, we just need to setup the primary values in the tables.
-				$WP_Statistics->Primary_Values();
+				self::Primary_Values();
 
 				// By default, on new installs, use the new search table.
 				$WP_Statistics->option->update( 'search_converted', 1 );
@@ -742,6 +742,66 @@ class Install {
 		return $page_type;
 	}
 
-}
+	/**
+	 * During installation of WP Statistics some initial data needs to be loaded
+	 * in to the database so errors are not displayed.
+	 * This function will add some initial data if the tables are empty.
+	 */
+	public static function Primary_Values() {
+	    //TODO Fix This Method
 
-new Install();
+		/**global $wpdb;
+
+		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_useronline" );
+
+		if ( ! $result ) {
+
+			$wpdb->insert(
+				$wpdb->prefix . "statistics_useronline",
+				array(
+					'ip'        => IP::StoreIP(),
+					'timestamp' => TimeZone::getCurrentDate( 'U' ),
+					'date'      => TimeZone::getCurrentDate(),
+					'referred'  => $this->get_Referred(),
+					'agent'     => $this->agent['browser'],
+					'platform'  => $this->agent['platform'],
+					'version'   => $this->agent['version'],
+				)
+			);
+		}
+
+		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visit" );
+
+		if ( ! $result ) {
+
+			$wpdb->insert(
+				$wpdb->prefix . "statistics_visit",
+				array(
+					'last_visit'   => TimeZone::getCurrentDate(),
+					'last_counter' => TimeZone::Current_date( 'Y-m-d' ),
+					'visit'        => 1,
+				)
+			);
+		}
+
+		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visitor" );
+
+		if ( ! $result ) {
+
+			$wpdb->insert(
+				$wpdb->prefix . "statistics_visitor",
+				array(
+					'last_counter' => TimeZone::getCurrentDate( 'Y-m-d' ),
+					'referred'     => $this->get_Referred(),
+					'agent'        => $this->agent['browser'],
+					'platform'     => $this->agent['platform'],
+					'version'      => $this->agent['version'],
+					'ip'           => IP::StoreIP(),
+					'location'     => '000',
+				)
+			);
+		}*/
+
+	}
+
+}

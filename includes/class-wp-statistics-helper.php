@@ -6,6 +6,23 @@ use WP_STATISTICS;
 
 class Helper {
 	/**
+	 * WP-Statistics WordPress Log
+	 *
+	 * @param $function
+	 * @param $message
+	 * @param $version
+	 */
+	public static function doing_it_wrong( $function, $message, $version ) {
+		$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+		if ( is_ajax() ) {
+			do_action( 'doing_it_wrong_run', $function, $message, $version );
+			error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+		} else {
+			_doing_it_wrong( $function, $message, $version );
+		}
+	}
+
+	/**
 	 * Returns an array of site id's
 	 *
 	 * @return array

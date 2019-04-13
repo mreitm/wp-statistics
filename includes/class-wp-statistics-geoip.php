@@ -37,7 +37,7 @@ class GeoIP {
 	 * @return mixed
 	 */
 	public static function get_geo_ip_path( $pack ) {
-		return path_join( Helper::get_uploads_dir( 'wp-statistics' ), self::$library[ $pack ]['file'] . '.' . self::$file_extension );
+		return path_join( Helper::get_uploads_dir( WP_STATISTICS_UPLOADS_DIR ), self::$library[ $pack ]['file'] . '.' . self::$file_extension );
 	}
 
 	/**
