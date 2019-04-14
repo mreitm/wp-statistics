@@ -1,5 +1,5 @@
 <?php
-$selist                       = wp_statistics_searchengine_list( true );
+$selist                       = WP_STATISTICS\SearchEngine::getList( true );
 $permalink                    = get_option( 'permalink_structure' );
 $disable_strip_uri_parameters = false;
 

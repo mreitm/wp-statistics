@@ -1,5 +1,5 @@
 <?php
-$selist = wp_statistics_searchengine_list( true );
+$selist = WP_STATISTICS\SearchEngine::getList( true );
 
 if ( $wps_nonce_valid ) {
 

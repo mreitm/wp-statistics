@@ -7,7 +7,7 @@
 
 use WP_STATISTICS\Referred;
 
-$search_engines = wp_statistics_searchengine_list();
+$search_engines = WP_STATISTICS\SearchEngine::getList();
 
 $search_result['All'] = wp_statistics_searchword( 'all', 'total' );
 
@@ -134,16 +134,16 @@ $total = $search_result[ $referred ];
 
 								foreach ( $result as $items ) {
 
-									if ( ! $WP_Statistics->Search_Engine_QueryString( $items->referred ) ) {
+									if ( ! WP_STATISTICS\SearchEngine::getByQueryString( $items->referred ) ) {
 										continue;
 									}
 
 									if ( $WP_Statistics->option->get( 'search_converted' ) ) {
-										$this_search_engine = $WP_Statistics->Search_Engine_Info_By_Engine( $items->engine );
+										$this_search_engine = WP_STATISTICS\SearchEngine::getInfo( $items->engine );
 										$words              = $items->words;
 									} else {
-										$this_search_engine = $WP_Statistics->Search_Engine_Info( $items->referred );
-										$words              = $WP_Statistics->Search_Engine_QueryString( $items->referred );
+										$this_search_engine = WP_STATISTICS\SearchEngine::getByUrl( $items->referred );
+										$words              = WP_STATISTICS\SearchEngine::getByQueryString( $items->referred );
 									}
 
 									echo "<tr>";

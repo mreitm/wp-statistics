@@ -266,5 +266,17 @@ class Helper {
 		return $post_types;
 	}
 
+	/**
+	 * Check Url Scheme
+	 *
+	 * @param $url
+	 * @param array $accept
+	 * @return bool
+	 */
+	public static function check_url_scheme( $url, $accept = array( 'http', 'https' ) ) {
+		$scheme = @parse_url( $url, PHP_URL_SCHEME );
+		return in_array( $scheme, $accept );
+	}
+
 
 }

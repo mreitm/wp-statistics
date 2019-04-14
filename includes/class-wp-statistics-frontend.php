@@ -96,7 +96,7 @@ class WP_Statistics_Frontend {
 		$params['version']  = $result['version'];
 
 		//set referred
-		$params['referred'] = $WP_Statistics->get_Referred();
+		$params['referred'] = \WP_STATISTICS\Referred::get();
 
 		//set prefix Rest
 		$params['api'] = rtrim( rest_get_url_prefix(), "/" );

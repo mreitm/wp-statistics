@@ -4,7 +4,7 @@
     });
 </script>
 <?php
-$search_engines = wp_statistics_searchengine_list();
+$search_engines = WP_STATISTICS\SearchEngine::getList();
 
 //Set Default Time Picker Option
 list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();

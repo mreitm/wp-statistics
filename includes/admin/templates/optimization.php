@@ -189,7 +189,7 @@ if ( array_key_exists( 'historical-submit', $_POST ) ) {
 if ( array_key_exists( 'search', $_GET ) ) {
 
 	// Make sure we get all the search engines, even the ones the disabled ones.
-	$se_list   = wp_statistics_searchengine_list();
+	$se_list   = WP_STATISTICS\SearchEngine::getList();
 	$total     = 0;
 	$limitsize = 10000;
 
@@ -207,7 +207,7 @@ if ( array_key_exists( 'search', $_GET ) ) {
 				$data['last_counter'] = $row->last_counter;
 				$data['engine']       = $key;
 				$data['host']         = $parts['host'];
-				$data['words']        = $WP_Statistics->Search_Engine_QueryString( $row->referred );
+				$data['words']        = WP_STATISTICS\SearchEngine::getByQueryString( $row->referred );
 				$data['visitor']      = $row->ID;
 
 				if ( $data['words'] == 'No search query found!' ) {

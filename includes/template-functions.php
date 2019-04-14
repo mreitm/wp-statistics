@@ -777,128 +777,14 @@ function wp_statistics_agent_version( $agent, $version, $rangestartdate = null, 
 	return $result;
 }
 
-// This function returns an array or array's which define what search engines we should look for.
-//
-// By default will only return ones that have not been disabled by the user, this can be overridden by the $all parameter.
-//
-// Each sub array is made up of the following items:
-//		name 		 = The proper name of the search engine
-//		translated   = The proper name translated to the local language
-//		tag 		 = a short one word, all lower case, representation of the search engine
-//		sqlpattern   = either a single SQL style search pattern OR an array or search patterns to match the hostname in a URL against
-//		regexpattern = either a single regex style search pattern OR an array or search patterns to match the hostname in a URL against
-//		querykey 	 = the URL key that contains the search string for the search engine
-//		image		 = the name of the image file to associate with this search engine (just the filename, no path info)
-//
-function wp_statistics_searchengine_list( $all = false ) {
-	global $WP_Statistics;
 
-	$default = $engines = array(
-		'ask'        => array(
-			'name'         => 'Ask.com',
-			'translated'   => __( 'Ask.com', 'wp-statistics' ),
-			'tag'          => 'ask',
-			'sqlpattern'   => '%ask.com%',
-			'regexpattern' => 'ask\.com',
-			'querykey'     => 'q',
-			'image'        => 'ask.png',
-		),
-		'baidu'      => array(
-			'name'         => 'Baidu',
-			'translated'   => __( 'Baidu', 'wp-statistics' ),
-			'tag'          => 'baidu',
-			'sqlpattern'   => '%baidu.com%',
-			'regexpattern' => 'baidu\.com',
-			'querykey'     => 'wd',
-			'image'        => 'baidu.png',
-		),
-		'bing'       => array(
-			'name'         => 'Bing',
-			'translated'   => __( 'Bing', 'wp-statistics' ),
-			'tag'          => 'bing',
-			'sqlpattern'   => '%bing.com%',
-			'regexpattern' => 'bing\.com',
-			'querykey'     => 'q',
-			'image'        => 'bing.png',
-		),
-		'clearch'    => array(
-			'name'         => 'clearch.org',
-			'translated'   => __( 'clearch.org', 'wp-statistics' ),
-			'tag'          => 'clearch',
-			'sqlpattern'   => '%clearch.org%',
-			'regexpattern' => 'clearch\.org',
-			'querykey'     => 'q',
-			'image'        => 'clearch.png',
-		),
-		'duckduckgo' => array(
-			'name'         => 'DuckDuckGo',
-			'translated'   => __( 'DuckDuckGo', 'wp-statistics' ),
-			'tag'          => 'duckduckgo',
-			'sqlpattern'   => array( '%duckduckgo.com%', '%ddg.gg%' ),
-			'regexpattern' => array( 'duckduckgo\.com', 'ddg\.gg' ),
-			'querykey'     => 'q',
-			'image'        => 'duckduckgo.png',
-		),
-		'google'     => array(
-			'name'         => 'Google',
-			'translated'   => __( 'Google', 'wp-statistics' ),
-			'tag'          => 'google',
-			'sqlpattern'   => '%google.%',
-			'regexpattern' => 'google\.',
-			'querykey'     => 'q',
-			'image'        => 'google.png',
-		),
-		'yahoo'      => array(
-			'name'         => 'Yahoo!',
-			'translated'   => __( 'Yahoo!', 'wp-statistics' ),
-			'tag'          => 'yahoo',
-			'sqlpattern'   => '%yahoo.com%',
-			'regexpattern' => 'yahoo\.com',
-			'querykey'     => 'p',
-			'image'        => 'yahoo.png',
-		),
-		'yandex'     => array(
-			'name'         => 'Yandex',
-			'translated'   => __( 'Yandex', 'wp-statistics' ),
-			'tag'          => 'yandex',
-			'sqlpattern'   => '%yandex.ru%',
-			'regexpattern' => 'yandex\.ru',
-			'querykey'     => 'text',
-			'image'        => 'yandex.png',
-		),
-		'qwant'      => array(
-			'name'         => 'Qwant',
-			'translated'   => __( 'Qwant', 'wp-statistics' ),
-			'tag'          => 'qwant',
-			'sqlpattern'   => '%qwant.com%',
-			'regexpattern' => 'qwant\.com',
-			'querykey'     => 'q',
-			'image'        => 'qwant.png',
-		)
-	);
-
-	if ( $all == false ) {
-		foreach ( $engines as $key => $engine ) {
-			if ( $WP_Statistics->option->get( 'disable_se_' . $engine['tag'] ) ) {
-				unset( $engines[ $key ] );
-			}
-		}
-
-		// If we've disabled all the search engines, reset the list back to default.
-		if ( count( $engines ) == 0 ) {
-			$engines = $default;
-		}
-	}
-
-	return $engines;
-}
 
 // This function will return the SQL WHERE clause for getting the search words for a given search engine.
 function wp_statistics_searchword_query( $search_engine = 'all' ) {
 	GLOBAL $WP_Statistics;
 
 	// Get a complete list of search engines
-	$searchengine_list = wp_statistics_searchengine_list();
+	$searchengine_list = WP_STATISTICS\SearchEngine::getList();
 	$search_query      = '';
 
 	if ( $WP_Statistics->option->get( 'search_converted' ) ) {
@@ -955,7 +841,7 @@ function wp_statistics_searchengine_query( $search_engine = 'all' ) {
 	GLOBAL $WP_Statistics;
 
 	// Get a complete list of search engines
-	$searchengine_list = wp_statistics_searchengine_list();
+	$searchengine_list = WP_STATISTICS\SearchEngine::getList();
 	$search_query      = '';
 
 	if ( $WP_Statistics->option->get( 'search_converted' ) ) {
@@ -1011,46 +897,6 @@ function wp_statistics_searchengine_query( $search_engine = 'all' ) {
 	}
 
 	return $search_query;
-}
-
-// This function will return a regular expression clause for matching one or more search engines.
-function wp_statistics_searchengine_regex( $search_engine = 'all' ) {
-
-	// Get a complete list of search engines
-	$searchengine_list = wp_statistics_searchengine_list();
-	$search_query      = '';
-
-	// Are we getting results for all search engines or a specific one?
-	if ( strtolower( $search_engine ) == 'all' ) {
-		foreach ( $searchengine_list as $se ) {
-			// The SQL pattern for a search engine may be an array if it has to handle multiple domains (like google.com and google.ca) or other factors.
-			if ( is_array( $se['regexpattern'] ) ) {
-				foreach ( $se['regexpattern'] as $subse ) {
-					$search_query .= "{$subse}|";
-				}
-			} else {
-				$search_query .= "{$se['regexpattern']}|";
-			}
-		}
-
-		// Trim off the last '|' for the loop above.
-		$search_query = substr( $search_query, 0, strlen( $search_query ) - 1 );
-	} else {
-		// For just one?  Ok, the SQL pattern for a search engine may be an array if it has to handle multiple domains (like google.com and google.ca) or other factors.
-		if ( is_array( $searchengine_list[ $search_engine ]['regexpattern'] ) ) {
-			foreach ( $searchengine_list[ $search_engine ]['regexpattern'] as $se ) {
-				$search_query .= "{$se}|";
-			}
-
-			// Trim off the last '|' for the loop above.
-			$search_query = substr( $search_query, 0, strlen( $search_query ) - 1 );
-		} else {
-			$search_query .= $searchengine_list[ $search_engine ]['regexpattern'];
-		}
-	}
-
-	// Add the brackets and return
-	return "({$search_query})";
 }
 
 /**

@@ -129,7 +129,7 @@ class WP_Statistics_Shortcode {
 	static function shortcake() {
 		// ShortCake support if loaded.
 		if ( function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-			$se_list = wp_statistics_searchengine_list();
+			$se_list = WP_STATISTICS\SearchEngine::getList();
 
 			$se_options = array( '' => 'None' );
 

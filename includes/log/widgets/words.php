@@ -49,16 +49,16 @@ function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count =
 
 		foreach ( $result as $items ) {
 
-			if ( ! $WP_Statistics->Search_Engine_QueryString( $items->referred ) ) {
+			if ( ! WP_STATISTICS\SearchEngine::getByQueryString( $items->referred ) ) {
 				continue;
 			}
 
 			if ( $WP_Statistics->option->get( 'search_converted' ) ) {
-				$this_search_engine = $WP_Statistics->Search_Engine_Info_By_Engine( $items->engine );
+				$this_search_engine = WP_STATISTICS\SearchEngine::get( $items->engine );
 				$words              = $items->words;
 			} else {
-				$this_search_engine = $WP_Statistics->Search_Engine_Info( $items->referred );
-				$words              = $WP_Statistics->Search_Engine_QueryString( $items->referred );
+				$this_search_engine = WP_STATISTICS\SearchEngine::getByUrl( $items->referred );
+				$words              = WP_STATISTICS\SearchEngine::getByQueryString( $items->referred );
 			}
 
 			echo "<tr>";

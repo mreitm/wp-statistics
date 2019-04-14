@@ -243,7 +243,7 @@ class WP_Statistics_Hits {
 
 			// Check to see if we're excluding referrer spam.
 			if ( $WP_Statistics->option->get( 'referrerspam' ) ) {
-				$referrer = $WP_Statistics->get_Referred();
+				$referrer = \WP_STATISTICS\Referred::get();
 
 				// Pull the referrer spam list from the database.
 				$referrerspamlist = explode( "\n", $WP_Statistics->option->get( 'referrerspamlist' ) );
@@ -469,7 +469,7 @@ class WP_Statistics_Hits {
 					$wpdb->prefix . 'statistics_visitor',
 					array(
 						'last_counter' => \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' ),
-						'referred'     => $WP_Statistics->get_Referred(),
+						'referred'     => \WP_STATISTICS\Referred::get(),
 						'agent'        => $WP_Statistics->agent['browser'],
 						'platform'     => $WP_Statistics->agent['platform'],
 						'version'      => $WP_Statistics->agent['version'],
@@ -488,11 +488,11 @@ class WP_Statistics_Hits {
 				// Also make sure we actually inserted a row on the INSERT IGNORE above or we'll create duplicate entries.
 				if ( $WP_Statistics->option->get( 'search_converted' ) && $wpdb->insert_id ) {
 
-					$search_engines = wp_statistics_searchengine_list();
+					$search_engines = WP_STATISTICS\SearchEngine::getList();
 					if ( WP_Statistics_Rest::is_rest() ) {
 						$referred = WP_Statistics_Rest::params( 'referred' );
 					} else {
-						$referred = $WP_Statistics->get_Referred();
+						$referred = \WP_STATISTICS\Referred::get();
 					}
 
 					// Parse the URL in to it's component parts.
@@ -501,14 +501,14 @@ class WP_Statistics_Hits {
 
 						// Loop through the SE list until we find which search engine matches.
 						foreach ( $search_engines as $key => $value ) {
-							$search_regex = wp_statistics_searchengine_regex( $key );
+							$search_regex = WP_STATISTICS\SearchEngine::regex( $key );
 
 							preg_match( '/' . $search_regex . '/', $parts['host'], $matches );
 
 							if ( isset( $matches[1] ) ) {
 								$data['last_counter'] = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' );
 								$data['engine']       = $key;
-								$data['words']        = $WP_Statistics->Search_Engine_QueryString( $referred );
+								$data['words']        = WP_STATISTICS\SearchEngine::getByQueryString( $referred );
 								$data['host']         = $parts['host'];
 								$data['visitor']      = $wpdb->insert_id;
 
@@ -746,7 +746,7 @@ class WP_Statistics_Hits {
 					'timestamp' => $this->timestamp,
 					'created'   => $this->timestamp,
 					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
-					'referred'  => $WP_Statistics->get_Referred(),
+					'referred'  => \WP_STATISTICS\Referred::get(),
 					'agent'     => $WP_Statistics->agent['browser'],
 					'platform'  => $WP_Statistics->agent['platform'],
 					'version'   => $WP_Statistics->agent['version'],
@@ -797,7 +797,7 @@ class WP_Statistics_Hits {
 				array(
 					'timestamp' => $this->timestamp,
 					'date'      => \WP_STATISTICS\TimeZone::getCurrentDate(),
-					'referred'  => $WP_Statistics->get_Referred(),
+					'referred'  => \WP_STATISTICS\Referred::get(),
 					'user_id'   => self::get_user_id(),
 					'page_id'   => $this->current_page_id,
 					'type'      => $this->current_page_type

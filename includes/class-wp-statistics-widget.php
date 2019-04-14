@@ -342,7 +342,7 @@ class WP_Statistics_Widget extends \WP_Widget {
 				} ?>">
 					<?php _e( 'Select type of search engine', 'wp-statistics' ); ?>:<br/>
 					<?php
-					$search_engines = wp_statistics_searchengine_list();
+					$search_engines = WP_STATISTICS\SearchEngine::getList();
 
 					foreach ( $search_engines as $se ) {
 						echo '		<input type="radio" id="select_' .
