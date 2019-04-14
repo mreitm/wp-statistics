@@ -4,6 +4,7 @@ use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use IPTools\IP;
 use IPTools\Network;
 use IPTools\Range;
+use WP_STATISTICS\Helper;
 
 class WP_Statistics_Hits {
 
@@ -13,8 +14,6 @@ class WP_Statistics_Hits {
 	protected $location = '000';
 	public $exclusion_match = false;
 	public $exclusion_reason = '';
-
-	public $exclusion_record = false;
 	private $timestamp;
 	private $current_page_id;
 	private $current_page_type;
@@ -25,14 +24,9 @@ class WP_Statistics_Hits {
 		global $wp_version, $WP_Statistics;
 
 		// Set the timestamp value.
-		$this->timestamp = \WP_STATISTICS\TimeZone::getCurrentDate( 'U' );
-		if ( WP_Statistics_Rest::is_rest() ) {
+		$this->timestamp = \WP_STATISTICS\TimeZone::getCurrentTimestamp();
+		if ( WP_Statistics_Rest::is_rest() ) { //TODO Remove and User Add_filter
 			$this->timestamp = WP_Statistics_Rest::params( 'timestamp' );
-		}
-
-		// Check to see if the user wants us to record why we're excluding hits.
-		if ( $WP_Statistics->option->get( 'record_exclusions' ) ) {
-			$this->exclusion_record = true;
 		}
 
 		// Create a IP Tools instance from the current IP address for use later.
@@ -408,7 +402,7 @@ class WP_Statistics_Hits {
 			$this->current_page_type = WP_Statistics_Rest::params( 'current_page_type' );
 		} else {
 			//Get Page Type
-			$get_page_type           = WP_Statistics_Frontend::get_page_type();
+			$get_page_type           = Helper::get_page_type();
 			$this->current_page_id   = $get_page_type['id'];
 			$this->current_page_type = $get_page_type['type'];
 		}
@@ -555,7 +549,7 @@ class WP_Statistics_Hits {
 	private function RecordExclusion() {
 		global $wpdb, $WP_Statistics;
 		// If we're not storing exclusions, just return.
-		if ( $this->exclusion_record != true ) {
+		if ( \WP_STATISTICS\Exclusion::is_record_exclusion() != true ) {
 			return;
 		}
 
@@ -572,18 +566,6 @@ class WP_Statistics_Hits {
 		}
 	}
 
-	// Check is Track All Page
-	static public function is_track_page() {
-		global $WP_Statistics;
-
-		//Check if Track All
-		if ( $WP_Statistics->option->get( 'track_all_pages' ) || is_single() || is_page() || is_front_page() ) {
-			return true;
-		}
-
-		return false;
-	}
-
 	// This function records page hits.
 	public function Pages() {
 		global $wpdb, $WP_Statistics;
@@ -598,7 +580,7 @@ class WP_Statistics_Hits {
 					$is_track_all = true;
 				}
 			} else {
-				if ( self::is_track_page() ) {
+				if ( Helper::is_track_all_page() ) {
 					$is_track_all = true;
 				}
 			}
@@ -628,7 +610,7 @@ class WP_Statistics_Hits {
 						$is_search = true;
 					}
 				} else {
-					$get_page_type = WP_Statistics_Frontend::get_page_type();
+					$get_page_type = Helper::get_page_type();
 					if ( array_key_exists( "search_query", $get_page_type ) ) {
 						$page_uri  = "?s=" . $get_page_type['search_query'];
 						$is_search = true;

@@ -52,7 +52,7 @@ class UserOnline {
 		if ( self::active_user_online() ) {
 
 			//Get Not timestamp
-			$now = TimeZone::getCurrentDate( 'U' );
+			$now = TimeZone::getCurrentTimestamp();
 
 			// Set the default seconds a user needs to visit the site before they are considered offline.
 			$reset_time = self::$reset_user_time;

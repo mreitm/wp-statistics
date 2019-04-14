@@ -4,6 +4,15 @@ namespace WP_STATISTICS;
 
 class TimeZone {
 	/**
+	 * Get Current timeStamp
+	 *
+	 * @return bool|string
+	 */
+	public static function getCurrentTimestamp() {
+		return apply_filters( 'wp_statistics_current_timestamp', self::getCurrentDate( 'U' ) );
+	}
+
+	/**
 	 * Set WordPress TimeZone offset
 	 */
 	public static function set_timezone() {

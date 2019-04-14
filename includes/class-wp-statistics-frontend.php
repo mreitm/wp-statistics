@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\Helper;
+
 /**
  * Class WP_Statistics_Frontend
  */
@@ -86,25 +88,20 @@ class WP_Statistics_Frontend {
 		 */
 		$params = array();
 
-		//Set Url
+		//Set Url WP-Rest API
 		$params['base'] = rtrim( get_rest_url(), "/" );
+		$params['api']  = rtrim( rest_get_url_prefix(), "/" );
 
-		//Set Browser
-		$result             = \WP_STATISTICS\UserAgent::getUserAgent();
-		$params['browser']  = $result['browser'];
-		$params['platform'] = $result['platform'];
-		$params['version']  = $result['version'];
+		//Set UserAgent [browser|platform|version]
+		$params    = wp_parse_args( $params, \WP_STATISTICS\UserAgent::getUserAgent() );
 
-		//set referred
+		//Set Referred
 		$params['referred'] = \WP_STATISTICS\Referred::get();
 
-		//set prefix Rest
-		$params['api'] = rtrim( rest_get_url_prefix(), "/" );
-
-		//Set ip
+		//Set IP
 		$params['ip'] = \WP_STATISTICS\IP::getIP();
 
-		//set hash ip
+		//Set Hash Ip
 		$params['hash_ip'] = \WP_STATISTICS\IP::getHashIP();
 
 		//exclude
@@ -113,38 +110,25 @@ class WP_Statistics_Frontend {
 		$params['exclude_reason'] = $check_exclude->exclusion_reason;
 
 		//User Agent String
-		$params['ua'] = '';
-		if ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ) {
-			$params['ua'] = $_SERVER['HTTP_USER_AGENT'];
-		}
+		$params['ua'] = \WP_STATISTICS\UserAgent::getHttpUserAgent();
 
 		//track all page
-		$params['track_all'] = 0;
-		if ( WP_Statistics_Hits::is_track_page() === true ) {
-			$params['track_all'] = 1;
-		}
+		$params['track_all'] = ( Helper::is_track_all_page() === true ? 1 : 0 );
 
 		//timestamp
-		$params['timestamp'] = \WP_STATISTICS\Timezone::getCurrentDate( 'U' );
+		$params['timestamp'] = \WP_STATISTICS\Timezone::getCurrentTimestamp();
 
-		//Wp_query
-		$get_page_type               = WP_Statistics_Frontend::get_page_type();
-		$params['search_query']      = '';
+		//Set Page Type
+		$get_page_type               = Helper::get_page_type();
 		$params['current_page_type'] = $get_page_type['type'];
 		$params['current_page_id']   = $get_page_type['id'];
-
-		if ( array_key_exists( "search_query", $get_page_type ) ) {
-			$params['search_query'] = $get_page_type['search_query'];
-		}
+		$params['search_query']      = ( isset( $get_page_type['search_query'] ) ? $get_page_type['search_query'] : '' );
 
 		//page url
 		$params['page_uri'] = wp_statistics_get_uri();
 
 		//Get User id
-		$params['user_id'] = 0; //TODO Change For Cashe result and get from User Class
-		if ( is_user_logged_in() ) {
-			$params['user_id'] = get_current_user_id();
-		}
+		$params['user_id'] = $WP_Statistics->user->ID;
 
 		//Fixed entity decode Html
 		foreach ( (array) $params as $key => $value ) {
@@ -224,86 +208,6 @@ class WP_Statistics_Frontend {
 		} else {
 			return $content;
 		}
-	}
-
-	/**
-	 * Get Page Type
-	 */
-	public static function get_page_type() {
-
-		//Set Default Option
-		$result = array( "type" => "unknown", "id" => 0 );
-
-		//Check Query object
-		$id = get_queried_object_id();
-		if ( is_numeric( $id ) and $id > 0 ) {
-			$result['id'] = $id;
-		}
-
-		//WooCommerce Product
-		if ( class_exists( 'WooCommerce' ) ) {
-			if ( is_product() ) {
-				return wp_parse_args( array( "type" => "product" ), $result );
-			}
-		}
-
-		//Home Page or Front Page
-		if ( is_front_page() || is_home() ) {
-			return wp_parse_args( array( "type" => "home" ), $result );
-		}
-
-		//attachment View
-		if ( is_attachment() ) {
-			$result['type'] = "attachment";
-		}
-
-		//is Archive Page
-		if ( is_archive() ) {
-			$result['type'] = "archive";
-		}
-
-		//Single Post Fro All Post Type
-		if ( is_singular() ) {
-			$result['type'] = "post";
-		}
-
-		//Single Page
-		if ( is_page() ) {
-			$result['type'] = "page";
-		}
-
-		//Category Page
-		if ( is_category() ) {
-			$result['type'] = "category";
-		}
-
-		//Tag Page
-		if ( is_tag() ) {
-			$result['type'] = "post_tag";
-		}
-
-		//is Custom Term From Taxonomy
-		if ( is_tax() ) {
-			$result['type'] = "tax";
-		}
-
-		//is Author Page
-		if ( is_author() ) {
-			$result['type'] = "author";
-		}
-
-		//is search page
-		$search_query = filter_var( get_search_query( false ), FILTER_SANITIZE_STRING );
-		if ( trim( $search_query ) != "" ) {
-			return array( "type" => "search", "id" => 0, "search_query" => $search_query );
-		}
-
-		//is 404 Page
-		if ( is_404() ) {
-			$result['type'] = "404";
-		}
-
-		return $result;
 	}
 
 }

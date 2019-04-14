@@ -63,7 +63,7 @@ class IP {
 				return \WP_Statistics_Rest::params( 'hash_ip' );
 			}
 
-			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() === false ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );
+			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );
 		}
 
 		return false;

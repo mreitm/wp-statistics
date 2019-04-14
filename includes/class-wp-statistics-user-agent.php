@@ -9,13 +9,7 @@ class UserAgent {
 	 * @return mixed
 	 */
 	public static function getHttpUserAgent() {
-		if ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ) {
-			$UserAgent = $_SERVER['HTTP_USER_AGENT'];
-		} else {
-			$UserAgent = false;
-		}
-
-		return apply_filters( 'wp_statistics_user_http_agent', $UserAgent );
+		return apply_filters( 'wp_statistics_user_http_agent', ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '' ) );
 	}
 
 	/**
@@ -36,7 +30,7 @@ class UserAgent {
 		}
 
 		// Get Http User Agent
-		$user_agent = ( self::getHttpUserAgent() === false ? '' : self::getHttpUserAgent() );
+		$user_agent = self::getHttpUserAgent();
 
 		// Get WhichBrowser Browser
 		$result = new \WhichBrowser\Parser( $user_agent );
