@@ -17,12 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once 'includes/defines.php';
 
 # Load Plugin
-require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics.php';
+if ( ! class_exists( 'WP_Statistics' ) ) {
+	require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics.php';
+}
 
-# Run WP-STATISTICS
-$GLOBALS['WP_Statistics'] = new WP_Statistics;
+# Returns the main instance of WP-Statistics.
+function WP_Statistics() {
+	return WP_Statistics::instance();
+}
 
-add_action('init', function(){
-
-
-});
+# Global for backwards compatibility.
+$GLOBALS['WP_Statistics'] = WP_Statistics();

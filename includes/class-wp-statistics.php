@@ -1,11 +1,6 @@
 <?php
-/**
- * WP-Statistics Setup
- *
- * @package WP-Statistics
- * @since   13.0
- */
 
+# Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,6 +9,20 @@ defined( 'ABSPATH' ) || exit;
  * @package WP Statistics
  */
 final class WP_Statistics {
+	/**
+	 * Holds various class instances
+	 *
+	 * @var array
+	 */
+	private $container = array();
+
+	/**
+	 * The single instance of the class.
+	 *
+	 * @var WP-Statistics
+	 */
+	protected static $_instance = null;
+
 	/**
 	 * Referrer
 	 *
@@ -27,6 +36,18 @@ final class WP_Statistics {
 	 * @var array
 	 */
 	public $restapi;
+
+	/**
+	 * Main WP-Statistics Instance.
+	 * Ensures only one instance of WP-Statistics is loaded or can be loaded.
+	 *
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
 
 	/**
 	 * WP_Statistics constructor.
@@ -61,6 +82,16 @@ final class WP_Statistics {
 	 */
 	public function __clone() {
 		\WP_STATISTICS\Helper::doing_it_wrong( __CLASS__, esc_html__( 'Cloning is forbidden.', 'wp-statisitcs' ), '13.0' );
+	}
+
+	/**
+	 * Magic getter to bypass referencing plugin.
+	 *
+	 * @param $key
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+		return $this->container[ $key ];
 	}
 
 	/**
@@ -235,55 +266,52 @@ final class WP_Statistics {
 	 * @return void
 	 */
 	public function instantiate() {
-		//todo seperate all item to seperate class
+		//TODO seperate all item to seperate class
 
 		# Get Country Codes
-		$GLOBALS['WP_Statistics']->country_codes = \WP_STATISTICS\Helper::get_country_codes();
+		$this->container['country_codes'] = \WP_STATISTICS\Helper::get_country_codes();
 
 		# Get User Detail
-		$GLOBALS['WP_Statistics']->user = new \WP_STATISTICS\User();
+		$this->container['user'] = new \WP_STATISTICS\User();
 
 		# Set Options
-		$GLOBALS['WP_Statistics']->option = new \WP_STATISTICS\Option();
+		$this->container['option'] = new \WP_STATISTICS\Option();
 
 		# User IP
-		$GLOBALS['WP_Statistics']->ip = \WP_STATISTICS\IP::getIP();
+		$this->container['ip'] = \WP_STATISTICS\IP::getIP();
 
 		# User Agent
-		$GLOBALS['WP_Statistics']->agent = \WP_STATISTICS\UserAgent::getUserAgent();
+		$this->container['agent'] = \WP_STATISTICS\UserAgent::getUserAgent();
 
 		# User Online
-		$GLOBALS['WP_Statistics']->users_online = new \WP_STATISTICS\UserOnline();
+		$this->container['users_online'] = new \WP_STATISTICS\UserOnline();
 
 		# Visitor
-		$GLOBALS['WP_Statistics']->visitor = new \WP_STATISTICS\Visitor();
+		$this->container['visitor'] = new \WP_STATISTICS\Visitor();
 
 
 		//Load Rest Api
 		$this->init_rest_api();
 
-		//Set constant
-		$GLOBALS['WP_Statistics'] = $this;
 
-
-		if ( \WP_STATISTICS\Helper::is_request( 'admin' ) ) {
+		if ( is_admin() ) {
 
 			# Admin Menu
-			$GLOBALS['WP_Statistics']->admin_menu = new \WP_STATISTICS\Admin_Menus;
+			$this->container['admin_menu'] = new \WP_STATISTICS\Admin_Menus;
 
 			# Admin Asset
 			new \WP_STATISTICS\Admin_Assets;
 
 			# MultiSite Admin
 			if ( is_multisite() ) {
-				$GLOBALS['WP_Statistics']->admin_network = new \WP_STATISTICS\Network;
+				$this->container['admin_network'] = new \WP_STATISTICS\Network;
 			}
 
 			# Welcome Screen
 			new \WP_STATISTICS\Welcome;
 
 			# Admin Menu Bar
-			$GLOBALS['WP_Statistics']->admin_bar = new \WP_STATISTICS\AdminBar;
+			$this->container['admin_bar'] = new \WP_STATISTICS\AdminBar;
 		}
 
 	}
@@ -292,7 +320,7 @@ final class WP_Statistics {
 	 * Check the REST API
 	 */
 	public function init_rest_api() {
-		$this->restapi = new WP_Statistics_Rest();
+		$this->container['restapi'] = new WP_Statistics_Rest();
 	}
 
 
@@ -331,7 +359,7 @@ final class WP_Statistics {
 			$this->referrer = get_bloginfo( 'url' );
 		}
 
-		if ( $GLOBALS['WP_Statistics']->option->get( 'addsearchwords', false ) ) {
+		if ( $this->option->get( 'addsearchwords', false ) ) {
 			// Check to see if this is a search engine referrer
 			$SEInfo = $this->Search_Engine_Info( $this->referrer );
 

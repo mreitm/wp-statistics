@@ -115,7 +115,9 @@ class Welcome {
 			$data = json_decode( $response['body'] );
 
 			// Load ParseDown
-			include( WP_STATISTICS_DIR . "includes/lib/Parsedown.php" );
+			if ( ! class_exists( '\Parsedown' ) ) {
+				include( WP_STATISTICS_DIR . "includes/lib/Parsedown.php" );
+			}
 			$parse = new \Parsedown();
 
 			// convert MarkDown To Html

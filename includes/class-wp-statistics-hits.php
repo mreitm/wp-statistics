@@ -1,8 +1,4 @@
 <?php
-/*
-	This is the primary class for recording hits on the WordPress site.  It extends the WP_Statistics class and is itself extended by the GEO_IP_Hits class.
-	This class handles; visits, visitors and pages.
-*/
 
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use IPTools\IP;
