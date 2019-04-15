@@ -29,7 +29,7 @@ class WP_Statistics_Hits {
 		}
 
 		// Let's check to see if our subnet matches a private IP address range, if so go ahead and set the location information now.
-		if ( $WP_Statistics->option->get( 'private_country_code' ) != '000' && $WP_Statistics->option->get( 'private_country_code' ) != '' ) {
+		if ( $WP_Statistics->option->get( 'private_country_code' ) != \WP_STATISTICS\GeoIP::$private_country && $WP_Statistics->option->get( 'private_country_code' ) != '' ) {
 			$private_subnets = array( '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/24', 'fc00::/7' );
 
 			foreach ( $private_subnets as $psub ) {

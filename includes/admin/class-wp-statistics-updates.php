@@ -242,7 +242,7 @@ class WP_Statistics_Updates {
 		global $wpdb, $WP_Statistics;
 
 		// Find all rows in the table that currently don't have GeoIP info or have an unknown ('000') location.
-		$result = $wpdb->get_results( "SELECT id,ip FROM `{$wpdb->prefix}statistics_visitor` WHERE location = '' or location = '000' or location IS NULL" );
+		$result = $wpdb->get_results( "SELECT id,ip FROM `{$wpdb->prefix}statistics_visitor` WHERE location = '' or location = '".GeoIP::$private_country."' or location IS NULL" );
 
 		// Try create a new reader instance.
 		$reader = false;
@@ -267,10 +267,10 @@ class WP_Statistics_Updates {
 					$record   = $reader->country( $item->ip );
 					$location = $record->country->isoCode;
 					if ( $location == "" ) {
-						$location = "000";
+						$location = GeoIP::$private_country;
 					}
 				} catch ( Exception $e ) {
-					$location = "000";
+					$location = GeoIP::$private_country;
 				}
 
 				// Update the row in the database.

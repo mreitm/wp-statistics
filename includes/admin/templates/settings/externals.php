@@ -16,11 +16,11 @@ if ( $wps_nonce_valid ) {
 	if ( array_key_exists( 'wps_private_country_code', $_POST ) ) {
 		$_POST['wps_private_country_code'] = trim( strtoupper( $_POST['wps_private_country_code'] ) );
 	} else {
-		$_POST['wps_private_country_code'] = '000';
+		$_POST['wps_private_country_code'] = \WP_STATISTICS\GeoIP::$private_country;
 	}
 
 	if ( $_POST['wps_private_country_code'] == '' ) {
-		$_POST['wps_private_country_code'] = '000';
+		$_POST['wps_private_country_code'] = \WP_STATISTICS\GeoIP::$private_country;
 	}
 
 	foreach ( $wps_option_list as $option ) {
@@ -173,7 +173,7 @@ if ( $wps_nonce_valid ) {
 
                 <td>
                     <input type="text" size="3" id="geoip-private-country-code" name="wps_private_country_code" value="<?php echo htmlentities(
-						$WP_Statistics->option->get( 'private_country_code', '000' ),
+						$WP_Statistics->option->get( 'private_country_code', \WP_STATISTICS\GeoIP::$private_country ),
 						ENT_QUOTES
 					); ?>">
 

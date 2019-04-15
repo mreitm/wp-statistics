@@ -19,7 +19,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 				<?php
 				$result = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE last_counter = '" . \WP_STATISTICS\Timezone::getCurrentDate( 'Y-m-d' ) . "'" );
 				$final_result = array();
-				$final_result['000'] = array();
+				$final_result[\WP_STATISTICS\GeoIP::$private_country] = array();
 
 				//Load City Geoip
 				$geoip_reader = false;
@@ -40,9 +40,9 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 					}
 				}
 
-				$final_total = count( $result ) - count( $final_result['000'] );
+				$final_total = count( $result ) - count( $final_result[\WP_STATISTICS\GeoIP::$private_country] );
 
-				unset( $final_result['000'] );
+				unset( $final_result[\WP_STATISTICS\GeoIP::$private_country] );
 
 				$startColor = array( 200, 238, 255 );
 				$endColor = array( 0, 100, 145 );
@@ -51,7 +51,7 @@ function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 
 				foreach ( $items as $markets ) {
 
-					if ( $markets['location'] == '000' ) {
+					if ( $markets['location'] == \WP_STATISTICS\GeoIP::$private_country ) {
 						continue;
 					}
 

@@ -31,6 +31,13 @@ class GeoIP {
 	public static $file_extension = 'mmdb';
 
 	/**
+	 * Default Private Country
+	 *
+	 * @var String
+	 */
+	public static $private_country = '000';
+
+	/**
 	 * Get Geo IP Path
 	 *
 	 * @param $pack
@@ -64,4 +71,14 @@ class GeoIP {
 
 		return $reader;
 	}
+
+	/**
+	 * Get Country name By User IP
+	 *
+	 * @param bool $ip
+	 */
+	public static function getCountry( $ip = false ) {
+
+	}
+
 }

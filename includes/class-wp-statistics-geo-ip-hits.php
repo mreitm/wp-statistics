@@ -9,7 +9,7 @@ class WP_Statistics_GEO_IP_Hits extends \WP_Statistics_Hits {
 		parent::__construct();
 
 		// We may have set the location based on a private IP address in the hits class, if so, don't bother looking it up again.
-		if ( $this->location == '000' ) {
+		if ( $this->location == \WP_STATISTICS\GeoIP::$private_country ) {
 
 			// Now get the location information from the MaxMind database.
 			try {
@@ -27,10 +27,10 @@ class WP_Statistics_GEO_IP_Hits extends \WP_Statistics_Hits {
 
 				// MaxMind returns a blank for location if it can't find it, but we want to use 000 so replace it.
 				if ( $location == "" ) {
-					$location = "000";
+					$location = \WP_STATISTICS\GeoIP::$private_country;
 				}
 			} catch ( Exception $e ) {
-				$location = "000";
+				$location = \WP_STATISTICS\GeoIP::$private_country;
 			}
 
 			// Store the location in the protected $location variable from the parent class.
