@@ -108,7 +108,7 @@ class IP {
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public static function CheckIPRange( $ip, $range = array() ) {
+	public static function CheckIPRange( $range = array(), $ip = false ) {
 
 		// Get User IP
 		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
@@ -130,9 +130,7 @@ class IP {
 
 			if ( $contains_ip ) {
 				return true;
-				break;
 			}
-
 		}
 
 		return false;

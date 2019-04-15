@@ -98,6 +98,7 @@ class GeoIP {
 	 * @param string $return
 	 * @return String|null
 	 * @see https://github.com/maxmind/GeoIP2-php
+	 * @throws \Exception
 	 */
 	public static function getCountry( $ip = false, $return = 'isoCode' ) {
 
@@ -106,6 +107,13 @@ class GeoIP {
 
 		// Get User IP
 		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
+
+		// Check Unknown IP
+		if ( $default_country != self::$private_country ) {
+			if ( IP::CheckIPRange( IP::$private_SubNets ) ) {
+				return $default_country;
+			}
+		}
 
 		// Load GEO-IP
 		$reader = self::Loader( 'country' );
@@ -130,6 +138,7 @@ class GeoIP {
 			}
 		}
 
+		# Check Has Location
 		if ( isset( $location ) and ! empty( $location ) ) {
 			return $location;
 		}

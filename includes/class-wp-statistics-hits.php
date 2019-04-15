@@ -1,10 +1,8 @@
 <?php
 
-use IPTools\IP;
-use IPTools\Range;
-use WP_STATISTICS\Helper;
+namespace WP_STATISTICS;
 
-class WP_Statistics_Hits {
+class Hits {
 
 	// Setup our public/private/protected variables.
 	public $result = null;
@@ -16,38 +14,17 @@ class WP_Statistics_Hits {
 	private $current_page_type;
 	public $current_visitor_id = 0;
 
-	// Construction function.
+	/**
+	 * WP_Statistics_Hits constructor.
+	 *
+	 * @throws \Exception
+	 */
 	public function __construct() {
-		global $WP_Statistics;
-
-
-		// Let's check to see if our subnet matches a private IP address range, if so go ahead and set the location information now.
-		if ( $WP_Statistics->option->get( 'private_country_code' ) != \WP_STATISTICS\GeoIP::$private_country && $WP_Statistics->option->get( 'private_country_code' ) != '' ) {
-
-			// Create a IP Tools instance from the current IP address for use later.
-			// Fall back to the localhost if it can't be parsed.
-			try {
-				$ip = new IP( $WP_Statistics->ip );
-			} catch ( Exception $e ) {
-				$ip = new IP( '127.0.0.1' );
-			}
-
-			foreach ( \WP_STATISTICS\IP::$private_SubNets as $psub ) {
-				try {
-					$contains_ip = Range::parse( $psub )->contains( $ip );
-				} catch ( Exception $e ) {
-					$contains_ip = false;
-				}
-
-				if ( $contains_ip ) {
-					$this->location = $WP_Statistics->option->get( 'private_country_code' );
-					break;
-				}
-			}
-		}
+		// location
+		$this->location = GeoIP::getCountry();
 
 		//Check Exclusion
-		$exclusion              = \WP_STATISTICS\Exclusion::check();
+		$exclusion              = Exclusion::check();
 		$this->exclusion_match  = $exclusion['exclusion_match'];
 		$this->exclusion_reason = $exclusion['exclusion_reason'];
 	}
@@ -103,7 +80,6 @@ class WP_Statistics_Hits {
 		}
 
 	}
-
 
 	// This function records unique visitors to the site.
 	public function Visitors() {

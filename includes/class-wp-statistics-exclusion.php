@@ -259,35 +259,29 @@ class Exclusion {
 
 	/**
 	 * Detect if IP Match.
+	 *
+	 * @throws \Exception
 	 */
 	public static function exclusion_iP_match() {
 		global $WP_Statistics;
 
-		try {
-			$ip = new IP( \WP_STATISTICS\IP::getIP() );
-		} catch ( \Exception $e ) {
-			$ip = new IP( '127.0.0.1' );
-		}
-
 		// Pull the sub nets from the database.
-		$subnets = explode( "\n", $WP_Statistics->option->get( 'exclude_ip' ) );
+		$SubNets = explode( "\n", $WP_Statistics->option->get( 'exclude_ip' ) );
 
-		// Check to see if we match any of the excluded addresses.
-		foreach ( $subnets as $subnet ) {
+		// Check in Loop
+		foreach ( $SubNets as $subnet ) {
+
+			// Sanitize SubNet
 			$subnet = trim( $subnet );
 
 			// The shortest ip address is 1.1.1.1, anything less must be a malformed entry.
 			if ( strlen( $subnet ) > 6 ) {
 
-				try {
-					$range_prased = Range::parse( $subnet )->contains( $ip );
-				} catch ( \Exception $e ) {
-					$range_prased = false;
-				}
-
-				if ( $range_prased ) {
+				// Check in Range
+				if ( \WP_STATISTICS\IP::CheckIPRange( array( $subnet ) ) ) {
 					return true;
 				}
+
 			}
 		}
 

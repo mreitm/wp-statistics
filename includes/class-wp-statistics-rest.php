@@ -65,7 +65,7 @@ class WP_Statistics_Rest {
 			return;
 		}
 
-		$h = new WP_Statistics_GEO_IP_Hits;
+		$h = new \WP_STATISTICS\Hits();
 
 		// Call the online users tracking code.
 		if ( $WP_Statistics->option->get( 'useronline' ) ) {

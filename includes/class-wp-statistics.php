@@ -147,7 +147,6 @@ final class WP_Statistics {
 
 		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geo-ip-hits.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
