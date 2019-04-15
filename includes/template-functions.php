@@ -1,6 +1,7 @@
 <?php
 
 use WP_STATISTICS\Helper;
+use WP_STATISTICS\Pages;
 
 /**
  * Get Current Users online
@@ -415,7 +416,7 @@ function wp_statistics_pages( $time, $page_uri = '', $id = - 1, $rangestartdate 
 
 		// If no page URI has been passed in, get the current page URI.
 		if ( $page_uri == '' ) {
-			$page_uri = Helper::get_page_uri();
+			$page_uri = Pages::get_page_uri();
 		}
 		$page_uri_sql = esc_sql( $page_uri );
 

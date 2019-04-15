@@ -2,6 +2,7 @@
 
 use WP_STATISTICS\Helper;
 use WP_STATISTICS\Hits;
+use WP_STATISTICS\Pages;
 
 /**
  * Class WP_Statistics_Frontend
@@ -112,19 +113,19 @@ class WP_Statistics_Frontend {
 		$params['ua'] = \WP_STATISTICS\UserAgent::getHttpUserAgent();
 
 		//track all page
-		$params['track_all'] = ( Helper::is_track_all_page() === true ? 1 : 0 );
+		$params['track_all'] = ( Pages::is_track_all_page() === true ? 1 : 0 );
 
 		//timestamp
 		$params['timestamp'] = \WP_STATISTICS\Timezone::getCurrentTimestamp();
 
 		//Set Page Type
-		$get_page_type               = Helper::get_page_type();
+		$get_page_type               = Pages::get_page_type();
 		$params['current_page_type'] = $get_page_type['type'];
 		$params['current_page_id']   = $get_page_type['id'];
 		$params['search_query']      = ( isset( $get_page_type['search_query'] ) ? $get_page_type['search_query'] : '' );
 
 		//page url
-		$params['page_uri'] = Helper::get_page_uri();
+		$params['page_uri'] = Pages::get_page_uri();
 
 		//Get User id
 		$params['user_id'] = $WP_Statistics->user->ID;

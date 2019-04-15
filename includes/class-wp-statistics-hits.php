@@ -136,7 +136,7 @@ class Hits {
 			$this->current_page_type = self::rest_params( 'current_page_type' );
 		} else {
 			//Get Page Type
-			$get_page_type           = Helper::get_page_type();
+			$get_page_type           = Pages::get_page_type();
 			$this->current_page_id   = $get_page_type['id'];
 			$this->current_page_type = $get_page_type['type'];
 		}
@@ -293,7 +293,7 @@ class Hits {
 					$is_track_all = true;
 				}
 			} else {
-				if ( Helper::is_track_all_page() ) {
+				if ( Pages::is_track_all_page() ) {
 					$is_track_all = true;
 				}
 			}
@@ -312,7 +312,7 @@ class Hits {
 				if ( WP_Statistics_Rest::is_rest() ) {
 					$page_uri = self::rest_params( 'page_uri' );
 				} else {
-					$page_uri = Helper::get_page_uri();
+					$page_uri = Pages::get_page_uri();
 				}
 
 				//Get String Search Wordpress
@@ -323,7 +323,7 @@ class Hits {
 						$is_search = true;
 					}
 				} else {
-					$get_page_type = Helper::get_page_type();
+					$get_page_type = Pages::get_page_type();
 					if ( array_key_exists( "search_query", $get_page_type ) ) {
 						$page_uri  = "?s=" . $get_page_type['search_query'];
 						$is_search = true;

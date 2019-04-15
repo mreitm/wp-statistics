@@ -137,6 +137,7 @@ final class WP_Statistics {
 
 		// Hits Class
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-pages.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visitor.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-historical.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visit.php';
