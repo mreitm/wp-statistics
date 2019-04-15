@@ -28,6 +28,7 @@ class Exclusion {
 		'Excluded URL',
 		'User Role',
 		'Host name',
+		'GeoIP',
 	);
 
 	/**
@@ -344,6 +345,37 @@ class Exclusion {
 			if ( UserAgent::getHttpUserAgent() == '' || \WP_STATISTICS\IP::getIP() == '' ) {
 				return true;
 			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Detect if GEO-IP include Or Exclude Country.
+	 */
+	public static function exclusion_geoip() {
+		global $WP_Statistics;
+
+		// Get User Location
+		$location = GeoIP::getCountry();
+
+		// Grab the excluded/included countries lists, force the country codes to be in upper case to match what the GeoIP code uses.
+		$excluded_countries        = explode( "\n", strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'excluded_countries' ) ) ) );
+		$included_countries_string = trim( strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'included_countries' ) ) ) );
+
+		// We need to be really sure this isn't an empty string or explode will return an array with one entry instead of none.
+		if ( $included_countries_string == '' ) {
+			$included_countries = array();
+		} else {
+			$included_countries = explode( "\n", $included_countries_string );
+		}
+
+		// Check to see if the current location is in the excluded countries list.
+		if ( in_array( $location, $excluded_countries ) ) {
+			return true;
+		} // Check to see if the current location is not the included countries list.
+		else if ( ! in_array( $location, $included_countries ) && count( $included_countries ) > 0 ) {
+			return true;
 		}
 
 		return false;
