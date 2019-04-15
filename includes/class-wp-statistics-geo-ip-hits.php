@@ -40,13 +40,8 @@ class WP_Statistics_GEO_IP_Hits extends \WP_Statistics_Hits {
 		// Check to see if we are excluded by the GeoIP rules.
 		if ( ! $this->exclusion_match ) {
 			// Grab the excluded/included countries lists, force the country codes to be in upper case to match what the GeoIP code uses.
-			$excluded_countries        = explode(
-				"\n",
-				strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'excluded_countries' ) ) )
-			);
-			$included_countries_string = trim(
-				strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'included_countries' ) ) )
-			);
+			$excluded_countries        = explode( "\n", strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'excluded_countries' ) ) ) );
+			$included_countries_string = trim( strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'included_countries' ) ) ) );
 
 			// We need to be really sure this isn't an empty string or explode will return an array with one entry instead of none.
 			if ( $included_countries_string == '' ) {

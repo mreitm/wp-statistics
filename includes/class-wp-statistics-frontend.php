@@ -93,7 +93,7 @@ class WP_Statistics_Frontend {
 		$params['api']  = rtrim( rest_get_url_prefix(), "/" );
 
 		//Set UserAgent [browser|platform|version]
-		$params    = wp_parse_args( $params, \WP_STATISTICS\UserAgent::getUserAgent() );
+		$params = wp_parse_args( $params, \WP_STATISTICS\UserAgent::getUserAgent() );
 
 		//Set Referred
 		$params['referred'] = \WP_STATISTICS\Referred::get();
@@ -105,9 +105,9 @@ class WP_Statistics_Frontend {
 		$params['hash_ip'] = \WP_STATISTICS\IP::getHashIP();
 
 		//exclude
-		$check_exclude            = new WP_Statistics_Hits();
-		$params['exclude']        = $check_exclude->exclusion_match;
-		$params['exclude_reason'] = $check_exclude->exclusion_reason;
+		$exclude                  = \WP_STATISTICS\Exclusion::check();
+		$params['exclude']        = $exclude['exclusion_match'];
+		$params['exclude_reason'] = $exclude['exclusion_reason'];
 
 		//User Agent String
 		$params['ua'] = \WP_STATISTICS\UserAgent::getHttpUserAgent();

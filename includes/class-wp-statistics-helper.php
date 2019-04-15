@@ -367,5 +367,14 @@ class Helper {
 		return $GLOBALS['WP_Statistics']->option->get( 'track_all_pages' ) || is_single() || is_page() || is_front_page();
 	}
 
+	/**
+	 * Get WordPress Version
+	 *
+	 * @return mixed|string
+	 */
+	public static function get_wordpress_version() {
+		return get_bloginfo('version');
+	}
+
 
 }
