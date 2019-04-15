@@ -2,6 +2,9 @@
 
 namespace WP_STATISTICS;
 
+use GeoIp2\Exception\AddressNotFoundException;
+use MaxMind\Db\Reader\InvalidDatabaseException;
+
 class GeoIP {
 	/**
 	 * List Geo ip Library
@@ -73,12 +76,59 @@ class GeoIP {
 	}
 
 	/**
+	 * Get Default Country Code
+	 *
+	 * @return String
+	 */
+	public static function getDefaultCountryCode() {
+		global $WP_Statistics;
+
+		$opt = $WP_Statistics->option->get( 'private_country_code' );
+		if ( isset( $opt ) and ! empty( $opt ) ) {
+			return trim( $opt );
+		}
+
+		return self::$private_country;
+	}
+
+	/**
 	 * Get Country name By User IP
 	 *
 	 * @param bool $ip
+	 * @return String|null
 	 */
 	public static function getCountry( $ip = false ) {
 
+		// Default Country Name
+		$default_country = self::getDefaultCountryCode();
+
+		// Get User IP
+		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
+
+		// Load GEO-IP
+		$reader = self::Loader( 'country' );
+
+		//Get Country name
+		if ( $reader != false ) {
+
+			try {
+				//Search in Geo-IP
+				$record = $reader->country( $ip );
+
+				//Get Country Code Name
+				$location = $record->country->isoCode;
+			} catch ( AddressNotFoundException $e ) {
+				//Don't Staff
+			} catch ( InvalidDatabaseException $e ) {
+				//Don't Staff
+			}
+		}
+
+		if ( isset( $location ) and ! empty( $location ) ) {
+			return $location;
+		}
+
+		return $default_country;
 	}
 
 }
