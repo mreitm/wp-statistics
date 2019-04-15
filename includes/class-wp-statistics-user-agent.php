@@ -19,16 +19,6 @@ class UserAgent {
 	 */
 	public static function getUserAgent() {
 
-		//Check If Rest Request
-		//TODO Remove At Last
-		if ( Hits::is_rest_hit() ) {
-			return array(
-				'browser'  => Hits::rest_params( 'browser' ),
-				'platform' => Hits::rest_params( 'platform' ),
-				'version'  => Hits::rest_params( 'version' )
-			);
-		}
-
 		// Get Http User Agent
 		$user_agent = self::getHttpUserAgent();
 

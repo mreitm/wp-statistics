@@ -22,11 +22,6 @@ class Referred {
 	public static function get() {
 		global $WP_Statistics;
 
-		//Check If Rest Api Request //TODO Remove At Last
-		if ( Hits::is_rest_hit() ) {
-			return Hits::rest_params( 'referred' );
-		}
-
 		// Get Default
 		$referred = self::getRefererURL();
 

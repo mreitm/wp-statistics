@@ -39,11 +39,6 @@ class IP {
 		// Set Default
 		$ip = false;
 
-		//Check If Rest Api Request //TODO Remove At Last
-		if ( Hits::is_rest_hit() ) {
-			return Hits::rest_params( 'ip' );
-		}
-
 		// Get User IP
 		$user_ip = self::get_Whip_ip();
 		if ( $user_ip != false ) {
@@ -66,12 +61,6 @@ class IP {
 
 		// Check Enabled Options
 		if ( $WP_Statistics->option->get( 'hash_ips' ) == true ) {
-
-			//Check If Rest Api Request //TODO Remove At Last
-			if ( Hits::is_rest_hit() ) {
-				return Hits::rest_params( 'hash_ip' );
-			}
-
 			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );
 		}
 

@@ -9,64 +9,64 @@ class Pages {
 	public static function get_page_type() {
 
 		//Set Default Option
-		$result = array( "type" => "unknown", "id" => 0 );
+		$current_page = array( "type" => "unknown", "id" => 0 );
 
 		//Check Query object
 		$id = get_queried_object_id();
 		if ( is_numeric( $id ) and $id > 0 ) {
-			$result['id'] = $id;
+			$current_page['id'] = $id;
 		}
 
 		//WooCommerce Product
 		if ( class_exists( 'WooCommerce' ) ) {
 			if ( is_product() ) {
-				return wp_parse_args( array( "type" => "product" ), $result );
+				return wp_parse_args( array( "type" => "product" ), $current_page );
 			}
 		}
 
 		//Home Page or Front Page
 		if ( is_front_page() || is_home() ) {
-			return wp_parse_args( array( "type" => "home" ), $result );
+			return wp_parse_args( array( "type" => "home" ), $current_page );
 		}
 
 		//attachment View
 		if ( is_attachment() ) {
-			$result['type'] = "attachment";
+			$current_page['type'] = "attachment";
 		}
 
 		//is Archive Page
 		if ( is_archive() ) {
-			$result['type'] = "archive";
+			$current_page['type'] = "archive";
 		}
 
 		//Single Post Fro All Post Type
 		if ( is_singular() ) {
-			$result['type'] = "post";
+			$current_page['type'] = "post";
 		}
 
 		//Single Page
 		if ( is_page() ) {
-			$result['type'] = "page";
+			$current_page['type'] = "page";
 		}
 
 		//Category Page
 		if ( is_category() ) {
-			$result['type'] = "category";
+			$current_page['type'] = "category";
 		}
 
 		//Tag Page
 		if ( is_tag() ) {
-			$result['type'] = "post_tag";
+			$current_page['type'] = "post_tag";
 		}
 
 		//is Custom Term From Taxonomy
 		if ( is_tax() ) {
-			$result['type'] = "tax";
+			$current_page['type'] = "tax";
 		}
 
 		//is Author Page
 		if ( is_author() ) {
-			$result['type'] = "author";
+			$current_page['type'] = "author";
 		}
 
 		//is search page
@@ -77,10 +77,10 @@ class Pages {
 
 		//is 404 Page
 		if ( is_404() ) {
-			$result['type'] = "404";
+			$current_page['type'] = "404";
 		}
 
-		return apply_filters( 'wp_statistics_current_page', $result );
+		return apply_filters( 'wp_statistics_current_page', $current_page );
 	}
 
 	/**

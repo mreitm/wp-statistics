@@ -24,13 +24,6 @@ final class WP_Statistics {
 	protected static $_instance = null;
 
 	/**
-	 * Rest Api init
-	 *
-	 * @var array
-	 */
-	public $restapi;
-
-	/**
 	 * Main WP-Statistics Instance.
 	 * Ensures only one instance of WP-Statistics is loaded or can be loaded.
 	 *
@@ -46,6 +39,7 @@ final class WP_Statistics {
 	 * WP_Statistics constructor.
 	 */
 	public function __construct() {
+
 		/**
 		 * Check PHP Support
 		 */
@@ -53,15 +47,18 @@ final class WP_Statistics {
 			add_action( 'admin_notices', array( $this, 'php_version_notice' ) );
 			return;
 		}
+
 		/**
 		 * Plugin Loaded Action
 		 */
 		add_action( 'plugins_loaded', array( $this, 'plugin_setup' ) );
+
 		/**
 		 * Install And Upgrade plugin
 		 */
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'uninstall' ) );
+
 		/**
 		 * wp-statistics loaded
 		 */
@@ -91,22 +88,22 @@ final class WP_Statistics {
 	 * Constructors plugin Setup
 	 */
 	public function plugin_setup() {
+
 		/**
 		 * Load Text Domain
 		 */
 		add_action( 'init', array( $this, 'load_textdomain' ) );
+
 		/**
 		 * instantiate Plugin
 		 */
-		//TODO PUSH TO INCLUDE METHOD
-		// third-party Libraries
-		require_once WP_STATISTICS_DIR . 'includes/vendor/autoload.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-rest.php';
+		$this->includes();
+
 		/**
 		 * Include Require File
 		 */
-		$this->includes();
 		$this->instantiate();
+
 		/*
 		 * Load action
 		 */
@@ -124,6 +121,9 @@ final class WP_Statistics {
 	 * Includes plugin files
 	 */
 	public function includes() {
+
+		// third-party Libraries
+		require_once WP_STATISTICS_DIR . 'includes/vendor/autoload.php';
 
 		// Utility classes.
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-db.php';
@@ -144,10 +144,10 @@ final class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-referred.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-search-engine.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-exclusion.php';
-
-
-		//todo rest api
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
+
+
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-rest.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
@@ -257,12 +257,12 @@ final class WP_Statistics {
 	 * Instantiate the classes
 	 *
 	 * @return void
+	 * @throws Exception
 	 */
 	public function instantiate() {
-		//TODO seperate all item to seperate class
 
 		# Sanitize WP-Statistics Data
-		\WP_STATISTICS\Hits::sanitize_hits_data();
+		$this->container['hits'] = new \WP_STATISTICS\Hits();
 
 		# Get Country Codes
 		$this->container['country_codes'] = \WP_STATISTICS\Helper::get_country_codes();
@@ -288,11 +288,6 @@ final class WP_Statistics {
 		# Referer
 		$this->container['referred'] = \WP_STATISTICS\Referred::get();
 
-
-		//Load Rest Api
-		$this->init_rest_api();
-
-
 		if ( is_admin() ) {
 
 			# Admin Menu
@@ -313,13 +308,6 @@ final class WP_Statistics {
 			$this->container['admin_bar'] = new \WP_STATISTICS\AdminBar;
 		}
 
-	}
-
-	/**
-	 * Check the REST API
-	 */
-	public function init_rest_api() {
-		$this->container['restapi'] = new WP_Statistics_Rest();
 	}
 
 }

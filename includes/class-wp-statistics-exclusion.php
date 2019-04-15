@@ -48,23 +48,14 @@ class Exclusion {
 		// Create Default Object
 		$exclude = array( 'exclusion_match' => false, 'exclusion_reason' => '' );
 
-		//TODO Remove At Last & Check has_filter return and do not go to foreach
-		if ( Hits::is_rest_hit() ) {
-
-			$exclude['exclusion_match']  = ( Hits::rest_params( 'exclude' ) == 1 ? true : false );
-			$exclude['exclusion_reason'] = Hits::rest_params( 'exclude_reason' );
-		} else {
-
-			// Check Exclusion
-			foreach ( self::$exclusion_list as $list ) {
-				$method = 'exclusion_' . strtolower( str_replace( array( "-", " " ), "_", $list ) );
-				$check  = self::{$method}();
-				if ( $check === true ) {
-					$exclude = array( 'exclusion_match' => true, 'exclusion_reason' => $list );
-					break;
-				}
+		// Check Exclusion
+		foreach ( self::$exclusion_list as $list ) {
+			$method = 'exclusion_' . strtolower( str_replace( array( "-", " " ), "_", $list ) );
+			$check  = self::{$method}();
+			if ( $check === true ) {
+				$exclude = array( 'exclusion_match' => true, 'exclusion_reason' => $list );
+				break;
 			}
-
 		}
 
 		return apply_filters( 'wp_statistics_exclusion', $exclude );

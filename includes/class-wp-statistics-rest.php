@@ -54,7 +54,7 @@ class WP_Statistics_Rest {
 
 
 		//Check Auth Key Request
-		if ( ! isset( $_POST[ Hits::$Rest_hit_key ] ) ) {
+		if ( ! isset( $_POST[ Hits::$rest_hits_key ] ) ) {
 			return new \WP_Error( 'error', 'You have no right to access', array( 'status' => 403 ) );
 		}
 
