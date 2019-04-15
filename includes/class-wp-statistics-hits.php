@@ -6,11 +6,18 @@ use WP_Statistics_Rest;
 
 class Hits {
 	/**
-	 * Rest-APi Hit Record Params
+	 * Rest-APi Hit Record Params Key
 	 *
 	 * @var string
 	 */
-	public static $Rest_hit_key = 'wp_statistics_hit';
+	public static $rest_hits_key = 'wp_statistics_hits';
+
+	/**
+	 * Rest-Api Hit Data
+	 *
+	 * @var object
+	 */
+	public $rest_hits;
 
 	// Setup our public/private/protected variables.
 	public $result = null;
@@ -23,11 +30,34 @@ class Hits {
 	public $current_visitor_id = 0;
 
 	/**
-	 * WP_Statistics_Hits constructor.
+	 * WP_Statistics Hits Class.
 	 *
 	 * @throws \Exception
 	 */
 	public function __construct() {
+
+		# Get Hit Data
+		$this->rest_hits = self::rest_params();
+
+		# Sanitize Hit Data if Has Rest-Api Process
+		if ( self::is_rest_hit() and $this->rest_hits != false ) {
+
+			# Set Hit Data
+			$this->rest_hits = (object) $this->rest_hits;
+
+			# Filter Data
+			add_filter( 'wp_statistics_user_agent', array( $this, 'set_user_agent' ) );
+			add_filter( 'wp_statistics_user_referer', array( $this, 'set_user_referer' ) );
+			add_filter( 'wp_statistics_user_ip', array( $this, 'set_user_ip' ) );
+			add_filter( 'wp_statistics_hash_ip', array( $this, 'set_hash_ip' ) );
+			add_filter( 'wp_statistics_exclusion', array( $this, 'set_exclusion' ) );
+			add_filter( 'wp_statistics_user_http_agent', array( $this, 'set_user_http_agent' ) );
+			add_filter( 'wp_statistics_current_timestamp', array( $this, 'set_current_timestamp' ) );
+			add_filter( 'wp_statistics_current_page', array( $this, 'set_current_page' ) );
+			add_filter( 'wp_statistics_page_uri', array( $this, 'set_page_uri' ) );
+			add_filter( 'wp_statistics_user_id', array( $this, 'set_user_id' ) );
+		}
+
 		// location
 		$this->location = GeoIP::getCountry();
 
@@ -38,26 +68,129 @@ class Hits {
 	}
 
 	/**
-	 * Prepare Wp-Statistics Data if has Rest-Api Request
+	 * Set User Agent
+	 *
+	 * @param $agent
+	 * @return array
 	 */
-	public static function sanitize_hits_data() {
+	public function set_user_agent( $agent ) {
 
-		# Check Request Process in Rest-Api
-		if ( self::is_rest_hit() ) {
-
-			# Get Rest-Api Data
-			$user_data = self::rest_params();
-			if ( $user_data != false ) {
-
-
-
-
-
-
-
-
-			}
+		if ( isset( $this->rest_hits->browser ) and isset( $this->rest_hits->platform ) and isset( $this->rest_hits->version ) ) {
+			return array(
+				'browser'  => $this->rest_hits->browser,
+				'platform' => $this->rest_hits->platform,
+				'version'  => $this->rest_hits->version,
+			);
 		}
+
+		return $agent;
+	}
+
+	/**
+	 * Set User Referer
+	 *
+	 * @param $referred
+	 * @return array
+	 */
+	public function set_user_referer( $referred ) {
+		return isset( $this->rest_hits->referred ) ? $this->rest_hits->referred : $referred;
+	}
+
+	/**
+	 * Set User IP
+	 *
+	 * @param $ip
+	 * @return string
+	 */
+	public function set_user_ip( $ip ) {
+		return isset( $this->rest_hits->ip ) ? $this->rest_hits->ip : $ip;
+	}
+
+	/**
+	 * Set Hash IP
+	 *
+	 * @param $hash_ip
+	 * @return mixed
+	 */
+	public function set_hash_ip( $hash_ip ) {
+		return isset( $this->rest_hits->hash_ip ) ? $this->rest_hits->hash_ip : $hash_ip;
+	}
+
+	/**
+	 * Set Exclusion
+	 *
+	 * @param $exclude
+	 * @return array
+	 */
+	public function set_exclusion( $exclude ) {
+
+		if ( isset( $this->rest_hits->exclude ) and isset( $this->rest_hits->exclude_reason ) ) {
+			return array(
+				'exclusion_match'  => $this->rest_hits->exclude == 1 ? true : false,
+				'exclusion_reason' => $this->rest_hits->exclude_reason,
+			);
+		}
+
+		return $exclude;
+	}
+
+	/**
+	 * Set User Http Agent
+	 *
+	 * @param $http_agent
+	 * @return string
+	 */
+	public function set_user_http_agent( $http_agent ) {
+		return isset( $this->rest_hits->ua ) ? $this->rest_hits->ua : $http_agent;
+	}
+
+	/**
+	 * Set Current timeStamp
+	 *
+	 * @param $timestamp
+	 * @return mixed
+	 */
+	public function set_current_timestamp( $timestamp ) {
+		return isset( $this->rest_hits->timestamp ) ? $this->rest_hits->timestamp : $timestamp;
+	}
+
+	/**
+	 * Set Current Page
+	 *
+	 * @param $current_page
+	 * @return array
+	 */
+	public function set_current_page( $current_page ) {
+
+		if ( isset( $this->rest_hits->current_page_type ) and isset( $this->rest_hits->current_page_id ) ) {
+			return array(
+				'type'         => $this->rest_hits->current_page_type,
+				'id'           => $this->rest_hits->current_page_id,
+				'search_query' => isset( $this->rest_hits->search_query ) ? $this->rest_hits->search_query : ''
+			);
+		}
+
+		return $current_page;
+	}
+
+	/**
+	 * Set Page Uri
+	 *
+	 * @param $page_uri
+	 * @return string
+	 */
+	public function set_page_uri( $page_uri ) {
+		return isset( $this->rest_hits->page_uri ) ? $this->rest_hits->page_uri : $page_uri;
+	}
+
+	/**
+	 * Set Current User ID
+	 *
+	 * @param $user_id
+	 * @return int
+	 */
+	public function set_user_id( $user_id ) {
+		return isset( $this->rest_hits->user_id ) ? $this->rest_hits->user_id : $user_id;
 	}
 
 	/**
@@ -66,7 +199,7 @@ class Hits {
 	 * @return bool
 	 */
 	public static function is_rest_hit() {
-		return Helper::is_rest_request() and isset( $_REQUEST[ self::$Rest_hit_key ] );
+		return Helper::is_rest_request() and isset( $_REQUEST[ self::$rest_hits_key ] );
 	}
 
 	/**
@@ -78,10 +211,10 @@ class Hits {
 	public static function rest_params( $params = false ) {
 
 		# Check Isset Request Parameter
-		if ( isset( $_REQUEST[ Hits::$Rest_hit_key ] ) ) {
+		if ( isset( $_REQUEST[ Hits::$rest_hits_key ] ) ) {
 
 			# Check Data
-			$data = Helper::json_to_array( $_REQUEST[ Hits::$Rest_hit_key ] );
+			$data = Helper::json_to_array( $_REQUEST[ Hits::$rest_hits_key ] );
 
 			# Return Data
 			return ( $params === false ? $data : ( isset( $data[ $params ] ) ? $data[ $params ] : false ) );
@@ -130,16 +263,10 @@ class Hits {
 	//Get current Page detail
 	public function get_page_detail() {
 
-		//if is Cache enable
-		if ( WP_Statistics_Rest::is_rest() ) {
-			$this->current_page_id   = self::rest_params( 'current_page_id' );
-			$this->current_page_type = self::rest_params( 'current_page_type' );
-		} else {
 			//Get Page Type
 			$get_page_type           = Pages::get_page_type();
 			$this->current_page_id   = $get_page_type['id'];
 			$this->current_page_type = $get_page_type['type'];
-		}
 
 	}
 
