@@ -20,20 +20,19 @@ class WP_Statistics_Hits {
 	public function __construct() {
 		global $WP_Statistics;
 
-		// Create a IP Tools instance from the current IP address for use later.
-		// Fall back to the localhost if it can't be parsed.
-		try {
-			$ip = new IP( $WP_Statistics->ip );
-		} catch ( Exception $e ) {
-			$ip = new IP( '127.0.0.1' );
-		}
 
 		// Let's check to see if our subnet matches a private IP address range, if so go ahead and set the location information now.
 		if ( $WP_Statistics->option->get( 'private_country_code' ) != \WP_STATISTICS\GeoIP::$private_country && $WP_Statistics->option->get( 'private_country_code' ) != '' ) {
-			$private_subnets = array( '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/24', 'fc00::/7' );
 
-			foreach ( $private_subnets as $psub ) {
+			// Create a IP Tools instance from the current IP address for use later.
+			// Fall back to the localhost if it can't be parsed.
+			try {
+				$ip = new IP( $WP_Statistics->ip );
+			} catch ( Exception $e ) {
+				$ip = new IP( '127.0.0.1' );
+			}
 
+			foreach ( \WP_STATISTICS\IP::$private_SubNets as $psub ) {
 				try {
 					$contains_ip = Range::parse( $psub )->contains( $ip );
 				} catch ( Exception $e ) {

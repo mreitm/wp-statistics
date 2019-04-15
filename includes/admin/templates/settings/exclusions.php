@@ -212,10 +212,13 @@ if ( $wps_nonce_valid ) {
 						'For IPv6 addresses use the fc00::/7 format.',
 						'wp-statistics'
 					); ?></p>
-                <a onclick="var wps_exclude_ip = getElementById('wps_exclude_ip'); if( wps_exclude_ip != null ) { wps_exclude_ip.value = jQuery.trim( wps_exclude_ip.value + '\n10.0.0.0/8' ); }" class="button"><?php _e( 'Add 10.0.0.0', 'wp-statistics' ); ?></a>
-                <a onclick="var wps_exclude_ip = getElementById('wps_exclude_ip'); if( wps_exclude_ip != null ) { wps_exclude_ip.value = jQuery.trim( wps_exclude_ip.value + '\n172.16.0.0/12' ); }" class="button"><?php _e( 'Add 172.16.0.0', 'wp-statistics' ); ?></a>
-                <a onclick="var wps_exclude_ip = getElementById('wps_exclude_ip'); if( wps_exclude_ip != null ) { wps_exclude_ip.value = jQuery.trim( wps_exclude_ip.value + '\n192.168.0.0/16' ); }" class="button"><?php _e( 'Add 192.168.0.0', 'wp-statistics' ); ?></a>
-                <a onclick="var wps_exclude_ip = getElementById('wps_exclude_ip'); if( wps_exclude_ip != null ) { wps_exclude_ip.value = jQuery.trim( wps_exclude_ip.value + '\nfc00::/7' ); }" class="button"><?php _e( 'Add fc00::/7', 'wp-statistics' ); ?></a>
+                <?php
+                foreach (\WP_STATISTICS\IP::$private_SubNets as $ip) {
+                    ?>
+                    <a onclick="var wps_exclude_ip = getElementById('wps_exclude_ip'); if( wps_exclude_ip != null ) { wps_exclude_ip.value = jQuery.trim( wps_exclude_ip.value + '\n<?php echo $ip; ?>' ); }" class="button"><?php _e( 'Add', 'wp-statistics' ); ?> <?php echo $ip; ?></a>
+	                <?php
+                }
+                ?>
             </td>
         </tr>
 

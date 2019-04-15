@@ -11,6 +11,13 @@ class IP {
 	public static $default_ip = '127.0.0.1';
 
 	/**
+	 * Default Private SubNets
+	 *
+	 * @var array
+	 */
+	public static $private_SubNets = array( '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/24', 'fc00::/7' );
+
+	/**
 	 * Get Real User IP in Whip Package
 	 *
 	 * @return false|string
