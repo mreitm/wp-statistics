@@ -2,6 +2,8 @@
 
 namespace WP_STATISTICS;
 
+use IPTools\Range;
+
 class IP {
 	/**
 	 * Default User IP
@@ -96,6 +98,44 @@ class IP {
 		}
 
 		return $user_ip;
+	}
+
+	/**
+	 * Check IP Has The Custom IP Range List
+	 *
+	 * @param $ip
+	 * @param array $range
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public static function CheckIPRange( $ip, $range = array() ) {
+
+		// Get User IP
+		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
+
+		// Get Range OF This IP
+		try {
+			$ip = new \IPTools\IP( $ip );
+		} catch ( \Exception $e ) {
+			$ip = new \IPTools\IP( self::$default_ip );
+		}
+
+		// Check List
+		foreach ( $range as $list ) {
+			try {
+				$contains_ip = Range::parse( $list )->contains( $ip );
+			} catch ( \Exception $e ) {
+				$contains_ip = false;
+			}
+
+			if ( $contains_ip ) {
+				return true;
+				break;
+			}
+
+		}
+
+		return false;
 	}
 
 }
