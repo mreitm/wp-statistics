@@ -3,8 +3,6 @@
 namespace WP_STATISTICS;
 
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
-use IPTools\IP;
-use IPTools\Range;
 
 class Exclusion {
 	/**
@@ -269,7 +267,7 @@ class Exclusion {
 			if ( strlen( $subnet ) > 6 ) {
 
 				// Check in Range
-				if ( \WP_STATISTICS\IP::CheckIPRange( array( $subnet ) ) ) {
+				if ( IP::CheckIPRange( array( $subnet ) ) ) {
 					return true;
 				}
 
@@ -327,7 +325,7 @@ class Exclusion {
 
 		// Check User IP is empty Or Not User Agent
 		if ( $WP_Statistics->option->get( 'corrupt_browser_info' ) ) {
-			if ( UserAgent::getHttpUserAgent() == '' || \WP_STATISTICS\IP::getIP() == '' ) {
+			if ( UserAgent::getHttpUserAgent() == '' || IP::getIP() == '' ) {
 				return true;
 			}
 		}
@@ -337,6 +335,8 @@ class Exclusion {
 
 	/**
 	 * Detect if GEO-IP include Or Exclude Country.
+	 *
+	 * @throws \Exception
 	 */
 	public static function exclusion_geoip() {
 		global $WP_Statistics;

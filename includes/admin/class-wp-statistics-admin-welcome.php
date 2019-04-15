@@ -116,7 +116,7 @@ class Welcome {
 
 			// Load ParseDown
 			if ( ! class_exists( '\Parsedown' ) ) {
-				include( WP_STATISTICS_DIR . "includes/lib/Parsedown.php" );
+				include( WP_STATISTICS_DIR . "includes/libraries/Parsedown.php" );
 			}
 			$parse = new \Parsedown();
 
