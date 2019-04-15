@@ -65,7 +65,7 @@ class GeoIP {
 
 				//Load GeoIP Reader
 				$reader = new \GeoIp2\Database\Reader( $file );
-			} catch ( \MaxMind\Db\Reader\InvalidDatabaseException $e ) {
+			} catch ( InvalidDatabaseException $e ) {
 				return false;
 			}
 		} else {
@@ -92,12 +92,14 @@ class GeoIP {
 	}
 
 	/**
-	 * Get Country name By User IP
+	 * Get Country Detail By User IP
 	 *
 	 * @param bool $ip
+	 * @param string $return
 	 * @return String|null
+	 * @see https://github.com/maxmind/GeoIP2-php
 	 */
-	public static function getCountry( $ip = false ) {
+	public static function getCountry( $ip = false, $return = 'isoCode' ) {
 
 		// Default Country Name
 		$default_country = self::getDefaultCountryCode();
@@ -115,8 +117,12 @@ class GeoIP {
 				//Search in Geo-IP
 				$record = $reader->country( $ip );
 
-				//Get Country Code Name
-				$location = $record->country->isoCode;
+				//Get Country
+				if ( $return == "all" ) {
+					$location = $record->country;
+				} else {
+					$location = $record->country->{$return};
+				}
 			} catch ( AddressNotFoundException $e ) {
 				//Don't Staff
 			} catch ( InvalidDatabaseException $e ) {
