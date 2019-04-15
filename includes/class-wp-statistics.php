@@ -86,6 +86,8 @@ final class WP_Statistics {
 
 	/**
 	 * Constructors plugin Setup
+	 *
+	 * @throws Exception
 	 */
 	public function plugin_setup() {
 
@@ -108,13 +110,11 @@ final class WP_Statistics {
 		 * Load action
 		 */
 		//TODO:  ADDED NEW IN SAME FILE CLASS
-		new WP_Statistics_Schedule;
 		if ( is_admin() ) {
 			new WP_Statistics_Admin;
 		} else {
-			new WP_Statistics_Frontend;
+			new \WP_STATISTICS\Frontend;
 		}
-		new WP_Statistics_Shortcode();
 	}
 
 	/**
@@ -130,13 +130,13 @@ final class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-timezone.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-agent.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geoip.php';
 
 		// Hits Class
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-agent.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-ip.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-geoip.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-pages.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-visitor.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-historical.php';
@@ -288,6 +288,13 @@ final class WP_Statistics {
 		# Referer
 		$this->container['referred'] = \WP_STATISTICS\Referred::get();
 
+		# Load WordPress ShortCode
+		new \WP_STATISTICS\Shortcode;
+
+		# Load WordPress Cron
+		new \WP_STATISTICS\Schedule;
+
+		# Run in Admin
 		if ( is_admin() ) {
 
 			# Admin Menu
@@ -308,6 +315,11 @@ final class WP_Statistics {
 			$this->container['admin_bar'] = new \WP_STATISTICS\AdminBar;
 		}
 
+		# Run in Frontend
+		if ( ! is_admin() ) {
+
+
+		}
 	}
 
 }

@@ -1,26 +1,32 @@
 <?php
 
+namespace WP_STATISTICS;
 
-class WP_Statistics_Shortcode {
+class ShortCode {
 
 	public function __construct() {
+
+		//init ShortCode
+		add_action( 'admin_init', array( $this, 'shortcake' ) );
+
+		// Add ShortCode
 		add_shortcode( 'wpstatistics', array( $this, 'shortcodes' ) );
 	}
 
 	/**
-	 * @param $atts
-	 *
-	 * WP-Statistics shortcode is in the format of:
+	 * WP-Statistics ShortCode is in the format of:
 	 * [wpstatistics stat=xxx time=xxxx provider=xxxx format=xxxxxx id=xxx]
+	 *
 	 * Where:
 	 * stat = the statistic you want.
 	 * time = is the timeframe, strtotime() (http://php.net/manual/en/datetime.formats.php) will be used to calculate
 	 * it. provider = the search provider to get stats on. format = i18n, english, none. id = the page/post id to get
 	 * stats on.
 	 *
+	 *  @param $atts
 	 * @return array|false|int|null|object|string|void
 	 */
-	public static function shortcodes( $atts ) {
+	public function shortcodes( $atts ) {
 
 		if ( ! is_array( $atts ) ) {
 			return;
@@ -123,13 +129,11 @@ class WP_Statistics_Shortcode {
 		return $result;
 	}
 
-	/**
-	 *
-	 */
-	static function shortcake() {
+	public function shortcake() {
+
 		// ShortCake support if loaded.
 		if ( function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-			$se_list = WP_STATISTICS\SearchEngine::getList();
+			$se_list =SearchEngine::getList();
 
 			$se_options = array( '' => 'None' );
 
@@ -137,19 +141,16 @@ class WP_Statistics_Shortcode {
 				$se_options[ $se['tag'] ] = $se['translated'];
 			}
 
-			shortcode_ui_register_for_shortcode(
-				'wpstatistics',
+			shortcode_ui_register_for_shortcode( 'wpstatistics',
 				array(
 
 					// Display label. String. Required.
 					'label'         => 'WP Statistics',
 
 					// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
-					'listItemImage' => '<img src="' .
-					                   WP_STATISTICS_URL .
-					                   'assets/images/logo-250.png" width="128" height="128">',
+					'listItemImage' => '<img src="' . WP_STATISTICS_URL . 'assets/images/logo-250.png" width="128" height="128">',
 
-					// Available shortcode attributes and default values. Required. Array.
+					// Available shortCode attributes and default values. Required. Array.
 					// Attribute model expects 'attr', 'type' and 'label'
 					// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 					'attrs'         => array(
@@ -220,6 +221,5 @@ class WP_Statistics_Shortcode {
 				)
 			);
 		}
-
 	}
 }

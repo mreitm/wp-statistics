@@ -1,28 +1,23 @@
 <?php
 
-use WP_STATISTICS\GeoIP;
+namespace WP_STATISTICS;
 
-/**
- * Class WP_Statistics_Schedule
- */
-class WP_Statistics_Schedule {
+class Schedule {
 
 	/**
-	 * WP_Statistics_Schedule constructor.
-	 *
-	 * @param $WP_Statistics
+	 * Schedule constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		global $WP_Statistics;
 
-		// before construct
-		add_filter( 'cron_schedules', 'WP_Statistics_Schedule::addcron' );
+		// Define New Cron Schedules Time in WordPress
+		add_filter( 'cron_schedules', array( $this, 'define_schedules_time' ) );
 
 		//Run This Method Only Admin Area
 		if ( is_admin() ) {
 
 			//Disable Run to Ajax
-			if ( ! wp_doing_ajax() ) {
+			if ( ! Helper::is_request('ajax') ) {
 
 				// Add the GeoIP update schedule if it doesn't exist and it should be.
 				if ( ! wp_next_scheduled( 'wp_statistics_geoip_hook' ) && $WP_Statistics->option->get( 'schedule_geoip' ) && $WP_Statistics->option->get( 'geoip' ) ) {
@@ -100,11 +95,15 @@ class WP_Statistics_Schedule {
 	}
 
 	/**
+	 * Define New Cron Schedules Time in WordPress
+	 *
 	 * @param array $schedules
 	 * @return mixed
 	 */
-	static function addcron( $schedules ) {
+	static function define_schedules_time( $schedules ) {
+
 		// Adds once weekly to the existing schedules.
+		//TODO Kholase shavad
 		if ( ! array_key_exists( 'weekly', $schedules ) ) {
 			$schedules['weekly'] = array(
 				'interval' => 604800,
@@ -140,8 +139,8 @@ class WP_Statistics_Schedule {
 		$wpdb->insert(
 			$wpdb->prefix . 'statistics_visit',
 			array(
-				'last_visit'   => \WP_STATISTICS\TimeZone::getCurrentDate( null, '+1' ),
-				'last_counter' => \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d', '+1' ),
+				'last_visit'   => TimeZone::getCurrentDate( null, '+1' ),
+				'last_counter' => TimeZone::getCurrentDate( 'Y-m-d', '+1' ),
 				'visit'        => 0,
 			),
 			array( '%s', '%s', '%d' )
@@ -190,7 +189,7 @@ class WP_Statistics_Schedule {
 	public function dbmaint_event() {
 		global $WP_Statistics;
 		$purge_days = intval( $WP_Statistics->option->get( 'schedule_dbmaint_days', false ) );
-		WP_STATISTICS\Purge::purge_data( $purge_days );
+		Purge::purge_data( $purge_days );
 	}
 
 	/**
@@ -199,7 +198,7 @@ class WP_Statistics_Schedule {
 	public function dbmaint_visitor_event() {
 		global $WP_Statistics;
 		$purge_hits = intval( $WP_Statistics->option->get( 'schedule_dbmaint_visitor_hits', false ) );
-		WP_STATISTICS\Purge::purge_visitor_hits( $purge_hits );
+		Purge::purge_visitor_hits( $purge_hits );
 	}
 
 	/**
@@ -233,7 +232,7 @@ class WP_Statistics_Schedule {
 
 		} else if ( $WP_Statistics->option->get( 'send_report' ) == 'sms' ) {
 
-			if ( class_exists( get_option( 'wp_webservice' ) ) ) {
+			if ( class_exists( get_option( 'wp_webservice' ) ) and is_plugin_active( 'wp-sms/wp-sms.php' ) ) {
 
 				$sms->to  = array( get_option( 'wp_admin_mobile' ) );
 				$sms->msg = $final_text_report;

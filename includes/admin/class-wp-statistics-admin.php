@@ -57,9 +57,6 @@ class WP_Statistics_Admin {
 			add_action( 'post_submitbox_misc_actions', array( $this, 'post_init' ) );
 		}
 
-		//init ShortCode
-		add_action( 'admin_init', 'WP_Statistics_Shortcode::shortcake' );
-
 		// Runs some scripts at the end of the admin panel inside the body tag
 		add_action( 'admin_footer', array( $this, 'admin_footer_scripts' ) );
 

@@ -16,7 +16,7 @@ function wp_statistics_useronline( $options = array() ) {
 	$defaults = array(
 		/**
 		 * Type Of Page in Wordpress
-		 * @See WP_Statistics_Frontend\get_page_type
+		 * @See Frontend\get_page_type
 		 *
 		 * -- Acceptable values --
 		 *
@@ -260,7 +260,7 @@ function wp_statistics_visitor( $time, $daily = null, $count_only = false, $opti
 	$defaults = array(
 		/**
 		 * Type Of Page in Wordpress
-		 * @See WP_Statistics_Frontend\get_page_type
+		 * @See Frontend\get_page_type
 		 *
 		 * -- Acceptable values --
 		 *

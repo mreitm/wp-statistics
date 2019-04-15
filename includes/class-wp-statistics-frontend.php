@@ -1,13 +1,9 @@
 <?php
 
-use WP_STATISTICS\Helper;
-use WP_STATISTICS\Hits;
-use WP_STATISTICS\Pages;
+namespace WP_STATISTICS;
 
-/**
- * Class WP_Statistics_Frontend
- */
-class WP_Statistics_Frontend {
+
+class Frontend {
 
 	public function __construct() {
 		global $WP_Statistics;
@@ -75,6 +71,7 @@ class WP_Statistics_Frontend {
 
 		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
 			$this->html_comment();
+			//TODO Solve Load Rest Class
 			echo '<script>var WP_Statistics_http = new XMLHttpRequest();WP_Statistics_http.open(\'POST\', \'' . add_query_arg( array( '_' => time() ), path_join( get_rest_url(), WP_Statistics_Rest::route . '/' . WP_Statistics_Rest::func ) ) . '\', true);WP_Statistics_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");WP_Statistics_http.send("' . Hits::$rest_hits_key . '=" + JSON.stringify(' . self::set_default_params() . '));</script>' . "\n";
 		}
 	}
@@ -93,30 +90,30 @@ class WP_Statistics_Frontend {
 		$params['api']  = rtrim( rest_get_url_prefix(), "/" );
 
 		//Set UserAgent [browser|platform|version]
-		$params = wp_parse_args( $params, \WP_STATISTICS\UserAgent::getUserAgent() );
+		$params = wp_parse_args( $params, UserAgent::getUserAgent() );
 
 		//Set Referred
-		$params['referred'] = \WP_STATISTICS\Referred::get();
+		$params['referred'] = Referred::get();
 
 		//Set IP
-		$params['ip'] = \WP_STATISTICS\IP::getIP();
+		$params['ip'] = IP::getIP();
 
 		//Set Hash Ip
-		$params['hash_ip'] = \WP_STATISTICS\IP::getHashIP();
+		$params['hash_ip'] = IP::getHashIP();
 
 		//exclude
-		$exclude                  = \WP_STATISTICS\Exclusion::check();
+		$exclude                  = Exclusion::check();
 		$params['exclude']        = $exclude['exclusion_match'];
 		$params['exclude_reason'] = $exclude['exclusion_reason'];
 
 		//User Agent String
-		$params['ua'] = \WP_STATISTICS\UserAgent::getHttpUserAgent();
+		$params['ua'] = UserAgent::getHttpUserAgent();
 
 		//track all page
 		$params['track_all'] = ( Pages::is_track_all_page() === true ? 1 : 0 );
 
 		//timestamp
-		$params['timestamp'] = \WP_STATISTICS\Timezone::getCurrentTimestamp();
+		$params['timestamp'] = Timezone::getCurrentTimestamp();
 
 		//Set Page Type
 		$get_page_type               = Pages::get_page_type();
@@ -136,6 +133,7 @@ class WP_Statistics_Frontend {
 
 	/**
 	 * Shutdown Action
+	 * @throws \Exception
 	 */
 	public function init() {
 		global $WP_Statistics;
@@ -149,7 +147,7 @@ class WP_Statistics_Frontend {
 		//Disable if User Active cache Plugin
 		if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
 
-			$h = new \WP_STATISTICS\Hits();
+			$h = new Hits();
 
 			// Call the online users tracking code.
 			if ( $WP_Statistics->option->get( 'useronline' ) ) {
