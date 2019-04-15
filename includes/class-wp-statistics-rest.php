@@ -1,5 +1,7 @@
 <?php
 
+use WP_STATISTICS\Hits;
+
 /**
  * Class WP_Statistics_Rest
  */
@@ -10,9 +12,6 @@ class WP_Statistics_Rest {
 
 	// Set Default Statistic Save method
 	const func = 'hit';
-
-	// Set Default POST Name
-	const _POST = 'wp_statistics_hit';
 
 	/**
 	 * Setup an Wordpress REst Api action.
@@ -55,7 +54,7 @@ class WP_Statistics_Rest {
 
 
 		//Check Auth Key Request
-		if ( ! isset( $_POST[ self::_POST ] ) ) {
+		if ( ! isset( $_POST[ Hits::$Rest_hit_key ] ) ) {
 			return new \WP_Error( 'error', 'You have no right to access', array( 'status' => 403 ) );
 		}
 
@@ -88,35 +87,4 @@ class WP_Statistics_Rest {
 		}
 	}
 
-	/*
-	 * Check is Rest Request
-	 */
-	static public function is_rest() {
-		global $WP_Statistics;
-
-		if ( isset( $WP_Statistics ) and isset( $_POST[ self::_POST ] ) ) {
-				return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * Get Params Request
-	 */
-	static public function params( $params ) {
-		if ( isset( $_POST[ self::_POST ] ) ) {
-			$data = wp_unslash( $_POST[ self::_POST ] );
-
-			if ( ! empty( $data ) && is_string( $data ) && is_array( json_decode( $data, true ) ) && json_last_error() == 0 ) {
-				$data = json_decode( $data, true );
-			}
-
-			if ( isset( $data[ $params ] ) ) {
-				return $data[ $params ];
-			}
-		}
-
-		return false;
-	}
 }

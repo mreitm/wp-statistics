@@ -21,11 +21,11 @@ class UserAgent {
 
 		//Check If Rest Request
 		//TODO Remove At Last
-		if ( \WP_Statistics_Rest::is_rest() ) {
+		if ( Hits::is_rest_hit() ) {
 			return array(
-				'browser'  => \WP_Statistics_Rest::params( 'browser' ),
-				'platform' => \WP_Statistics_Rest::params( 'platform' ),
-				'version'  => \WP_Statistics_Rest::params( 'version' )
+				'browser'  => Hits::rest_params( 'browser' ),
+				'platform' => Hits::rest_params( 'platform' ),
+				'version'  => Hits::rest_params( 'version' )
 			);
 		}
 

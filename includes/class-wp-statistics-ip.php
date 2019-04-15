@@ -40,8 +40,8 @@ class IP {
 		$ip = false;
 
 		//Check If Rest Api Request //TODO Remove At Last
-		if ( \WP_Statistics_Rest::is_rest() ) {
-			return \WP_Statistics_Rest::params( 'ip' );
+		if ( Hits::is_rest_hit() ) {
+			return Hits::rest_params( 'ip' );
 		}
 
 		// Get User IP
@@ -68,8 +68,8 @@ class IP {
 		if ( $WP_Statistics->option->get( 'hash_ips' ) == true ) {
 
 			//Check If Rest Api Request //TODO Remove At Last
-			if ( \WP_Statistics_Rest::is_rest() ) {
-				return \WP_Statistics_Rest::params( 'hash_ip' );
+			if ( Hits::is_rest_hit() ) {
+				return Hits::rest_params( 'hash_ip' );
 			}
 
 			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );

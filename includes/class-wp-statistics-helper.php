@@ -373,7 +373,134 @@ class Helper {
 	 * @return mixed|string
 	 */
 	public static function get_wordpress_version() {
-		return get_bloginfo('version');
+		return get_bloginfo( 'version' );
+	}
+
+	/**
+	 * Convert Json To Array
+	 *
+	 * @param $json
+	 * @return bool|mixed
+	 */
+	public static function json_to_array( $json ) {
+
+		// Sanitize Slash Data
+		$data = wp_unslash( $json );
+
+		// Check Validate Json Data
+		if ( ! empty( $data ) && is_string( $data ) && is_array( json_decode( $data, true ) ) && json_last_error() == 0 ) {
+			return json_decode( $data, true );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Standard Json Encode
+	 *
+	 * @param $array
+	 * @return false|string
+	 */
+	public static function standard_json_encode( $array ) {
+
+		//Fixed entity decode Html
+		foreach ( (array) $array as $key => $value ) {
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+			$array[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
+		}
+
+		return json_encode( $array, JSON_UNESCAPED_SLASHES );
+	}
+
+	/**
+	 * Show Site Icon by Url
+	 *
+	 * @param $url
+	 * @param int $size
+	 * @param string $style
+	 * @return bool|string
+	 */
+	public static function show_site_icon( $url, $size = 16, $style = '' ) {
+		$url = preg_replace( '/^https?:\/\//', '', $url );
+		if ( $url != "" ) {
+			$imgurl = "https://www.google.com/s2/favicons?domain=" . $url;
+			return '<img src="' . $imgurl . '" width="' . $size . '" height="' . $size . '" style="' . ( $style == "" ? 'vertical-align: -3px;' : '' ) . '" />';
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get Domain name from url
+	 * e.g : https://wp-statistics.com/add-ons/ -> wp-statistics.com
+	 *
+	 * @param $url
+	 * @return mixed
+	 */
+	public static function get_domain_name( $url ) {
+		//Remove protocol
+		$url = preg_replace( "(^https?://)", "", trim( $url ) );
+		//remove w(3)
+		$url = preg_replace( '#^(http(s)?://)?w{3}\.#', '$1', $url );
+		//remove all Query
+		$url = explode( "/", $url );
+
+		return $url[0];
+	}
+
+	/**
+	 * Get Page Url
+	 *
+	 * @return bool|mixed|string
+	 */
+	public static function get_page_uri() {
+
+		// Get the site's path from the URL.
+		$site_uri     = parse_url( site_url(), PHP_URL_PATH );
+		$site_uri_len = strlen( $site_uri );
+
+		// Get the site's path from the URL.
+		$home_uri     = parse_url( home_url(), PHP_URL_PATH );
+		$home_uri_len = strlen( $home_uri );
+
+		// Get the current page URI.
+		$page_uri = $_SERVER["REQUEST_URI"];
+
+		/*
+		 * We need to check which URI is longer in case one contains the other.
+		 * For example home_uri might be "/site/wp" and site_uri might be "/site".
+		 * In that case we want to check to see if the page_uri starts with "/site/wp" before
+		 * we check for "/site", but in the reverse case, we need to swap the order of the check.
+		 */
+		if ( $site_uri_len > $home_uri_len ) {
+			if ( substr( $page_uri, 0, $site_uri_len ) == $site_uri ) {
+				$page_uri = substr( $page_uri, $site_uri_len );
+			}
+
+			if ( substr( $page_uri, 0, $home_uri_len ) == $home_uri ) {
+				$page_uri = substr( $page_uri, $home_uri_len );
+			}
+		} else {
+			if ( substr( $page_uri, 0, $home_uri_len ) == $home_uri ) {
+				$page_uri = substr( $page_uri, $home_uri_len );
+			}
+
+			if ( substr( $page_uri, 0, $site_uri_len ) == $site_uri ) {
+				$page_uri = substr( $page_uri, $site_uri_len );
+			}
+		}
+
+		//Sanitize Xss injection
+		$page_uri = filter_var( $page_uri, FILTER_SANITIZE_STRING );
+
+		// If we're at the root (aka the URI is blank), let's make sure to indicate it.
+		if ( $page_uri == '' ) {
+			$page_uri = '/';
+		}
+
+		return apply_filters( 'wp_statistics_page_uri', $page_uri );
 	}
 
 

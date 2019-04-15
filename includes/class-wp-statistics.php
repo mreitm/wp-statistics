@@ -260,6 +260,9 @@ final class WP_Statistics {
 	public function instantiate() {
 		//TODO seperate all item to seperate class
 
+		# Sanitize WP-Statistics Data
+		\WP_STATISTICS\Hits::sanitize_hits_data();
+
 		# Get Country Codes
 		$this->container['country_codes'] = \WP_STATISTICS\Helper::get_country_codes();
 

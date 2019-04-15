@@ -2,7 +2,15 @@
 
 namespace WP_STATISTICS;
 
+use WP_Statistics_Rest;
+
 class Hits {
+	/**
+	 * Rest-APi Hit Record Params
+	 *
+	 * @var string
+	 */
+	public static $Rest_hit_key = 'wp_statistics_hit';
 
 	// Setup our public/private/protected variables.
 	public $result = null;
@@ -28,6 +36,60 @@ class Hits {
 		$this->exclusion_match  = $exclusion['exclusion_match'];
 		$this->exclusion_reason = $exclusion['exclusion_reason'];
 	}
+
+	/**
+	 * Prepare Wp-Statistics Data if has Rest-Api Request
+	 */
+	public static function sanitize_hits_data() {
+
+		# Check Request Process in Rest-Api
+		if ( self::is_rest_hit() ) {
+
+			# Get Rest-Api Data
+			$user_data = self::rest_params();
+			if ( $user_data != false ) {
+
+
+
+
+
+
+
+
+			}
+		}
+	}
+
+	/**
+	 * Check If Record Hits in Rest-Api Request
+	 *
+	 * @return bool
+	 */
+	public static function is_rest_hit() {
+		return Helper::is_rest_request() and isset( $_REQUEST[ self::$Rest_hit_key ] );
+	}
+
+	/**
+	 * Get Params Value in Rest-APi Request Hit
+	 *
+	 * @param $params
+	 * @return bool
+	 */
+	public static function rest_params( $params = false ) {
+
+		# Check Isset Request Parameter
+		if ( isset( $_REQUEST[ Hits::$Rest_hit_key ] ) ) {
+
+			# Check Data
+			$data = Helper::json_to_array( $_REQUEST[ Hits::$Rest_hit_key ] );
+
+			# Return Data
+			return ( $params === false ? $data : ( isset( $data[ $params ] ) ? $data[ $params ] : false ) );
+		}
+
+		return false;
+	}
+
 
 	// This function records visits to the site.
 	public function Visits() {
@@ -70,8 +132,8 @@ class Hits {
 
 		//if is Cache enable
 		if ( WP_Statistics_Rest::is_rest() ) {
-			$this->current_page_id   = WP_Statistics_Rest::params( 'current_page_id' );
-			$this->current_page_type = WP_Statistics_Rest::params( 'current_page_type' );
+			$this->current_page_id   = self::rest_params( 'current_page_id' );
+			$this->current_page_type = self::rest_params( 'current_page_type' );
 		} else {
 			//Get Page Type
 			$get_page_type           = Helper::get_page_type();
@@ -120,7 +182,7 @@ class Hits {
 				// If we've been told to store the entire user agent, do so.
 				if ( $WP_Statistics->option->get( 'store_ua' ) == true ) {
 					if ( WP_Statistics_Rest::is_rest() ) {
-						$ua = WP_Statistics_Rest::params( 'ua' );
+						$ua = self::rest_params( 'ua' );
 					} else {
 						$ua = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '' );
 					}
@@ -155,7 +217,7 @@ class Hits {
 
 					$search_engines = WP_STATISTICS\SearchEngine::getList();
 					if ( WP_Statistics_Rest::is_rest() ) {
-						$referred = WP_Statistics_Rest::params( 'referred' );
+						$referred = self::rest_params( 'referred' );
 					} else {
 						$referred = \WP_STATISTICS\Referred::get();
 					}
@@ -213,7 +275,7 @@ class Hits {
 		}
 
 		if ( $this->exclusion_match ) {
-			WP_STATISTICS\Exclusion::record( array( 'exclusion_match' => $this->exclusion_match, 'exclusion_reason' => $this->exclusion_reason ) );
+			Exclusion::record( array( 'exclusion_match' => $this->exclusion_match, 'exclusion_reason' => $this->exclusion_reason ) );
 		}
 	}
 
@@ -227,7 +289,7 @@ class Hits {
 			// Don't track anything but actual pages and posts, unless we've been told to.
 			$is_track_all = false;
 			if ( WP_Statistics_Rest::is_rest() ) {
-				if ( WP_Statistics_Rest::params( 'track_all' ) == 1 ) {
+				if ( self::rest_params( 'track_all' ) == 1 ) {
 					$is_track_all = true;
 				}
 			} else {
@@ -248,16 +310,16 @@ class Hits {
 
 				// Get the current page URI.
 				if ( WP_Statistics_Rest::is_rest() ) {
-					$page_uri = WP_Statistics_Rest::params( 'page_uri' );
+					$page_uri = self::rest_params( 'page_uri' );
 				} else {
-					$page_uri = wp_statistics_get_uri();
+					$page_uri = Helper::get_page_uri();
 				}
 
 				//Get String Search Wordpress
 				$is_search = false;
 				if ( WP_Statistics_Rest::is_rest() ) {
-					if ( WP_Statistics_Rest::params( 'search_query' ) != "" ) {
-						$page_uri  = "?s=" . WP_Statistics_Rest::params( 'search_query' );
+					if ( self::rest_params( 'search_query' ) != "" ) {
+						$page_uri  = "?s=" . self::rest_params( 'search_query' );
 						$is_search = true;
 					}
 				} else {
@@ -402,8 +464,8 @@ class Hits {
 
 		//if Rest Request
 		if ( WP_Statistics_Rest::is_rest() ) {
-			if ( WP_Statistics_Rest::params( 'user_id' ) != "" ) {
-				$user_id = WP_Statistics_Rest::params( 'user_id' );
+			if ( self::rest_params( 'user_id' ) != "" ) {
+				$user_id = self::rest_params( 'user_id' );
 			}
 		} else {
 			if ( is_user_logged_in() ) {

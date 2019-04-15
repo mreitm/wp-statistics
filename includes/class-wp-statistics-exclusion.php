@@ -49,10 +49,10 @@ class Exclusion {
 		$exclude = array( 'exclusion_match' => false, 'exclusion_reason' => '' );
 
 		//TODO Remove At Last & Check has_filter return and do not go to foreach
-		if ( \WP_Statistics_Rest::is_rest() ) {
+		if ( Hits::is_rest_hit() ) {
 
-			$exclude['exclusion_match']  = ( \WP_Statistics_Rest::params( 'exclude' ) == 1 ? true : false );
-			$exclude['exclusion_reason'] = \WP_Statistics_Rest::params( 'exclude_reason' );
+			$exclude['exclusion_match']  = ( Hits::rest_params( 'exclude' ) == 1 ? true : false );
+			$exclude['exclusion_reason'] = Hits::rest_params( 'exclude_reason' );
 		} else {
 
 			// Check Exclusion

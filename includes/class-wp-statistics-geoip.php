@@ -51,6 +51,21 @@ class GeoIP {
 	}
 
 	/**
+	 * Check Is Active Geo-ip
+	 *
+	 * @param bool $which
+	 * @return boolean
+	 */
+	public static function is_active( $which = false ) {
+
+		//Default Geo-Ip Option name
+		$opt = ( $which == "city" ? 'geoip_city' : 'geoip' );
+
+		// Return
+		return $GLOBALS['WP_Statistics']->option->get( $opt );
+	}
+
+	/**
 	 * geo ip Loader
 	 *
 	 * @param $pack

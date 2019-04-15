@@ -40,7 +40,7 @@ $total    = 0;
 if ( $referr ) {
 
 	//Get domain Name
-	$search_url = wp_statistics_get_domain_name( trim( $_GET['referr'] ) );
+	$search_url = WP_STATISTICS\Helper::get_domain_name( trim( $_GET['referr'] ) );
 	$result     = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT * FROM `{$wpdb->prefix}statistics_visitor` WHERE `referred` REGEXP \"^(https?://|www\\.)[\.A-Za-z0-9\-]+\\.[a-zA-Z]{2,4}\" AND referred <> '' AND LENGTH(referred) >=12 AND (`referred` LIKE  %s OR `referred` LIKE %s OR `referred` LIKE %s OR `referred` LIKE %s) AND `last_counter` BETWEEN %s AND %s ORDER BY `{$wpdb->prefix}statistics_visitor`.`ID` DESC",
@@ -251,7 +251,7 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 										echo "<tr>";
 										echo "<td>" . number_format_i18n( $i ) . "</td>";
-										echo "<td>" . wp_statistics_show_site_icon( $domain ) . " " . Referred::get_referrer_link( $domain, $referrer_list[ $domain ]['title'] ) . "</td>";
+										echo "<td>" . WP_STATISTICS\Helper::show_site_icon( $domain ) . " " . Referred::get_referrer_link( $domain, $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['title'] ) == "" ? $unknown : $referrer_list[ $domain ]['title'] ) . "</td>";
 										echo "<td>" . ( trim( $referrer_list[ $domain ]['ip'] ) == "" ? $unknown : $referrer_list[ $domain ]['ip'] ) . "</td>";
 										if ( $WP_Statistics->option->get( 'geoip' ) ) {

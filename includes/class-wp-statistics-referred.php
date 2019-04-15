@@ -23,8 +23,8 @@ class Referred {
 		global $WP_Statistics;
 
 		//Check If Rest Api Request //TODO Remove At Last
-		if ( WP_Statistics_Rest::is_rest() ) {
-			return WP_Statistics_Rest::params( 'referred' );
+		if ( Hits::is_rest_hit() ) {
+			return Hits::rest_params( 'referred' );
 		}
 
 		// Get Default

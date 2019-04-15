@@ -415,7 +415,7 @@ function wp_statistics_pages( $time, $page_uri = '', $id = - 1, $rangestartdate 
 
 		// If no page URI has been passed in, get the current page URI.
 		if ( $page_uri == '' ) {
-			$page_uri = wp_statistics_get_uri();
+			$page_uri = Helper::get_page_uri();
 		}
 		$page_uri_sql = esc_sql( $page_uri );
 
@@ -562,55 +562,7 @@ function wp_statistics_get_top_pages( $rangestartdate = null, $rangeenddate = nu
 	return array( $total, $uris );
 }
 
-// This function gets the current page URI.
-function wp_statistics_get_uri() {
-	// Get the site's path from the URL.
-	$site_uri     = parse_url( site_url(), PHP_URL_PATH );
-	$site_uri_len = strlen( $site_uri );
 
-	// Get the site's path from the URL.
-	$home_uri     = parse_url( home_url(), PHP_URL_PATH );
-	$home_uri_len = strlen( $home_uri );
-
-	// Get the current page URI.
-	$page_uri = $_SERVER["REQUEST_URI"];
-
-	/*
-	 * We need to check which URI is longer in case one contains the other.
-	 *
-	 * For example home_uri might be "/site/wp" and site_uri might be "/site".
-	 *
-	 * In that case we want to check to see if the page_uri starts with "/site/wp" before
-	 * we check for "/site", but in the reverse case, we need to swap the order of the check.
-	 */
-	if ( $site_uri_len > $home_uri_len ) {
-		if ( substr( $page_uri, 0, $site_uri_len ) == $site_uri ) {
-			$page_uri = substr( $page_uri, $site_uri_len );
-		}
-
-		if ( substr( $page_uri, 0, $home_uri_len ) == $home_uri ) {
-			$page_uri = substr( $page_uri, $home_uri_len );
-		}
-	} else {
-		if ( substr( $page_uri, 0, $home_uri_len ) == $home_uri ) {
-			$page_uri = substr( $page_uri, $home_uri_len );
-		}
-
-		if ( substr( $page_uri, 0, $site_uri_len ) == $site_uri ) {
-			$page_uri = substr( $page_uri, $site_uri_len );
-		}
-	}
-
-	//Sanitize Xss injection
-	$page_uri = filter_var( $page_uri, FILTER_SANITIZE_STRING );
-
-	// If we're at the root (aka the URI is blank), let's make sure to indicate it.
-	if ( $page_uri == '' ) {
-		$page_uri = '/';
-	}
-
-	return $page_uri;
-}
 
 // This function returns all unique user agents in the database.
 function wp_statistics_ua_list( $rangestartdate = null, $rangeenddate = null ) {
@@ -1945,24 +1897,6 @@ function wp_statistics_get_domain_server( $url ) {
 }
 
 /**
- * Show Site Icon by Url
- *
- * @param $url
- * @param int $size
- * @param string $style
- * @return bool|string
- */
-function wp_statistics_show_site_icon( $url, $size = 16, $style = '' ) {
-	$url = preg_replace( '/^https?:\/\//', '', $url );
-	if ( $url != "" ) {
-		$imgurl = "https://www.google.com/s2/favicons?domain=" . $url;
-		return '<img src="' . $imgurl . '" width="' . $size . '" height="' . $size . '" style="' . ( $style == "" ? 'vertical-align: -3px;' : '' ) . '" />';
-	}
-
-	return false;
-}
-
-/**
  * Get Number Referer Domain
  *
  * @param $url
@@ -1973,7 +1907,7 @@ function wp_statistics_get_number_referer_from_domain( $url, $time_rang = array(
 	global $wpdb;
 
 	//Get Domain Name
-	$search_url = wp_statistics_get_domain_name( esc_url_raw( $url ) );
+	$search_url = WP_STATISTICS\Helper::get_domain_name( esc_url_raw( $url ) );
 
 	//Prepare SQL
 	$time_sql = '';
@@ -1986,20 +1920,3 @@ function wp_statistics_get_number_referer_from_domain( $url, $time_rang = array(
 	return $wpdb->get_var( $sql );
 }
 
-/**
- * Get Domain name from url
- * e.g : https://wp-statistics.com/add-ons/ -> wp-statistics.com
- *
- * @param $url
- * @return mixed
- */
-function wp_statistics_get_domain_name( $url ) {
-	//Remove protocol
-	$url = preg_replace( "(^https?://)", "", trim( $url ) );
-	//remove w(3)
-	$url = preg_replace( '#^(http(s)?://)?w{3}\.#', '$1', $url );
-	//remove all Query
-	$url = explode( "/", $url );
-
-	return $url[0];
-}

@@ -1,6 +1,7 @@
 <?php
 
 use WP_STATISTICS\Helper;
+use WP_STATISTICS\Hits;
 
 /**
  * Class WP_Statistics_Frontend
@@ -73,7 +74,7 @@ class WP_Statistics_Frontend {
 
 		if ( $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
 			$this->html_comment();
-			echo '<script>var WP_Statistics_http = new XMLHttpRequest();WP_Statistics_http.open(\'POST\', \'' . add_query_arg( array( '_' => time() ), path_join( get_rest_url(), WP_Statistics_Rest::route . '/' . WP_Statistics_Rest::func ) ) . '\', true);WP_Statistics_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");WP_Statistics_http.send("' . WP_Statistics_Rest::_POST . '=" + JSON.stringify(' . self::set_default_params() . '));</script>' . "\n";
+			echo '<script>var WP_Statistics_http = new XMLHttpRequest();WP_Statistics_http.open(\'POST\', \'' . add_query_arg( array( '_' => time() ), path_join( get_rest_url(), WP_Statistics_Rest::route . '/' . WP_Statistics_Rest::func ) ) . '\', true);WP_Statistics_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");WP_Statistics_http.send("' . Hits::$Rest_hit_key . '=" + JSON.stringify(' . self::set_default_params() . '));</script>' . "\n";
 		}
 	}
 
@@ -83,9 +84,7 @@ class WP_Statistics_Frontend {
 	static public function set_default_params() {
 		global $WP_Statistics;
 
-		/*
-		 * Load Rest Api JavaScript
-		 */
+		// Create Empty Params Object
 		$params = array();
 
 		//Set Url WP-Rest API
@@ -125,20 +124,13 @@ class WP_Statistics_Frontend {
 		$params['search_query']      = ( isset( $get_page_type['search_query'] ) ? $get_page_type['search_query'] : '' );
 
 		//page url
-		$params['page_uri'] = wp_statistics_get_uri();
+		$params['page_uri'] = Helper::get_page_uri();
 
 		//Get User id
 		$params['user_id'] = $WP_Statistics->user->ID;
 
-		//Fixed entity decode Html
-		foreach ( (array) $params as $key => $value ) {
-			if ( ! is_scalar( $value ) ) {
-				continue;
-			}
-			$params[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
-		}
-
-		return json_encode( $params, JSON_UNESCAPED_SLASHES );
+		//return Json Data
+		return Helper::standard_json_encode( $params );
 	}
 
 	/**
