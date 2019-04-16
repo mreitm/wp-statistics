@@ -165,7 +165,7 @@ class Helper {
 		}
 
 		# Load From file
-		require_once WP_STATISTICS_DIR . "includes/defines/country-codes.php";
+		include WP_STATISTICS_DIR . "includes/defines/country-codes.php";
 		if ( isset( $ISOCountryCode ) ) {
 			return $ISOCountryCode;
 		}
@@ -191,7 +191,7 @@ class Helper {
 		}
 
 		# Load From file
-		require_once WP_STATISTICS_DIR . "includes/defines/robots-list.php";
+		include WP_STATISTICS_DIR . "includes/defines/robots-list.php";
 		if ( isset( $wps_robots_list_array ) ) {
 			$list = $wps_robots_list_array;
 		}
