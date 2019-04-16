@@ -39,7 +39,6 @@ final class WP_Statistics {
 	 * WP_Statistics constructor.
 	 */
 	public function __construct() {
-
 		/**
 		 * Check PHP Support
 		 */
@@ -90,19 +89,18 @@ final class WP_Statistics {
 	 * @throws Exception
 	 */
 	public function plugin_setup() {
-
 		/**
 		 * Load Text Domain
 		 */
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
 		/**
-		 * instantiate Plugin
+		 * Include Require File
 		 */
 		$this->includes();
 
 		/**
-		 * Include Require File
+		 * instantiate Plugin
 		 */
 		$this->instantiate();
 
@@ -147,7 +145,6 @@ final class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
 
 
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-rest.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
@@ -189,6 +186,9 @@ final class WP_Statistics {
 		// Front Class.
 		if ( ! is_admin() ) {
 		}
+
+		// Rest-Api
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-rest.php';
 
 		// WP-Cli
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {

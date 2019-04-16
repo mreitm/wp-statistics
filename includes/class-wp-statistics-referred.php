@@ -45,7 +45,7 @@ class Referred {
 					$result = SearchEngine::getByQueryString( $referred );
 
 					// If there were no search words, let's add the page title
-					if ( $result == '' || $result == 'No search query found!' ) {
+					if ( $result == '' || $result == SearchEngine::$error_found ) {
 						$result = wp_title( '', false );
 						if ( $result != '' ) {
 							$referred = esc_url( add_query_arg( $SEInfo['querykey'], urlencode( '~"' . $result . '"' ), $referred ) );

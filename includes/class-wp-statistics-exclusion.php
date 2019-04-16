@@ -27,6 +27,8 @@ class Exclusion {
 		'User Role',
 		'Host name',
 		'GeoIP',
+		'Honeypot',
+		'Robot threshold',
 	);
 
 	/**
@@ -72,11 +74,15 @@ class Exclusion {
 			return;
 		}
 
+		// Check Exist this Exclusion in this day
 		$result = $wpdb->query( "UPDATE " . DB::table( 'exclusions' ) . " SET `count` = `count` + 1 WHERE `date` = '" . TimeZone::getCurrentDate( 'Y-m-d' ) . "' AND `reason` = '{$exclusion['exclusion_reason']}'" );
 		if ( ! $result ) {
 
-			$wpdb->insert(
-				DB::table( 'exclusions' ),
+			// Action Before Save Exclusion
+			do_action( 'wp_statistics_before_save_exclusion', $exclusion );
+
+			// Add to DB
+			$wpdb->insert( DB::table( 'exclusions' ),
 				array(
 					'date'   => TimeZone::getCurrentDate( 'Y-m-d' ),
 					'reason' => $exclusion['exclusion_reason'],
@@ -112,6 +118,36 @@ class Exclusion {
 	 */
 	public static function exclusion_404() {
 		return $GLOBALS['WP_Statistics']->option->get( 'exclude_404s' ) and is_404();
+	}
+
+	/**
+	 * Detect if honeypot.
+	 */
+	public static function exclusion_honeypot() {
+		global $WP_Statistics;
+
+		// Get Current Page detail
+		$current_page = Pages::get_page_type();
+		if ( $WP_Statistics->option->get( 'use_honeypot' ) && $WP_Statistics->option->get( 'honeypot_postid' ) > 0 && $WP_Statistics->option->get( 'honeypot_postid' ) == $current_page['id'] && $current_page['id'] > 0 ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Detect if robot threshold.
+	 */
+	public static function exclusion_robot_threshold() {
+		global $WP_Statistics;
+
+		// Check Current visitor
+		$visitor = Visitor::exist_ip_in_day( ( IP::getHashIP() != false ? IP::getHashIP() : IP::StoreIP() ) );
+		if ( $visitor != false and $WP_Statistics->option->get( 'robot_threshold' ) > 0 && $visitor->hits + 1 > $WP_Statistics->option->get( 'robot_threshold' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

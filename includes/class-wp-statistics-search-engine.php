@@ -4,6 +4,13 @@ namespace WP_STATISTICS;
 
 class SearchEngine {
 	/**
+	 * Default error not founding search engine
+	 *
+	 * @var string
+	 */
+	public static $error_found = 'No search query found!';
+
+	/**
 	 * Get List Of Search engine in WP-Statistics
 	 *
 	 * @param bool $all
@@ -240,8 +247,6 @@ class SearchEngine {
 	 * @return bool|string
 	 */
 	public static function getByQueryString( $url = false ) {
-		//Error
-		$error = 'No search query found!';
 
 		// Get Referred Url
 		$referred_url = Referred::getRefererURL();
@@ -280,11 +285,83 @@ class SearchEngine {
 					$words = '';
 				}
 
-				return ( $words == "" ? $error : $words );
+				return ( $words == "" ? self::$error_found : $words );
 			}
 		}
 
-		return $error;
+		return self::$error_found;
+	}
+
+	/**
+	 * Record Search Engine
+	 *
+	 * @param array $arg
+	 */
+	public static function record( $arg = array() ) {
+
+		// Define the array of defaults
+		$defaults = array(
+			'visitor_id' => 0
+		);
+		$args     = wp_parse_args( $arg, $defaults );
+
+		// Check Exist Visitor ID
+		if ( $args['visitor_id'] > 0 ) {
+
+			// Get Search Engine List
+			$search_engines = self::getList();
+
+			// Get Referred Link
+			$referred = Referred::get();
+
+			// Check Validate Url
+			if ( wp_http_validate_url( $referred ) ) {
+
+				// Parse Url and Check Search Engine Match regex
+				$parts = @parse_url( $referred );
+
+				// Loop through the SE list until we find which search engine matches.
+				foreach ( $search_engines as $key => $value ) {
+
+					// Check find Regex
+					$search_regex = self::regex( $key );
+					preg_match( '/' . $search_regex . '/', $parts['host'], $matches );
+					if ( isset( $matches[1] ) ) {
+
+						// Prepare Search Word Data
+						$search_word = array(
+							'last_counter' => TimeZone::getCurrentDate( 'Y-m-d' ),
+							'engine'       => $key,
+							'words'        => ( SearchEngine::getByQueryString( $referred ) == self::$error_found ? '' : SearchEngine::getByQueryString( $referred ) ),
+							'host'         => $parts['host'],
+							'visitor'      => $args['visitor_id'],
+						);
+						$search_word = apply_filters( 'wp_statistics_search_engine_word', $search_word );
+
+						// Save To DB
+						self::save_word( $search_word );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Added new Search Word record to DB
+	 *
+	 * @param array $data
+	 */
+	public static function save_word( $data = array() ) {
+		global $wpdb;
+
+		# Action Before Save Search Engine Word
+		do_action( 'wp_statistics_before_save_search_word', $data );
+
+		# Save to Database
+		$wpdb->insert( DB::table('search'), $data );
+
+		# Action after Save Search Engine Word
+		do_action( 'wp_statistics_after_save_search_word', $data );
 	}
 
 

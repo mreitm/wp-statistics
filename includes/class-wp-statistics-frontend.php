@@ -17,8 +17,8 @@ class Frontend {
 		// Enqueue scripts & styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		//Get Visitor information and Save To Database
-		add_action( 'wp', array( $this, 'init' ) );
+		// Get Visitor information and Save To Database
+		add_action( 'wp', array( $this, 'record_hits' ) );
 
 		//Add inline Rest Request
 		add_action( 'wp_head', array( $this, 'add_inline_rest_js' ) );
@@ -132,48 +132,23 @@ class Frontend {
 	}
 
 	/**
-	 * Shutdown Action
+	 * Record WP-Statistics Hits in Frontend
+	 *
 	 * @throws \Exception
 	 */
-	public function init() {
+	public function record_hits() {
 		global $WP_Statistics;
 
-		// If something has gone horribly wrong and $WP_Statistics isn't an object, bail out.
-		// This seems to happen sometimes with WP Cron calls.
-		if ( ! is_object( $WP_Statistics ) ) {
-			return;
-		}
-
-		//Disable if User Active cache Plugin
+		// Disable if User Active cache Plugin
 		if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
-
-			$h = new Hits();
-
-			// Call the online users tracking code.
-			if ( $WP_Statistics->option->get( 'useronline' ) ) {
-				$h->Check_online();
-			}
-
-			// Call the visitor tracking code.
-			if ( $WP_Statistics->option->get( 'visitors' ) ) {
-				$h->Visitors();
-			}
-
-			// Call the visit tracking code.
-			if ( $WP_Statistics->option->get( 'visits' ) ) {
-				$h->Visits();
-			}
-
-			// Call the page tracking code.
-			if ( $WP_Statistics->option->get( 'pages' ) ) {
-				$h->Pages();
-			}
+			Hits::record();
 		}
 	}
 
 	/**
-	 * @param $content
+	 * Show Hits in After WordPress the_content
 	 *
+	 * @param $content
 	 * @return string
 	 */
 	public function show_hits( $content ) {
