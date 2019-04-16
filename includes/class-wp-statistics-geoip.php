@@ -121,7 +121,7 @@ class GeoIP {
 		$default_country = self::getDefaultCountryCode();
 
 		// Get User IP
-		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
+		$ip = ( $ip === false ? IP::getIP() : $ip );
 
 		// Check Unknown IP
 		if ( $default_country != self::$private_country ) {

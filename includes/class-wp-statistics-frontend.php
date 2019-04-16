@@ -8,27 +8,27 @@ class Frontend {
 	public function __construct() {
 		global $WP_Statistics;
 
-		//Enable Shortcode in Widget
+		# Enable ShortCode in Widget
 		add_filter( 'widget_text', 'do_shortcode' );
 
-		// Add the honey trap code in the footer.
+		# Add the honey trap code in the footer.
 		add_action( 'wp_footer', array( $this, 'add_honeypot' ) );
 
-		// Enqueue scripts & styles
+		# Enqueue scripts & styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		// Get Visitor information and Save To Database
+		# Get Visitor information and Save To Database
 		add_action( 'wp', array( $this, 'record_hits' ) );
 
-		//Add inline Rest Request
+		# Add inline Rest Request
 		add_action( 'wp_head', array( $this, 'add_inline_rest_js' ) );
 
-		//Add Html Comment in head
+		# Add Html Comment in head
 		if ( ! $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
 			add_action( 'wp_head', array( $this, 'html_comment' ) );
 		}
 
-		// Check to show hits in posts/pages
+		# Check to show hits in posts/pages
 		if ( $WP_Statistics->option->get( 'show_hits' ) ) {
 			add_filter( 'the_content', array( $this, 'show_hits' ) );
 		}
@@ -175,5 +175,4 @@ class Frontend {
 			return $content;
 		}
 	}
-
 }

@@ -100,7 +100,7 @@ class IP {
 	public static function CheckIPRange( $range = array(), $ip = false ) {
 
 		// Get User IP
-		$ip = ! isset( $ip ) ? IP::getIP() : $ip;
+		$ip = ( $ip === false ? IP::getIP() : $ip );
 
 		// Get Range OF This IP
 		try {

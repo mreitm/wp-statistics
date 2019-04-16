@@ -110,8 +110,6 @@ final class WP_Statistics {
 		//TODO:  ADDED NEW IN SAME FILE CLASS
 		if ( is_admin() ) {
 			new WP_Statistics_Admin;
-		} else {
-			new \WP_STATISTICS\Frontend;
 		}
 	}
 
@@ -129,6 +127,10 @@ final class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-option.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-helper.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-widget.php';
+		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
 
 		// Hits Class
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-user-online.php';
@@ -144,17 +146,9 @@ final class WP_Statistics {
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-exclusion.php';
 		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-hits.php';
 
-
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-schedule.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-shortcode.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-widget.php';
-		require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-install.php';
-
-
+		// Admin classes
 		if ( is_admin() ) {
 
-			// Admin classes.
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-pages.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-ajax.php';
@@ -166,25 +160,16 @@ final class WP_Statistics {
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-welcome.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-network.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
-
-			//Admin Menu
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menus.php';
-
-			//Admin Asset
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-assets.php';
-
-			//Admin Notice
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-notices.php';
-
-			//TinyMCE Editor
 			require_once WP_STATISTICS_DIR . 'includes/admin/TinyMCE/class-wp-statistics-tinymce.php';
-
-			//Admin Bar
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-bar.php';
 		}
 
 		// Front Class.
 		if ( ! is_admin() ) {
+			require_once WP_STATISTICS_DIR . 'includes/class-wp-statistics-frontend.php';
 		}
 
 		// Rest-Api
@@ -231,6 +216,18 @@ final class WP_Statistics {
             <p><?php printf( $error ); ?></p>
         </div>
 		<?php
+	}
+
+	/**
+	 * The main logging function
+	 *
+	 * @uses error_log
+	 * @param string $type type of the error. e.g: debug, error, info
+	 * @param string $msg
+	 */
+	public static function log( $type = '', $msg = '' ) {
+		$msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
+		error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
 	}
 
 	/**
@@ -317,8 +314,7 @@ final class WP_Statistics {
 
 		# Run in Frontend
 		if ( ! is_admin() ) {
-
-
+			new WP_STATISTICS\Frontend;
 		}
 	}
 
