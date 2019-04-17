@@ -1,24 +1,6 @@
 <?php
-
 //Get List Roles Wordpress
 global $wp_roles;
-$role_list = $wp_roles->get_names();
-
-//Save Option Access
-if ( $wps_nonce_valid ) {
-	$wps_option_list = array_merge( $wps_option_list, array( 'wps_read_capability', 'wps_manage_capability' ) );
-	foreach ( $wps_option_list as $option ) {
-		$new_option = str_replace( "wps_", "", $option );
-
-		if ( array_key_exists( $option, $_POST ) ) {
-			$value = $_POST[ $option ];
-		} else {
-			$value = '';
-		}
-		$WP_Statistics->option->store( $new_option, $value );
-	}
-}
-
 ?>
     <table class="form-table">
         <tbody>
@@ -27,12 +9,12 @@ if ( $wps_nonce_valid ) {
         </tr>
 		<?php
 
-        //Get List Of Capability
+		//Get List Of Capability
 		foreach ( $wp_roles->roles as $role ) {
 			$cap_list = $role['capabilities'];
 			foreach ( $cap_list as $key => $cap ) {
 
-			    //remove level_ from List
+				//remove level_ from List
 				if ( substr( $key, 0, 6 ) != 'level_' ) {
 					$all_caps[ $key ] = 1;
 				}
@@ -40,7 +22,7 @@ if ( $wps_nonce_valid ) {
 		}
 
 		ksort( $all_caps );
-		$read_cap    = $WP_Statistics->option->get( 'read_capability', 'manage_options' );
+		$read_cap    = WP_STATISTICS\Option::get( 'read_capability', 'manage_options' );
 		$option_list = '';
 		foreach ( $all_caps as $key => $cap ) {
 			if ( $key == $read_cap ) {
@@ -61,7 +43,7 @@ if ( $wps_nonce_valid ) {
         </tr>
 
 		<?php
-		$manage_cap = $WP_Statistics->option->get( 'manage_capability', 'manage_options' );
+		$manage_cap = WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' );
 		foreach ( $all_caps as $key => $cap ) {
 			if ( $key == $manage_cap ) {
 				$selected = " SELECTED";

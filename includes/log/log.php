@@ -1,11 +1,11 @@
 <?php
 $nag_html = '';
 
-if ( ! $WP_Statistics->option->get( 'geoip' ) ) {
+if ( ! WP_STATISTICS\Option::get( 'geoip' ) ) {
 	$nag_html .= '<div class="notice notice-warning"><p>' . sprintf( __( 'GeoIP collection is not enabled. Please go to <a href="%s">setting page</a> to enable GeoIP for getting more information and location (country) from the visitor.', 'wp-statistics' ), WP_Statistics_Admin_Pages::admin_url( 'settings', array( 'tab' => 'externals-settings' ) ) ) . '</p></div>';
 }
 
-if ( ! $WP_Statistics->option->get( 'disable_donation_nag', false ) ) {
+if ( ! WP_STATISTICS\Option::get( 'disable_donation_nag', false ) ) {
 	$nag_html .= '<div class="notice notice-success is-dismissible wps-donate-notice"><p>' . __( 'Have you thought about donating to WP Statistics?', 'wp-statistics' ) . ' <a href="http://wp-statistics.com/donate/" target="_blank">' . __( 'Donate Now!', 'wp-statistics' ) . '</a></p></div>';
 }
 

@@ -57,10 +57,9 @@ class IP {
 	 * Generate hash string
 	 */
 	public static function getHashIP() {
-		global $WP_Statistics;
-
+		
 		// Check Enabled Options
-		if ( $WP_Statistics->option->get( 'hash_ips' ) == true ) {
+		if ( Option::get( 'hash_ips' ) == true ) {
 			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );
 		}
 
@@ -82,7 +81,7 @@ class IP {
 		}
 
 		// If the anonymize IP enabled for GDPR.
-		if ( $WP_Statistics->option->get( 'anonymize_ips' ) == true ) {
+		if ( Option::get( 'anonymize_ips' ) == true ) {
 			$user_ip = substr( $user_ip, 0, strrpos( $user_ip, '.' ) ) . '.0';
 		}
 

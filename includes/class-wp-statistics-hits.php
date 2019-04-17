@@ -262,7 +262,7 @@ class Hits {
 		}
 
 		# Record User Online
-		if ( UserOnline::active() and ( $exclusion['exclusion_match'] === false || $WP_Statistics->option->get( 'all_online' ) ) ) {
+		if ( UserOnline::active() and ( $exclusion['exclusion_match'] === false || Option::get( 'all_online' ) ) ) {
 			UserOnline::record( array( 'location' => $location ) );
 		}
 

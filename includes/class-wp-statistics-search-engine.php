@@ -105,7 +105,7 @@ class SearchEngine {
 
 		if ( $all == false ) {
 			foreach ( $engines as $key => $engine ) {
-				if ( $WP_Statistics->option->get( 'disable_se_' . $engine['tag'] ) ) {
+				if ( Option::get( 'disable_se_' . $engine['tag'] ) ) {
 					unset( $engines[ $key ] );
 				}
 			}

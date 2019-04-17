@@ -17,7 +17,7 @@ function wp_statistics_generate_page_postbox_content(
 ) {
 	GLOBAL $WP_Statistics;
 
-	if ( ! $WP_Statistics->option->get( 'pages' ) ) {
+	if ( ! WP_STATISTICS\Option::get( 'pages' ) ) {
 		return;
 	}
 
@@ -65,7 +65,7 @@ function wp_statistics_generate_page_postbox_content(
             data: {
                 labels: [<?php echo implode( ', ', $date ); ?>],
                 datasets: [
-					<?php if ( $WP_Statistics->option->get( 'visitors' ) ) { ?>
+					<?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) { ?>
                     {
                         label: '<?php echo $title; ?>',
                         data: [<?php echo implode( ',', $stats ); ?>],

@@ -30,7 +30,7 @@
 				GLOBAL $wpdb, $WP_Statistics;
 				$wp_prefix = $wpdb->prefix;
 
-				$dbupdates = $WP_Statistics->option->get( 'pending_db_updates' );
+				$dbupdates = WP_STATISTICS\Option::get( 'pending_db_updates' );
 
 				// Check the number of index's on the visitors table, if it's only 5 we need to check for duplicate entries and remove them
 				$result = $wpdb->query(
@@ -84,7 +84,7 @@
 					<?php
 				}
 
-				$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
+				WP_STATISTICS\Option::update( 'pending_db_updates', $dbupdates );
 				?>
             </td>
 
@@ -101,7 +101,7 @@
             <td>
 				<?php
 				// Note, the result will be the number of fields contained in the index, so in our case 1.
-				if ( $WP_Statistics->option->get( 'search_converted' ) != 1 ) {
+				if ( WP_STATISTICS\Option::get( 'search_converted' ) != 1 ) {
 					?>
                     <input id="visits-submit" class="button button-primary" type="button" value="<?php _e( 'Convert Now!', 'wp-statistics' ); ?>" name="search-submit" onclick="location.href=document.URL+'&search=1&tab=database'">
                     <p class="description"><?php echo __( 'Older installs of WP Statistics store details of searches in the visitors table which can become a performance issue on large datasets.', 'wp-statistics' ) . ' ' . __( 'A new table has been created to hold this information in a more scalable fashion, however the old data must first be converted to the new format before it can be used.', 'wp-statistics' ); ?></p>

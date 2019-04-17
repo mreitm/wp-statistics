@@ -9,7 +9,7 @@ class Pages {
 	 * @return mixed
 	 */
 	public static function active() {
-		return ( has_filter( 'wp_statistics_active_pages' ) ) ? apply_filters( 'wp_statistics_active_pages', true ) : $GLOBALS['WP_Statistics']->option->get( 'pages' );
+		return ( has_filter( 'wp_statistics_active_pages' ) ) ? apply_filters( 'wp_statistics_active_pages', true ) : Option::get( 'pages' );
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Pages {
 	 * @return bool
 	 */
 	public static function is_track_all_page() {
-		return apply_filters( 'wp_statistics_track_all_pages', $GLOBALS['WP_Statistics']->option->get( 'track_all_pages' ) || is_single() || is_page() || is_front_page() );
+		return apply_filters( 'wp_statistics_track_all_pages', Option::get( 'track_all_pages' ) || is_single() || is_page() || is_front_page() );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Pages {
 		}
 
 		// Check Strip Url Parameter
-		if ( $WP_Statistics->option->get( 'strip_uri_parameters' ) and array_key_exists( "search_query", $current_page ) === false ) {
+		if ( Option::get( 'strip_uri_parameters' ) and array_key_exists( "search_query", $current_page ) === false ) {
 			$temp = explode( '?', $page_uri );
 			if ( $temp !== false ) {
 				$page_uri = $temp[0];

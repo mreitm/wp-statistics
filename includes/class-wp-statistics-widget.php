@@ -20,9 +20,8 @@ class WP_Statistics_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		global $WP_Statistics;
 		extract( $args );
-		$widget_options = $WP_Statistics->option->get( 'widget' );
+		$widget_options = WP_STATISTICS\Option::get( 'widget' );
 
 		echo $before_widget;
 		echo $before_title . $widget_options['name_widget'] . $after_title;
@@ -227,7 +226,7 @@ class WP_Statistics_Widget extends \WP_Widget {
 				}
 			}
 
-			$WP_Statistics->option->update( 'widget', $widget_options );
+			WP_STATISTICS\Option::update( 'widget', $widget_options );
 		}
 
 		return array();
@@ -242,7 +241,7 @@ class WP_Statistics_Widget extends \WP_Widget {
 	 */
 	public function form( $instance ) {
 		GLOBAL $WP_Statistics;
-		$widget_options = $WP_Statistics->option->get( 'widget' );
+		$widget_options = WP_STATISTICS\Option::get( 'widget' );
 		?>
         <p>
             <label for="name_widget"><?php _e( 'Name', 'wp-statistics' ); ?>:

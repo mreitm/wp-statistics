@@ -63,7 +63,7 @@ class GeoIP {
 		//TODO Check Exist DATABASE FILE
 
 		// Return
-		return $GLOBALS['WP_Statistics']->option->get( $opt );
+		return Option::get( $opt );
 	}
 
 	/**
@@ -99,7 +99,7 @@ class GeoIP {
 	public static function getDefaultCountryCode() {
 		global $WP_Statistics;
 
-		$opt = $WP_Statistics->option->get( 'private_country_code' );
+		$opt = Option::get( 'private_country_code' );
 		if ( isset( $opt ) and ! empty( $opt ) ) {
 			return trim( $opt );
 		}

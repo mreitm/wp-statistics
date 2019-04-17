@@ -15,7 +15,7 @@ list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_
 );
 $daysInThePast = round( ( time() - $rangeend_utime ) / 86400, 0 );
 
-$total_stats = $WP_Statistics->option->get( 'chart_totals' );
+$total_stats = WP_STATISTICS\Option::get( 'chart_totals' );
 $date        = array();
 $stats       = array();
 $total_daily = array();

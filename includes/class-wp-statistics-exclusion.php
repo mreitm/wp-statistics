@@ -37,7 +37,7 @@ class Exclusion {
 	 * @return mixed
 	 */
 	public static function active() {
-		return $GLOBALS['WP_Statistics']->option->get( 'record_exclusions' );
+		return Option::get( 'record_exclusions' );
 	}
 
 	/**
@@ -113,14 +113,14 @@ class Exclusion {
 	 * Detect if WordPress Feed.
 	 */
 	public static function exclusion_feed() {
-		return $GLOBALS['WP_Statistics']->option->get( 'exclude_feeds' ) and is_feed();
+		return Option::get( 'exclude_feeds' ) and is_feed();
 	}
 
 	/**
 	 * Detect if WordPress 404 Page.
 	 */
 	public static function exclusion_404() {
-		return $GLOBALS['WP_Statistics']->option->get( 'exclude_404s' ) and is_404();
+		return Option::get( 'exclude_404s' ) and is_404();
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Exclusion {
 
 		// Get Current Page detail
 		$current_page = Pages::get_page_type();
-		if ( $WP_Statistics->option->get( 'use_honeypot' ) && $WP_Statistics->option->get( 'honeypot_postid' ) > 0 && $WP_Statistics->option->get( 'honeypot_postid' ) == $current_page['id'] && $current_page['id'] > 0 ) {
+		if ( Option::get( 'use_honeypot' ) && Option::get( 'honeypot_postid' ) > 0 && Option::get( 'honeypot_postid' ) == $current_page['id'] && $current_page['id'] > 0 ) {
 			return true;
 		}
 
@@ -146,7 +146,7 @@ class Exclusion {
 
 		// Check Current visitor
 		$visitor = Visitor::exist_ip_in_day( ( IP::getHashIP() != false ? IP::getHashIP() : IP::StoreIP() ) );
-		if ( $visitor != false and $WP_Statistics->option->get( 'robot_threshold' ) > 0 && $visitor->hits + 1 > $WP_Statistics->option->get( 'robot_threshold' ) ) {
+		if ( $visitor != false and Option::get( 'robot_threshold' ) > 0 && $visitor->hits + 1 > Option::get( 'robot_threshold' ) ) {
 			return true;
 		}
 
@@ -163,7 +163,7 @@ class Exclusion {
 			$current_user = wp_get_current_user();
 			foreach ( $current_user->roles as $role ) {
 				$option_name = 'exclude_' . str_replace( ' ', '_', strtolower( $role ) );
-				if ( $WP_Statistics->option->get( $option_name ) == true ) {
+				if ( Option::get( $option_name ) == true ) {
 					return true;
 				}
 			}
@@ -178,14 +178,14 @@ class Exclusion {
 	public static function exclusion_excluded_url() {
 		global $WP_Statistics;
 
-		if ( $WP_Statistics->option->get( 'excluded_urls' ) ) {
+		if ( Option::get( 'excluded_urls' ) ) {
 			$script    = $_SERVER['REQUEST_URI'];
 			$delimiter = strpos( $script, '?' );
 			if ( $delimiter > 0 ) {
 				$script = substr( $script, 0, $delimiter );
 			}
 
-			$excluded_urls = explode( "\n", $WP_Statistics->option->get( 'excluded_urls' ) );
+			$excluded_urls = explode( "\n", Option::get( 'excluded_urls' ) );
 			foreach ( $excluded_urls as $url ) {
 				$this_url = trim( $url );
 
@@ -207,11 +207,11 @@ class Exclusion {
 		global $WP_Statistics;
 
 		// Check to see if we're excluding referrer spam.
-		if ( $WP_Statistics->option->get( 'referrerspam' ) ) {
+		if ( Option::get( 'referrerspam' ) ) {
 			$referrer = Referred::get();
 
 			// Pull the referrer spam list from the database.
-			$referrer_spam_list = explode( "\n", $WP_Statistics->option->get( 'referrerspamlist' ) );
+			$referrer_spam_list = explode( "\n", Option::get( 'referrerspamlist' ) );
 
 			// Check to see if we match any of the robots.
 			foreach ( $referrer_spam_list as $item ) {
@@ -254,7 +254,7 @@ class Exclusion {
 	public static function exclusion_login_page() {
 		global $WP_Statistics;
 
-		if ( $WP_Statistics->option->get( 'exclude_loginpage' ) ) {
+		if ( Option::get( 'exclude_loginpage' ) ) {
 			$protocol = strpos( strtolower( $_SERVER['SERVER_PROTOCOL'] ), 'https' ) === false ? 'http' : 'https';
 			$host     = $_SERVER['HTTP_HOST'];
 			$script   = $_SERVER['SCRIPT_NAME'];
@@ -276,7 +276,7 @@ class Exclusion {
 	public static function exclusion_admin_page() {
 		global $WP_Statistics;
 
-		if ( $WP_Statistics->option->get( 'exclude_adminpage' ) and isset( $_SERVER['SERVER_NAME'] ) and isset( $_SERVER['REQUEST_URI'] ) ) {
+		if ( Option::get( 'exclude_adminpage' ) and isset( $_SERVER['SERVER_NAME'] ) and isset( $_SERVER['REQUEST_URI'] ) ) {
 			if ( stristr( $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'], "wp-admin" ) ) {
 				return true;
 			}
@@ -294,7 +294,7 @@ class Exclusion {
 		global $WP_Statistics;
 
 		// Pull the sub nets from the database.
-		$SubNets = explode( "\n", $WP_Statistics->option->get( 'exclude_ip' ) );
+		$SubNets = explode( "\n", Option::get( 'exclude_ip' ) );
 
 		// Check in Loop
 		foreach ( $SubNets as $subnet ) {
@@ -348,7 +348,7 @@ class Exclusion {
 		global $WP_Statistics;
 
 		// Pull the robots from the database.
-		$robots = explode( "\n", $WP_Statistics->option->get( 'robotlist' ) );
+		$robots = explode( "\n", Option::get( 'robotlist' ) );
 
 		// Check to see if we match any of the robots.
 		foreach ( $robots as $robot ) {
@@ -363,7 +363,7 @@ class Exclusion {
 		}
 
 		// Check User IP is empty Or Not User Agent
-		if ( $WP_Statistics->option->get( 'corrupt_browser_info' ) ) {
+		if ( Option::get( 'corrupt_browser_info' ) ) {
 			if ( UserAgent::getHttpUserAgent() == '' || IP::getIP() == '' ) {
 				return true;
 			}
@@ -384,8 +384,8 @@ class Exclusion {
 		$location = GeoIP::getCountry();
 
 		// Grab the excluded/included countries lists, force the country codes to be in upper case to match what the GeoIP code uses.
-		$excluded_countries        = explode( "\n", strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'excluded_countries' ) ) ) );
-		$included_countries_string = trim( strtoupper( str_replace( "\r\n", "\n", $WP_Statistics->option->get( 'included_countries' ) ) ) );
+		$excluded_countries        = explode( "\n", strtoupper( str_replace( "\r\n", "\n", Option::get( 'excluded_countries' ) ) ) );
+		$included_countries_string = trim( strtoupper( str_replace( "\r\n", "\n", Option::get( 'included_countries' ) ) ) );
 
 		// We need to be really sure this isn't an empty string or explode will return an array with one entry instead of none.
 		if ( $included_countries_string == '' ) {
@@ -412,7 +412,7 @@ class Exclusion {
 		global $WP_Statistics;
 
 		// Get Host name List
-		$excluded_host = explode( "\n", $WP_Statistics->option->get( 'excluded_hosts' ) );
+		$excluded_host = explode( "\n", Option::get( 'excluded_hosts' ) );
 
 		// If there's nothing in the excluded host list, don't do anything.
 		if ( count( $excluded_host ) > 0 ) {

@@ -31,7 +31,7 @@ class WP_Statistics_Ajax {
 //	public function test_action_callback() {
 //		global $WP_Statistics;
 //		$manage_cap = wp_statistics_validate_capability(
-//			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+//			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 //		);
 //		echo $manage_cap;
 //		die();
@@ -44,21 +44,21 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics; 
 
 		$manage_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) and isset( $_REQUEST['notice'] ) ) {
 			switch ( $_REQUEST['notice'] ) {
 				case 'donate':
-					$WP_Statistics->option->update( 'disable_donation_nag', true );
+					WP_STATISTICS\Option::update( 'disable_donation_nag', true );
 					break;
 
 				case 'suggestion':
-					$WP_Statistics->option->update( 'disable_suggestion_nag', true );
+					WP_STATISTICS\Option::update( 'disable_suggestion_nag', true );
 					break;
 			}
 
-			$WP_Statistics->option->update( 'admin_notices', false );
+			WP_STATISTICS\Option::update( 'admin_notices', false );
 		}
 
 		wp_die();
@@ -71,7 +71,7 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics, $wpdb; 
 
 		$manage_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -109,7 +109,7 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics, $wpdb; 
 
 		$manage_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -146,7 +146,7 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics, $wpdb; 
 
 		$manage_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -197,7 +197,7 @@ class WP_Statistics_Ajax {
 		}
 
 		//Check User Cap
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
 
 		if ( current_user_can( $manage_cap ) ) {
 
@@ -226,7 +226,7 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics;
 
 
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
 		if ( current_user_can( $manage_cap ) ) {
 			$purge_days = 0;
 
@@ -250,7 +250,7 @@ class WP_Statistics_Ajax {
 		global $WP_Statistics;
 
 		$manage_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'manage_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -307,7 +307,7 @@ class WP_Statistics_Ajax {
 		}
 
 		$view_cap = wp_statistics_validate_capability(
-			$WP_Statistics->option->get( 'read_capability', 'manage_options' )
+			WP_STATISTICS\Option::get( 'read_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $view_cap ) ) {

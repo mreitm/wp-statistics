@@ -26,7 +26,7 @@ function wp_statistics_generate_hits_postbox_content( $size = '300', $days = 20 
             data: {
                 labels: [<?php echo implode( ', ', $date ); ?>],
                 datasets: [
-					<?php if ( $WP_Statistics->option->get( 'visitors' ) ) { ?>
+					<?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) { ?>
                     {
                         label: '<?php _e( 'Visitors', 'wp-statistics' ); ?>',
                         data: [<?php echo implode( ',', $visitors ); ?>],
@@ -36,7 +36,7 @@ function wp_statistics_generate_hits_postbox_content( $size = '300', $days = 20 
                         fill: true,
                     },
 					<?php } ?>
-					<?php if ( $WP_Statistics->option->get( 'visits' ) ) { ?>
+					<?php if ( WP_STATISTICS\Option::get( 'visits' ) ) { ?>
                     {
                         label: '<?php _e( 'Visits', 'wp-statistics' ); ?>',
                         data: [<?php echo implode( ',', $visits ); ?>],

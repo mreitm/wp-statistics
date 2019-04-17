@@ -16,12 +16,11 @@ class Network {
 	 * Load WordPress Network Admin Menu
 	 */
 	public function wp_admin_menu() {
-		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
         // TODO Remove At Last
-		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 
 		// Add the top level menu.
 		add_menu_page( __( 'Statistics', 'wp-statistics' ), __( 'Statistics', 'wp-statistics' ), $read_cap, WP_STATISTICS_MAIN_FILE, array( $this, 'overview'), 'dashicons-chart-pie' );
@@ -30,7 +29,7 @@ class Network {
 		add_submenu_page( WP_STATISTICS_MAIN_FILE, __( 'Overview', 'wp-statistics' ), __( 'Overview', 'wp-statistics' ), $read_cap, WP_STATISTICS_MAIN_FILE, array( $this, 'overview') );
 
 		$count = 0;
-		$sites = WP_STATISTICS\Helper::get_wp_sites_list();
+		$sites = Helper::get_wp_sites_list();
 
 		foreach ( $sites as $blog_id ) {
 			$details = get_blog_details( $blog_id );
@@ -64,20 +63,20 @@ class Network {
 				$i = 0;
 
 				$options = array(
-					__( 'Overview', 'wp-statistics' )           => \WP_STATISTICS\Admin_Menus::get_page_slug( 'overview' ),
-					__( 'Hits', 'wp-statistics' )               => \WP_STATISTICS\Admin_Menus::get_page_slug( 'hits' ),
-					__( 'Online', 'wp-statistics' )             => \WP_STATISTICS\Admin_Menus::get_page_slug( 'online' ),
-					__( 'Referrers', 'wp-statistics' )          => \WP_STATISTICS\Admin_Menus::get_page_slug( 'referrers' ),
-					__( 'Search Words', 'wp-statistics' )       => \WP_STATISTICS\Admin_Menus::get_page_slug( 'words' ),
-					__( 'Searches', 'wp-statistics' )           => \WP_STATISTICS\Admin_Menus::get_page_slug( 'searches' ),
-					__( 'Pages', 'wp-statistics' )              => \WP_STATISTICS\Admin_Menus::get_page_slug( 'pages' ),
-					__( 'Visitors', 'wp-statistics' )           => \WP_STATISTICS\Admin_Menus::get_page_slug( 'visitors' ),
-					__( 'Countries', 'wp-statistics' )          => \WP_STATISTICS\Admin_Menus::get_page_slug( 'countries' ),
-					__( 'Browsers', 'wp-statistics' )           => \WP_STATISTICS\Admin_Menus::get_page_slug( 'browser' ),
-					__( 'Top Visitors Today', 'wp-statistics' ) => \WP_STATISTICS\Admin_Menus::get_page_slug( 'top-visitors' ),
-					__( 'Exclusions', 'wp-statistics' )         => \WP_STATISTICS\Admin_Menus::get_page_slug( 'exclusions' ),
-					__( 'Optimization', 'wp-statistics' )       => \WP_STATISTICS\Admin_Menus::get_page_slug( 'optimization' ),
-					__( 'Settings', 'wp-statistics' )           => \WP_STATISTICS\Admin_Menus::get_page_slug( 'settings' ),
+					__( 'Overview', 'wp-statistics' )           => Admin_Menus::get_page_slug( 'overview' ),
+					__( 'Hits', 'wp-statistics' )               => Admin_Menus::get_page_slug( 'hits' ),
+					__( 'Online', 'wp-statistics' )             => Admin_Menus::get_page_slug( 'online' ),
+					__( 'Referrers', 'wp-statistics' )          => Admin_Menus::get_page_slug( 'referrers' ),
+					__( 'Search Words', 'wp-statistics' )       => Admin_Menus::get_page_slug( 'words' ),
+					__( 'Searches', 'wp-statistics' )           => Admin_Menus::get_page_slug( 'searches' ),
+					__( 'Pages', 'wp-statistics' )              => Admin_Menus::get_page_slug( 'pages' ),
+					__( 'Visitors', 'wp-statistics' )           => Admin_Menus::get_page_slug( 'visitors' ),
+					__( 'Countries', 'wp-statistics' )          => Admin_Menus::get_page_slug( 'countries' ),
+					__( 'Browsers', 'wp-statistics' )           => Admin_Menus::get_page_slug( 'browser' ),
+					__( 'Top Visitors Today', 'wp-statistics' ) => Admin_Menus::get_page_slug( 'top-visitors' ),
+					__( 'Exclusions', 'wp-statistics' )         => Admin_Menus::get_page_slug( 'exclusions' ),
+					__( 'Optimization', 'wp-statistics' )       => Admin_Menus::get_page_slug( 'optimization' ),
+					__( 'Settings', 'wp-statistics' )           => Admin_Menus::get_page_slug( 'settings' ),
 				);
 
 				$sites = WP_STATISTICS\Helper::get_wp_sites_list();
@@ -127,7 +126,7 @@ class Network {
 	public function goto_blog() {
 		global $plugin_page;
 		$blog_id = str_replace( 'wp_statistics_blogid_', '', $plugin_page );
-		$url = get_admin_url( $blog_id ) . '/admin.php?page=' . \WP_STATISTICS\Admin_Menus::get_page_slug( 'overview' );
+		$url = get_admin_url( $blog_id ) . '/admin.php?page=' . Admin_Menus::get_page_slug( 'overview' );
 		echo "<script>window.location.href = '$url';</script>";
 	}
 

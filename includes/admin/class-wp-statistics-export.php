@@ -20,7 +20,7 @@ class WP_Statistics_Export {
 	 */
 	public function export_data() {
 		if ( isset( $_POST['wps_export'] ) ) {
-			global $WP_Statistics, $wpdb;
+			global $wpdb;
 
 			//Set Time Limit Script Run
 			set_time_limit( 0 );
@@ -31,7 +31,7 @@ class WP_Statistics_Export {
 			}
 
 			//Check Current User Capability
-			$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+			$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
 			if ( current_user_can( $manage_cap ) ) {
 				$table = $_POST['table-to-export'];
 				$type  = $_POST['export-file-type'];

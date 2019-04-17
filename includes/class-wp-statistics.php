@@ -103,14 +103,6 @@ final class WP_Statistics {
 		 * instantiate Plugin
 		 */
 		$this->instantiate();
-
-		/*
-		 * Load action
-		 */
-		//TODO:  ADDED NEW IN SAME FILE CLASS
-		if ( is_admin() ) {
-			new WP_Statistics_Admin;
-		}
 	}
 
 	/**
@@ -268,7 +260,7 @@ final class WP_Statistics {
 		$this->container['user_id'] = \WP_STATISTICS\User::get_user_id();
 
 		# Set Options
-		$this->container['option'] = new \WP_STATISTICS\Option();
+		$this->container['option'] = \WP_STATISTICS\Option::getOptions();
 
 		# User IP
 		$this->container['ip'] = \WP_STATISTICS\IP::getIP();
@@ -293,6 +285,9 @@ final class WP_Statistics {
 
 		# Run in Admin
 		if ( is_admin() ) {
+
+		    // TODO Seperate All Classes
+			new WP_Statistics_Admin;
 
 			# Admin Menu
 			$this->container['admin_menu'] = new \WP_STATISTICS\Admin_Menus;

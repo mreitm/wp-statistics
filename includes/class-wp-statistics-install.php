@@ -2,13 +2,7 @@
 
 namespace WP_STATISTICS;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
-
-
 class Install {
-
 	/**
 	 * WP_Statistics_Install constructor.
 	 *
@@ -233,9 +227,9 @@ class Install {
 				$dbupdates['unique_date'] = true;
 			}
 
-			$WP_Statistics->option->update( 'pending_db_updates', $dbupdates );
-
-			$default_options = Option::Default_Option();
+			Option::update( 'pending_db_updates', $dbupdates );
+			$default_options = Option::defaultOption();
+			$store_options   = Option::getOptions();
 
 			if ( $installed_version == false ) {
 
@@ -243,13 +237,14 @@ class Install {
 				self::Primary_Values();
 
 				// By default, on new installs, use the new search table.
-				$WP_Statistics->option->update( 'search_converted', 1 );
+				Option::update( 'search_converted', 1 );
 
 			} else {
 
 				// If this is an upgrade, we need to check to see if we need to convert anything from old to new formats.
 				// Check to see if the "new" settings code is in place or not, if not, upgrade the old settings to the new system.
-				if ( get_option( 'wp_statistics' ) === false ) {
+				if ( get_option( Option::$opt_name ) === false ) {
+
 					$core_options   = array(
 						'wps_disable_map',
 						'wps_map_location',
@@ -319,41 +314,39 @@ class Install {
 
 					// Handle the core options, we're going to strip off the 'wps_' header as we store them in the new settings array.
 					foreach ( $core_options as $option ) {
-						$new_name = substr( $option, 4 );
-						$WP_Statistics->option->store( $new_name, get_option( $option ) );
+						$new_name                   = substr( $option, 4 );
+						$store_options[ $new_name ] = get_option( $option );
 						delete_option( $option );
 					}
 
 					$widget = array();
-
 					// Handle the widget options, we're going to store them in a sub-array.
 					foreach ( $widget_options as $option ) {
 						$widget[ $option ] = get_option( $option );
-
 						delete_option( $option );
 					}
+					$store_options['widget'] = $widget;
 
-					$WP_Statistics->option->store( 'widget', $widget );
 
 					foreach ( $var_options as $option ) {
 						// Handle the special variables options.
 						$result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}options WHERE option_name LIKE '{$option}'" );
 
 						foreach ( $result as $opt ) {
-							$new_name = substr( $opt->option_name, 4 );
-							$WP_Statistics->option->store( $new_name, $opt->option_value );
+							$new_name                   = substr( $opt->option_name, 4 );
+							$store_options[ $new_name ] = $opt->option_value;
 							delete_option( $opt->option_name );
 						}
 					}
 
-					$WP_Statistics->option->save_options();
+					Option::save_options( $store_options );
 				}
 
 				// If the robot list is empty, fill in the defaults.
-				$wps_temp_robotslist = $WP_Statistics->option->get( 'robotlist' );
+				$wps_temp_robots_list = Option::get( 'robotlist' );
 
-				if ( trim( $wps_temp_robotslist ) == "" || $WP_Statistics->option->get( 'force_robot_update' ) == true ) {
-					$WP_Statistics->option->update( 'robotlist', $default_options['robotlist'] );
+				if ( trim( $wps_temp_robots_list ) == "" || Option::get( 'force_robot_update' ) == true ) {
+					Option::update( 'robotlist', $default_options['robotlist'] );
 				}
 
 				// WP Statistics V4.2 and below automatically exclude the administrator for statistics collection
@@ -361,9 +354,9 @@ class Install {
 				// 4.2 behaviour when we upgrade, so see if the option exists in the database and if not, set it.
 				// This will not work correctly on a WordPress install that has removed the administrator role.
 				// However that seems VERY unlikely.
-				$exclude_admins = $WP_Statistics->option->get( 'exclude_administrator', '2' );
+				$exclude_admins = Option::get( 'exclude_administrator', '2' );
 				if ( $exclude_admins == '2' ) {
-					$WP_Statistics->option->update( 'exclude_administrator', '1' );
+					Option::update( 'exclude_administrator', '1' );
 				}
 
 				// WordPress 4.3 broke the diplay of the sidebar widget because it no longer accepted a null value
@@ -388,20 +381,20 @@ class Install {
 
 			// If this is a first time install or an upgrade and we've added options, set some intelligent defaults.
 			foreach ( $default_options as $key => $value ) {
-				if ( ! in_array( $key, $excluded_defaults ) && false === $WP_Statistics->option->get( $key ) ) {
-					$WP_Statistics->option->store( $key, $value );
+				if ( ! in_array( $key, $excluded_defaults ) && false === Option::get( $key ) ) {
+					$store_options[ $key ] = $value;
 				}
 			}
 
 			if ( $installed_version == false ) {
-				$WP_Statistics->option->store( 'force_robot_update', true );
+				$store_options['force_robot_update'] = true;
 			}
 
 			// Save the settings now that we've set them.
-			$WP_Statistics->option->save_options();
+			Option::save_options( $store_options );
 
-			if ( $WP_Statistics->option->get( 'upgrade_report' ) == true ) {
-				$WP_Statistics->option->update( 'send_upgrade_email', true );
+			if ( Option::get( 'upgrade_report' ) == true ) {
+				Option::update( 'send_upgrade_email', true );
 			}
 
 			// Handle multi site implementations
@@ -748,59 +741,59 @@ class Install {
 	 * This function will add some initial data if the tables are empty.
 	 */
 	public static function Primary_Values() {
-	    //TODO Fix This Method
+		//TODO Fix This Method
 
 		/**global $wpdb;
-
-		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_useronline" );
-
-		if ( ! $result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_useronline",
-				array(
-					'ip'        => IP::StoreIP(),
-					'timestamp' => TimeZone::getCurrentDate( 'U' ),
-					'date'      => TimeZone::getCurrentDate(),
-					'referred'  => $this->get_Referred(),
-					'agent'     => $this->agent['browser'],
-					'platform'  => $this->agent['platform'],
-					'version'   => $this->agent['version'],
-				)
-			);
-		}
-
-		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visit" );
-
-		if ( ! $result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_visit",
-				array(
-					'last_visit'   => TimeZone::getCurrentDate(),
-					'last_counter' => TimeZone::Current_date( 'Y-m-d' ),
-					'visit'        => 1,
-				)
-			);
-		}
-
-		$result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visitor" );
-
-		if ( ! $result ) {
-
-			$wpdb->insert(
-				$wpdb->prefix . "statistics_visitor",
-				array(
-					'last_counter' => TimeZone::getCurrentDate( 'Y-m-d' ),
-					'referred'     => $this->get_Referred(),
-					'agent'        => $this->agent['browser'],
-					'platform'     => $this->agent['platform'],
-					'version'      => $this->agent['version'],
-					'ip'           => IP::StoreIP(),
-					'location'     => '000',
-				)
-			);
-		}*/
+		 *
+		 * $result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_useronline" );
+		 *
+		 * if ( ! $result ) {
+		 *
+		 * $wpdb->insert(
+		 * $wpdb->prefix . "statistics_useronline",
+		 * array(
+		 * 'ip'        => IP::StoreIP(),
+		 * 'timestamp' => TimeZone::getCurrentDate( 'U' ),
+		 * 'date'      => TimeZone::getCurrentDate(),
+		 * 'referred'  => $this->get_Referred(),
+		 * 'agent'     => $this->agent['browser'],
+		 * 'platform'  => $this->agent['platform'],
+		 * 'version'   => $this->agent['version'],
+		 * )
+		 * );
+		 * }
+		 *
+		 * $result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visit" );
+		 *
+		 * if ( ! $result ) {
+		 *
+		 * $wpdb->insert(
+		 * $wpdb->prefix . "statistics_visit",
+		 * array(
+		 * 'last_visit'   => TimeZone::getCurrentDate(),
+		 * 'last_counter' => TimeZone::Current_date( 'Y-m-d' ),
+		 * 'visit'        => 1,
+		 * )
+		 * );
+		 * }
+		 *
+		 * $result = $wpdb->query( "SELECT * FROM {$wpdb->prefix}statistics_visitor" );
+		 *
+		 * if ( ! $result ) {
+		 *
+		 * $wpdb->insert(
+		 * $wpdb->prefix . "statistics_visitor",
+		 * array(
+		 * 'last_counter' => TimeZone::getCurrentDate( 'Y-m-d' ),
+		 * 'referred'     => $this->get_Referred(),
+		 * 'agent'        => $this->agent['browser'],
+		 * 'platform'     => $this->agent['platform'],
+		 * 'version'      => $this->agent['version'],
+		 * 'ip'           => IP::StoreIP(),
+		 * 'location'     => '000',
+		 * )
+		 * );
+		 * }*/
 
 	}
 

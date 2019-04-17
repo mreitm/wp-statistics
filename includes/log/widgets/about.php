@@ -12,7 +12,7 @@ function wp_statistics_generate_about_postbox_content() {
             <a href="https://wordpress.org/support/plugin/wp-statistics/reviews/?rate=5#new-post" target="_blank"><?php _e( 'Rate & Review', 'wp-statistics' ); ?></a>
         </p>
 		<?php
-		if ( current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) ) ) ) {
+		if ( current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
 			?>
             | <p>
                 <a href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'settings', array( 'tab' => 'about' ) ); ?>"><?php _e( 'More Info', 'wp-statistics' ); ?></a>

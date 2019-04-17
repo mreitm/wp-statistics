@@ -21,7 +21,7 @@ class AdminBar {
 		 *
 		 * @example add_filter('wp_statistics_show_admin_bar', function(){ return false; });
 		 */
-		return ( has_filter( 'wp_statistics_show_admin_bar' ) ) ? apply_filters( 'wp_statistics_show_admin_bar', true ) : $GLOBALS['WP_Statistics']->option->get( 'menu_bar' );
+		return ( has_filter( 'wp_statistics_show_admin_bar' ) ) ? apply_filters( 'wp_statistics_show_admin_bar', true ) : Option::get( 'menu_bar' );
 	}
 
 	/**

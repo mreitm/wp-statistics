@@ -22,7 +22,7 @@ class WP_Statistics_Rest {
 		/*
 		 * add Router Rest Api
 		 */
-		if ( isset( $WP_Statistics ) and $WP_Statistics->option->get( 'use_cache_plugin' ) ) {
+		if ( isset( $WP_Statistics ) and Option::get( 'use_cache_plugin' ) ) {
 			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 	}
@@ -67,22 +67,22 @@ class WP_Statistics_Rest {
 		$h = new \WP_STATISTICS\Hits();
 
 		// Call the online users tracking code.
-		if ( $WP_Statistics->option->get( 'useronline' ) ) {
+		if ( Option::get( 'useronline' ) ) {
 			$h->Check_online();
 		}
 
 		// Call the visitor tracking code.
-		if ( $WP_Statistics->option->get( 'visitors' ) ) {
+		if ( Option::get( 'visitors' ) ) {
 			$h->Visitors();
 		}
 
 		// Call the visit tracking code.
-		if ( $WP_Statistics->option->get( 'visits' ) ) {
+		if ( Option::get( 'visits' ) ) {
 			$h->Visits();
 		}
 
 		// Call the page tracking code.
-		if ( $WP_Statistics->option->get( 'pages' ) ) {
+		if ( Option::get( 'pages' ) ) {
 			$h->Pages();
 		}
 	}

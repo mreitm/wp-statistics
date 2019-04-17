@@ -11,15 +11,11 @@ class WP_Statistics_Editor {
 	 * Adds a box to the main column on the Post and Page edit screens.
 	 */
 	static function add_meta_box() {
-		global $WP_Statistics;
-
-		//Load All User Options
-		$WP_Statistics->option->load_user_options();
 
 		// We need to fudge the display settings for first time users so not all of the widgets are displayed, we only want to do this on
 		// the first time they visit the dashboard though so check to see if we've been here before.
-		if ( ! $WP_Statistics->option->user( 'editor_set' ) ) {
-			$WP_Statistics->option->update_user_option( 'editor_set', WP_STATISTICS_VERSION );
+		if ( ! WP_STATISTICS\Option::getUserOption( 'editor_set' ) ) {
+			WP_STATISTICS\Option::update_user_option( 'editor_set', WP_STATISTICS_VERSION );
 
 			$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_post', true );
 			if ( ! is_array( $hidden_widgets ) ) {
@@ -45,17 +41,17 @@ class WP_Statistics_Editor {
 		}
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.
-		if ( ! current_user_can( wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_option' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'read_capability', 'manage_option' ) ) ) ) {
 			return;
 		}
 
 		// If the admin has disabled the widgets don't display them.
-		if ( $WP_Statistics->option->get( 'disable_editor' ) ) {
+		if ( WP_STATISTICS\Option::get( 'disable_editor' ) ) {
 			return;
 		}
 
 		// If the admin has disabled the Hit Post MetaBox.
-		if ( ! $WP_Statistics->option->get( 'hit_post_metabox' ) ) {
+		if ( ! WP_STATISTICS\Option::get( 'hit_post_metabox' ) ) {
 			return;
 		}
 

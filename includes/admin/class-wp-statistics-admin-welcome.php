@@ -23,26 +23,26 @@ class Welcome {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
 		add_action( 'upgrader_process_complete', array( $this, 'do_welcome' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'init' ) );
+		add_action( 'admin_init', array( $this, 'init' ), 30 );
 	}
 
 	/**
 	 * Initial
 	 */
 	public function init() {
-		global $WP_Statistics;
 
-		if ( $WP_Statistics->option->get( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
+		if ( Option::get( 'show_welcome_page', false ) and ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/index.php' ) !== false or ( isset( $_GET['page'] ) and $_GET['page'] == 'wps_overview_page' ) ) ) {
+
 			// Disable show welcome page
-			$WP_Statistics->option->update( 'first_show_welcome_page', true );
-			$WP_Statistics->option->update( 'show_welcome_page', false );
+			Option::update( 'first_show_welcome_page', true );
+			Option::update( 'show_welcome_page', false );
 
 			// Redirect to welcome page
 			wp_redirect( \WP_Statistics_Admin_Pages::admin_url( 'wps_welcome' ) );
 		}
 
-		if ( ! $WP_Statistics->option->get( 'first_show_welcome_page', false ) ) {
-			$WP_Statistics->option->update( 'show_welcome_page', true );
+		if ( ! Option::get( 'first_show_welcome_page', false ) ) {
+			Option::update( 'show_welcome_page', true );
 		}
 	}
 
@@ -86,13 +86,9 @@ class Welcome {
 		if ( isset( $options['action'] ) and $options['action'] == 'update' and isset( $options['type'] ) and $options['type'] == 'plugin' and isset( $options['plugins'] ) ) {
 			foreach ( $options['plugins'] as $each_plugin ) {
 				if ( $each_plugin == $current_plugin_path_name ) {
-					global $WP_Statistics;
 
 					// Enable welcome page in database
-					$WP_Statistics->option->update( 'show_welcome_page', true );
-
-					// Run the upgrade
-					\WP_Statistics_Updates::do_upgrade();
+					Option::update( 'show_welcome_page', true );
 				}
 			}
 		}

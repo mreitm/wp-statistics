@@ -14,7 +14,7 @@ class Visitor {
 	 * Get Coefficient
 	 */
 	public static function getCoefficient() {
-		$coefficient = $GLOBALS['WP_Statistics']->option->get( 'coefficient', self::$coefficient );
+		$coefficient = Option::get( 'coefficient', self::$coefficient );
 		return is_numeric( $coefficient ) and $coefficient > 0 ? $coefficient : self::$coefficient;
 	}
 
@@ -24,7 +24,7 @@ class Visitor {
 	 * @return mixed
 	 */
 	public static function active() {
-		return ( has_filter( 'wp_statistics_active_visitors' ) ) ? apply_filters( 'wp_statistics_active_visitors', true ) : $GLOBALS['WP_Statistics']->option->get( 'visitors' );
+		return ( has_filter( 'wp_statistics_active_visitors' ) ) ? apply_filters( 'wp_statistics_active_visitors', true ) : Option::get( 'visitors' );
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Visitor {
 					'version'      => $user_agent['version'],
 					'ip'           => $user_ip,
 					'location'     => $args['location'],
-					'UAString'     => ( $WP_Statistics->option->get( 'store_ua' ) == true ? UserAgent::getHttpUserAgent() : '' ),
+					'UAString'     => ( Option::get( 'store_ua' ) == true ? UserAgent::getHttpUserAgent() : '' ),
 					'hits'         => 1,
 					'honeypot'     => ( $args['exclusion_reason'] == 'Honeypot' ? 1 : 0 ),
 				);

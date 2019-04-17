@@ -94,4 +94,12 @@ class User {
 		return $count > 0;
 	}
 
+	/**
+	 * Get WordPress Role List
+	 */
+	public static function get_role_list() {
+		global $wp_roles;
+		return $wp_roles->get_names();
+	}
+
 }

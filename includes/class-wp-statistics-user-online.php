@@ -37,7 +37,7 @@ class UserOnline {
 		 *
 		 * @example add_filter('wp_statistics_active_user_online', function(){ if( is_page() ) { return false; } });
 		 */
-		return ( has_filter( 'wp_statistics_active_user_online' ) ) ? apply_filters( 'wp_statistics_active_user_online', true ) : $GLOBALS['WP_Statistics']->option->get( 'useronline' );
+		return ( has_filter( 'wp_statistics_active_user_online' ) ) ? apply_filters( 'wp_statistics_active_user_online', true ) : Option::get( 'useronline' );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class UserOnline {
 	 * @return string
 	 */
 	public function reset_user_online() {
-		global $WP_Statistics, $wpdb;
+		global $wpdb;
 
 		//Check User Online is Active in this Wordpress
 		if ( self::active() ) {
@@ -58,8 +58,8 @@ class UserOnline {
 			$reset_time = self::$reset_user_time;
 
 			// Get the user set value for seconds to check for users online.
-			if ( $WP_Statistics->option->get( 'check_online' ) ) {
-				$reset_time = $WP_Statistics->option->get( 'check_online' );
+			if ( Option::get( 'check_online' ) ) {
+				$reset_time = Option::get( 'check_online' );
 			}
 
 			// We want to delete users that are over the number of seconds set by the admin.
@@ -168,7 +168,7 @@ class UserOnline {
 	 * Update User Online
 	 */
 	public static function update_user_online() {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// Get Current Page
 		$current_page = Pages::get_page_type();

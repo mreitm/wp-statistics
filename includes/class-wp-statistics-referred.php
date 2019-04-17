@@ -2,8 +2,6 @@
 
 namespace WP_STATISTICS;
 
-use WP_Statistics_Rest;
-
 class Referred {
 	/**
 	 * Get referer URL
@@ -20,7 +18,6 @@ class Referred {
 	 * @return array|bool|string
 	 */
 	public static function get() {
-		global $WP_Statistics;
 
 		// Get Default
 		$referred = self::getRefererURL();
@@ -34,7 +31,7 @@ class Referred {
 		}
 
 		// Check Search Engine
-		if ( $WP_Statistics->option->get( 'addsearchwords', false ) ) {
+		if ( Option::get( 'addsearchwords', false ) ) {
 
 			// Check to see if this is a search engine referrer
 			$SEInfo = SearchEngine::getByUrl( $referred );

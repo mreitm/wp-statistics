@@ -69,8 +69,8 @@ class Admin_Menus {
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
 		// TODO Push To Helper Class with own Function -> wp_statistics_validate_capability
-		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability(Option::get( 'read_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 
 		/**
 		 * List of WP-Statistics Admin Menu
@@ -259,8 +259,8 @@ class Admin_Menus {
 		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
-		$read_cap   = wp_statistics_validate_capability( $WP_Statistics->option->get( 'read_capability', 'manage_options' ) );
-		$manage_cap = wp_statistics_validate_capability( $WP_Statistics->option->get( 'manage_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 
 		//Show Admin Menu List
 		foreach ( self::get_menu_list() as $key => $menu ) {

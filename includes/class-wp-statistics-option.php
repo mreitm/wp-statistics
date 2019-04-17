@@ -11,32 +11,11 @@ class Option {
 	public static $opt_name = 'wp_statistics';
 
 	/**
-	 * Plugin options (Recorded in database)
+	 * WP-Statistics Option name Prefix
 	 *
-	 * @var array
+	 * @var string
 	 */
-	public $options = array();
-
-	/**
-	 * User Options
-	 *
-	 * @var array
-	 */
-	public $user_options = array();
-
-	/**
-	 * is user options loaded?
-	 *
-	 * @var bool
-	 */
-	public $user_options_loaded = false;
-
-	/**
-	 * Option constructor.
-	 */
-	public function __construct() {
-		$this->load_options();
-	}
+	public static $opt_prefix = 'wps_';
 
 	/**
 	 * WP-Statistics Default Option
@@ -44,7 +23,7 @@ class Option {
 	 * @param null $option_name
 	 * @return array
 	 */
-	public static function Default_Option( $option_name = null ) {
+	public static function defaultOption( $option_name = null ) {
 
 		$options                          = array();
 		$options['robotlist']             = Helper::get_robots_list();
@@ -80,51 +59,42 @@ class Option {
 	}
 
 	/**
-	 * Loads the options from WordPress
+	 * Get WP-Statistics All Options
+	 *
+	 * @return mixed
 	 */
-	public function load_options() {
-		$this->options = get_option( self::$opt_name );
-
-		if ( ! is_array( $this->options ) ) {
-			$this->user_options = array();
+	public static function getOptions() {
+		$get_opt = get_option( self::$opt_name );
+		if ( ! isset( $get_opt ) || ! is_array( $get_opt ) ) {
+			return array();
 		}
+
+		return $get_opt;
 	}
 
 	/**
-	 * Loads the user options from WordPress.
-	 * It is NOT called during the class constructor.
+	 * Saves the current options array to the database.
 	 *
-	 * @param bool|false $force
+	 * @param $options
 	 */
-	public function load_user_options( $force = false ) {
-		if ( $this->user_options_loaded == true && $force != true ) {
-			return;
-		}
-
-		$this->user_options = get_user_meta( User::get_user_id(), 'wp_statistics', true );
-		if ( ! is_array( $this->user_options ) ) {
-			$this->user_options = array();
-		}
-
-		$this->user_options_loaded = true;
+	public static function save_options( $options ) {
+		update_option( self::$opt_name, $options );
 	}
 
 	/**
-	 * mimics WordPress's get_option() function but uses the array instead of individual options.
+	 * Get the only Option that we want
 	 *
-	 * @param      $option
+	 * @param $option_name
 	 * @param null $default
-	 *
-	 * @return bool|null
+	 * @return string
 	 */
-	public function get( $option, $default = null ) {
-		// If no options array exists, return FALSE.
-		if ( ! is_array( $this->options ) ) {
-			return false;
-		}
+	public static function get( $option_name, $default = null ) {
+
+		// Get all Options
+		$options = self::getOptions();
 
 		// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
-		if ( ! array_key_exists( $option, $this->options ) ) {
+		if ( ! array_key_exists( $option_name, $options ) ) {
 			if ( isset( $default ) ) {
 				return $default;
 			} else {
@@ -139,30 +109,47 @@ class Option {
 		 * @param string $value Option Value.
 		 * @example add_filter('wp_statistics_option_coefficient', function(){ return 5; });
 		 */
-		return apply_filters( "wp_statistics_option_{$option}", $this->options[ $option ] );
+		return apply_filters( "wp_statistics_option_{$option_name}", $options[ $option_name ] );
 	}
 
+	/**
+	 * Update Wp-Statistics Option
+	 *
+	 * @param $option
+	 * @param $value
+	 */
+	public static function update( $option, $value ) {
+
+		// Get All Option
+		$options = self::getOptions();
+
+		// Store the value in the array.
+		$options[ $option ] = $value;
+
+		// Write the array to the database.
+		update_option( self::$opt_name, $options );
+	}
 
 	/**
-	 * mimics WordPress's get_user_meta() function
-	 * But uses the array instead of individual options.
+	 * Get WP-Statistics User Meta
 	 *
 	 * @param      $option
 	 * @param null $default
-	 *
 	 * @return bool|null
 	 */
-	public function user( $option, $default = null ) {
-		// If the user id has not been set or no options array exists, return FALSE.
+	public static function getUserOption( $option, $default = null ) {
+
+		// If the user id has not been set return FALSE.
 		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
-		if ( ! is_array( $this->user_options ) ) {
-			return false;
-		}
+
+		// Check User Exist
+		$user_options = get_user_meta( User::get_user_id(), self::$opt_name, true );
+		$user_options = ( is_array( $user_options ) ? $user_options : array() );
 
 		// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
-		if ( ! array_key_exists( $option, $this->user_options ) ) {
+		if ( isset( $user_options ) and ! array_key_exists( $option, $user_options ) ) {
 			if ( isset( $default ) ) {
 				return $default;
 			} else {
@@ -171,22 +158,7 @@ class Option {
 		}
 
 		// Return the option.
-		return $this->user_options[ $option ];
-	}
-
-	/**
-	 * Mimics WordPress's update_option() function
-	 * But uses the array instead of individual options.
-	 *
-	 * @param $option
-	 * @param $value
-	 */
-	public function update( $option, $value ) {
-		// Store the value in the array.
-		$this->options[ $option ] = $value;
-
-		// Write the array to the database.
-		update_option( self::$opt_name, $this->options );
+		return ( isset( $user_options[ $option ] ) ? $user_options[ $option ] : false );
 	}
 
 	/**
@@ -198,84 +170,20 @@ class Option {
 	 *
 	 * @return bool
 	 */
-	public function update_user_option( $option, $value ) {
+	public static function update_user_option( $option, $value ) {
 		// If the user id has not been set return FALSE.
 		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
+
+		// Get All User Options
+		$user_options = get_user_meta( User::get_user_id(), self::$opt_name, true );
 
 		// Store the value in the array.
-		$this->user_options[ $option ] = $value;
+		$user_options[ $option ] = $value;
 
 		// Write the array to the database.
-		update_user_meta( User::get_user_id(), self::$opt_name, $this->user_options );
+		update_user_meta( User::get_user_id(), self::$opt_name, $user_options );
 	}
-
-	/**
-	 * This function is similar to update_option,
-	 * but it only stores the option in the array.
-	 * This save some writing to the database if you have multiple values to update.
-	 *
-	 * @param $option
-	 * @param $value
-	 */
-	public function store( $option, $value ) {
-		$this->options[ $option ] = $value;
-	}
-
-	/**
-	 * This function is similar to update_user_option,
-	 * but it only stores the option in the array.
-	 * This save some writing to the database if you have multiple values to update.
-	 *
-	 * @param $option
-	 * @param $value
-	 *
-	 * @return bool
-	 */
-	public function store_user_option( $option, $value ) {
-		// If the user id has not been set return FALSE.
-		if ( User::get_user_id() == 0 ) {
-			return false;
-		}
-
-		$this->user_options[ $option ] = $value;
-	}
-
-	/**
-	 * Saves the current options array to the database.
-	 */
-	public function save_options() {
-		update_option( self::$opt_name, $this->options );
-	}
-
-	/**
-	 * Saves the current user options array to the database.
-	 *
-	 * @return bool
-	 */
-	public function save_user_options() {
-		if ( User::get_user_id() == 0 ) {
-			return false;
-		}
-
-		update_user_meta( User::get_user_id(), self::$opt_name, $this->user_options );
-	}
-
-	/**
-	 * Check to see if an option is currently set or not.
-	 *
-	 * @param $option
-	 *
-	 * @return bool
-	 */
-	public function isset_option( $option ) {
-		if ( ! is_array( $this->options ) ) {
-			return false;
-		}
-
-		return array_key_exists( $option, $this->options );
-	}
-
 
 }
