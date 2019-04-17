@@ -1,7 +1,7 @@
 <?php
 function wp_statistics_generate_quickstats_postbox_content( $search_engines, $search = false, $time = false ) {
 
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	$show_visitors = WP_STATISTICS\Option::get( 'visitor' );
 	?>

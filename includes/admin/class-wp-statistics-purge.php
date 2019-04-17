@@ -159,7 +159,7 @@ class Purge {
 	}
 
 	public static function purge_visitor_hits( $purge_hits ) {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// If it's less than 10 hits, don't do anything.
 		if ( $purge_hits > 9 ) {

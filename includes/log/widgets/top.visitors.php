@@ -6,7 +6,7 @@ function wp_statistics_generate_top_visitors_postbox_content(
 	$compact = false
 ) {
 
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	if ( $day == 'today' ) {
 		$sql_time = \WP_STATISTICS\TimeZone::getCurrentDate( 'Y-m-d' );

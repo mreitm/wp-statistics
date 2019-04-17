@@ -126,7 +126,7 @@ class UserOnline {
 	 * @param array $args
 	 */
 	public static function add_user_online( $args = array() ) {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// Get Current Page
 		$current_page = Pages::get_page_type();

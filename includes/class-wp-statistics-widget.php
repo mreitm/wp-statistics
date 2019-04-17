@@ -188,7 +188,6 @@ class WP_Statistics_Widget extends \WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
-		GLOBAL $WP_Statistics;
 
 		if ( array_key_exists( 'wp_statistics_control_widget_submit', $_POST ) ) {
 			$keys = array(
@@ -240,7 +239,6 @@ class WP_Statistics_Widget extends \WP_Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
-		GLOBAL $WP_Statistics;
 		$widget_options = WP_STATISTICS\Option::get( 'widget' );
 		?>
         <p>

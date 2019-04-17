@@ -280,7 +280,7 @@ class WP_Statistics_Admin_Pages {
 	 * Loads the optimization page code.
 	 */
 	static function optimization() {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// Check the current user has the rights to be here.
 		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
@@ -760,7 +760,7 @@ class WP_Statistics_Admin_Pages {
 	 * Notification Setting
 	 */
 	public static function wp_statistics_notice_setting() {
-		global $pagenow, $WP_Statistics;
+		global $pagenow;
 
 		//Show Notice By Plugin
 		$get = get_transient( WP_Statistics_Admin_Pages::$setting_notice );
@@ -799,7 +799,7 @@ class WP_Statistics_Admin_Pages {
 	 * @param string $log_type Log Type
 	 */
 	static function log( $log_type = "" ) {
-		global $wpdb, $WP_Statistics, $plugin_page;
+		global $wpdb, $plugin_page;
 
 		switch ( $plugin_page ) {
 			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'browser' ):

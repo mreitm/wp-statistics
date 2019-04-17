@@ -268,7 +268,6 @@ class WP_Statistics_Admin {
 	 * Call the add/render functions at the appropriate times.
 	 */
 	public function load_edit_init() {
-		global $WP_Statistics;
 
 		$read_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'read_capability', 'manage_options' ) );
 
@@ -320,7 +319,7 @@ class WP_Statistics_Admin {
 	 * Enqueue Scripts in Admin Area
 	 */
 	public function enqueue_scripts() {
-		global $pagenow, $WP_Statistics;
+		global $pagenow;
 
 		// Load our CSS to be used.
 		wp_enqueue_style( 'wpstatistics-admin-css', WP_STATISTICS_URL . 'assets/css/admin.css', true, WP_STATISTICS_VERSION );

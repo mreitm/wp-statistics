@@ -9,7 +9,7 @@ class Install {
 	 * @internal param $WP_Statistics
 	 */
 	public function install() {
-		global $WP_Statistics, $wpdb;
+		global $wpdb;
 
 		// Check installed plugin version
 		$installed_version = get_option( 'wp_statistics_plugin_version' );

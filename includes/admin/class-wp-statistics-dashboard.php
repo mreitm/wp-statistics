@@ -209,7 +209,6 @@ class WP_Statistics_Dashboard {
 	 * Load Widget Script/style
 	 */
 	static function load_widget_css_and_scripts() {
-		global $WP_Statistics;
 
 		// Load the css we use for the statistics pages.
 		wp_enqueue_style( 'wpstatistics-log-css', WP_STATISTICS_URL . 'assets/css/log.css', true, '1.2' );

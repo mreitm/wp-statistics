@@ -1,7 +1,7 @@
 <?php
 function wp_statistics_generate_map_postbox_content( $ISOCountryCode ) {
 
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	if ( WP_STATISTICS\Option::get( 'geoip' ) && ! WP_STATISTICS\Option::get( 'disable_map' ) ) { ?>
         <div id="map_canvas"></div>

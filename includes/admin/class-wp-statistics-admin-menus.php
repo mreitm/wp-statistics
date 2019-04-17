@@ -65,7 +65,6 @@ class Admin_Menus {
 	 * Get Menu List
 	 */
 	public static function get_menu_list() {
-		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
 		// TODO Push To Helper Class with own Function -> wp_statistics_validate_capability
@@ -256,7 +255,6 @@ class Admin_Menus {
 	 * Load WordPress Admin Menu
 	 */
 	public function wp_admin_menu() {
-		global $WP_Statistics;
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
 		$read_cap   = wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_options' ) );

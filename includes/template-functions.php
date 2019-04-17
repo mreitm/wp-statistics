@@ -10,7 +10,7 @@ use WP_STATISTICS\Pages;
  * @return mixed
  */
 function wp_statistics_useronline( $options = array() ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Check Parameter
 	$defaults = array(
@@ -196,7 +196,7 @@ function wp_statistics_mysql_time_conditions( $field = 'date', $time = 'total', 
  * @return int
  */
 function wp_statistics_visit( $time, $daily = null ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Date Column Name in visits table
 	$table_name  = WP_STATISTICS\DB::table( 'visit' );
@@ -254,7 +254,7 @@ function wp_statistics_visit( $time, $daily = null ) {
  * @return int|null|string
  */
 function wp_statistics_visitor( $time, $daily = null, $count_only = false, $options = array() ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Check Parameter
 	$defaults = array(
@@ -399,7 +399,7 @@ function wp_statistics_visitor( $time, $daily = null, $count_only = false, $opti
  * @return int|null|string
  */
 function wp_statistics_pages( $time, $page_uri = '', $id = - 1, $rangestartdate = null, $rangeenddate = null, $type = false ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Date Column Name in visits table
 	$table_name  = WP_STATISTICS\DB::table( 'pages' );
@@ -734,7 +734,6 @@ function wp_statistics_agent_version( $agent, $version, $rangestartdate = null, 
 
 // This function will return the SQL WHERE clause for getting the search words for a given search engine.
 function wp_statistics_searchword_query( $search_engine = 'all' ) {
-	GLOBAL $WP_Statistics;
 
 	// Get a complete list of search engines
 	$searchengine_list = WP_STATISTICS\SearchEngine::getList();
@@ -791,7 +790,6 @@ function wp_statistics_searchword_query( $search_engine = 'all' ) {
 
 // This function will return the SQL WHERE clause for getting the search engine.
 function wp_statistics_searchengine_query( $search_engine = 'all' ) {
-	GLOBAL $WP_Statistics;
 
 	// Get a complete list of search engines
 	$searchengine_list = WP_STATISTICS\SearchEngine::getList();
@@ -861,7 +859,7 @@ function wp_statistics_searchengine_query( $search_engine = 'all' ) {
  * @return mixed
  */
 function wp_statistics_get_search_engine_query( $search_engine = 'all', $time = 'total', $search_by = 'query' ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Prepare Table Name
 	$table_name = $wpdb->prefix . 'statistics_';
@@ -908,7 +906,7 @@ function wp_statistics_searchengine( $search_engine = 'all', $time = 'total' ) {
 
 //This Function will return the referrer list
 function wp_statistics_referrer( $time = null ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	$timezone = array(
 		'today'     => 0,
@@ -999,8 +997,7 @@ function wp_statistics_countusers() {
 
 // This function will return the last date a post was published on your site.
 function wp_statistics_lastpostdate() {
-
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	$db_date = $wpdb->get_var(
 		"SELECT post_date FROM {$wpdb->posts} WHERE post_type='post' AND post_status='publish' ORDER BY post_date DESC LIMIT 1"
@@ -1131,7 +1128,6 @@ function wp_statistics_geoip_supported() {
 
 // This function creates the date range selector 'widget' used in the various statistics pages.
 function wp_statistics_date_range_selector( $page, $current, $range = array(), $desc = array(), $extrafields = '', $pre_extra = '', $post_extra = '' ) {
-	GLOBAL $WP_Statistics;
 
 	//import DataPicker Jquery Ui Jquery Plugin
 	wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -1380,7 +1376,6 @@ function wp_statistics_dateformat_php_to_jqueryui( $php_format ) {
  * @return array
  */
 function wp_statistics_date_range_calculator( $days, $start, $end ) {
-	global $WP_Statistics;
 
 	$daysToDisplay = $days;
 	$rangestart    = $start;
@@ -1506,7 +1501,6 @@ function wp_statistics_validate_capability( $capability ) {
  * @return bool
  */
 function wp_statistics_check_access_user( $type = 'both', $export = false ) {
-	global $WP_Statistics;
 
 	//List Of Default Cap
 	$list = array(
@@ -1763,7 +1757,6 @@ function wp_statistics_get_page_info( $page_id, $type = 'post' ) {
  * @return array|bool
  */
 function wp_statistics_check_option_require( $item = array(), $condition_key = 'require' ) {
-	global $WP_Statistics;
 
 	$condition = true;
 	if ( array_key_exists( 'require', $item ) ) {
@@ -1867,7 +1860,6 @@ function wp_statistics_get_site_title( $url ) {
  * @return array
  */
 function wp_statistics_get_domain_server( $url ) {
-	global $WP_Statistics;
 
 	//Create Empty Object
 	$result = array(

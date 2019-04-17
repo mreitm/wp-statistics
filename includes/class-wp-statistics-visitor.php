@@ -77,7 +77,7 @@ class Visitor {
 	 * @return bool|INT
 	 */
 	public static function record( $arg = array() ) {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// Define the array of defaults
 		$defaults = array(

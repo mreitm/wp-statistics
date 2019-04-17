@@ -158,7 +158,6 @@ class Pages {
 	 * Sanitize Page Url For Push to Database
 	 */
 	public static function sanitize_page_uri() {
-		global $WP_Statistics;
 
 		// Get Current WordPress Page
 		$current_page = self::get_page_type();

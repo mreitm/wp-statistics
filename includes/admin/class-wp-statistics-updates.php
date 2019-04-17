@@ -219,7 +219,7 @@ class WP_Statistics_Updates {
 	 * @return string
 	 */
 	static function populate_geoip_info() {
-		global $wpdb, $WP_Statistics;
+		global $wpdb;
 
 		// Find all rows in the table that currently don't have GeoIP info or have an unknown ('000') location.
 		$result = $wpdb->get_results( "SELECT id,ip FROM `{$wpdb->prefix}statistics_visitor` WHERE location = '' or location = '".GeoIP::$private_country."' or location IS NULL" );

@@ -47,7 +47,6 @@ class Network {
 	 * Network Overview
 	 */
 	public function overview() {
-		global $WP_Statistics;
 		?>
         <div id="wrap wps-wrap">
             <br/>

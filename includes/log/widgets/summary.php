@@ -1,6 +1,6 @@
 <?php
 function wp_statistics_generate_summary_postbox_content( $search_engines, $search = true, $time = true ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 	$show_visitors = WP_STATISTICS\Option::get( 'visitor' );
 	?>
     <table width="100%" class="widefat table-stats" id="summary-stats">

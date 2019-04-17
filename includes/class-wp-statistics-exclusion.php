@@ -127,7 +127,6 @@ class Exclusion {
 	 * Detect if honeypot.
 	 */
 	public static function exclusion_honeypot() {
-		global $WP_Statistics;
 
 		// Get Current Page detail
 		$current_page = Pages::get_page_type();
@@ -142,7 +141,6 @@ class Exclusion {
 	 * Detect if robot threshold.
 	 */
 	public static function exclusion_robot_threshold() {
-		global $WP_Statistics;
 
 		// Check Current visitor
 		$visitor = Visitor::exist_ip_in_day( ( IP::getHashIP() != false ? IP::getHashIP() : IP::StoreIP() ) );
@@ -157,7 +155,6 @@ class Exclusion {
 	 * Detect if Exclude WordPress User role.
 	 */
 	public static function exclusion_user_role() {
-		global $WP_Statistics;
 
 		if ( is_user_logged_in() ) {
 			$current_user = wp_get_current_user();
@@ -176,7 +173,6 @@ class Exclusion {
 	 * Detect if Excluded URL.
 	 */
 	public static function exclusion_excluded_url() {
-		global $WP_Statistics;
 
 		if ( Option::get( 'excluded_urls' ) ) {
 			$script    = $_SERVER['REQUEST_URI'];
@@ -204,7 +200,6 @@ class Exclusion {
 	 * Detect if Referrer Spam.
 	 */
 	public static function exclusion_referrer_spam() {
-		global $WP_Statistics;
 
 		// Check to see if we're excluding referrer spam.
 		if ( Option::get( 'referrerspam' ) ) {
@@ -252,7 +247,6 @@ class Exclusion {
 	 * Detect if WordPress Login Page.
 	 */
 	public static function exclusion_login_page() {
-		global $WP_Statistics;
 
 		if ( Option::get( 'exclude_loginpage' ) ) {
 			$protocol = strpos( strtolower( $_SERVER['SERVER_PROTOCOL'] ), 'https' ) === false ? 'http' : 'https';
@@ -274,7 +268,6 @@ class Exclusion {
 	 * Detect if WordPress Admin Page.
 	 */
 	public static function exclusion_admin_page() {
-		global $WP_Statistics;
 
 		if ( Option::get( 'exclude_adminpage' ) and isset( $_SERVER['SERVER_NAME'] ) and isset( $_SERVER['REQUEST_URI'] ) ) {
 			if ( stristr( $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'], "wp-admin" ) ) {
@@ -291,7 +284,6 @@ class Exclusion {
 	 * @throws \Exception
 	 */
 	public static function exclusion_iP_match() {
-		global $WP_Statistics;
 
 		// Pull the sub nets from the database.
 		$SubNets = explode( "\n", Option::get( 'exclude_ip' ) );
@@ -345,7 +337,6 @@ class Exclusion {
 	 * Detect if Robots.
 	 */
 	public static function exclusion_robot() {
-		global $WP_Statistics;
 
 		// Pull the robots from the database.
 		$robots = explode( "\n", Option::get( 'robotlist' ) );
@@ -378,7 +369,6 @@ class Exclusion {
 	 * @throws \Exception
 	 */
 	public static function exclusion_geoip() {
-		global $WP_Statistics;
 
 		// Get User Location
 		$location = GeoIP::getCountry();

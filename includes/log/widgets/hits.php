@@ -1,6 +1,6 @@
 <?php
 function wp_statistics_generate_hits_postbox_content( $size = '300', $days = 20 ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 	$id       = 'visits-stats-' . rand( 111, 999 );
 	$visitors = array();
 	$visits   = array();

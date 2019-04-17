@@ -223,7 +223,6 @@ class Hits {
 	 * @throws \Exception
 	 */
 	public static function record() {
-		global $WP_Statistics;
 
 		# Get User Location
 		$location = GeoIP::getCountry();

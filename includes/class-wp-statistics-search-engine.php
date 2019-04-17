@@ -17,7 +17,6 @@ class SearchEngine {
 	 * @return array
 	 */
 	public static function getList( $all = false ) {
-		global $WP_Statistics;
 
 		$default = $engines = array(
 			'ask'        => array(

@@ -41,7 +41,6 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to close the notice on the overview page.
 	 */
 	public function close_notice_action_callback() {
-		global $WP_Statistics; 
 
 		$manage_cap = wp_statistics_validate_capability(
 			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
@@ -68,7 +67,7 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to delete an agent in the optimization page.
 	 */
 	public function delete_agents_action_callback() {
-		global $WP_Statistics, $wpdb; 
+		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
 			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
@@ -106,7 +105,7 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to delete a platform in the optimization page.
 	 */
 	public function delete_platforms_action_callback() {
-		global $WP_Statistics, $wpdb; 
+		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
 			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
@@ -143,7 +142,7 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to delete a ip in the optimization page.
 	 */
 	public function delete_ip_action_callback() {
-		global $WP_Statistics, $wpdb; 
+		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
 			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
@@ -180,7 +179,6 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to empty a table in the optimization page.
 	 */
 	public function empty_table_action_callback() {
-		global $WP_Statistics;
 
 		//Check isset Table-post
 		if ( ! isset( $_POST['table-name'] ) ) {
@@ -223,8 +221,6 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to purge old data in the optimization page.
 	 */
 	public function purge_data_action_callback() {
-		global $WP_Statistics;
-
 
 		$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
 		if ( current_user_can( $manage_cap ) ) {
@@ -247,7 +243,6 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to purge visitors with more than a defined number of hits.
 	 */
 	public function purge_visitor_hits_action_callback() {
-		global $WP_Statistics;
 
 		$manage_cap = wp_statistics_validate_capability(
 			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
@@ -277,7 +272,6 @@ class WP_Statistics_Ajax {
 	 * Setup an AJAX action to purge visitors with more than a defined number of hits.
 	 */
 	public function get_widget_contents_action_callback() {
-		global $WP_Statistics;
 
 		$widgets = array(
 			'about',

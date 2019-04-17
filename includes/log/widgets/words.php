@@ -3,7 +3,7 @@
 use WP_STATISTICS\Referred;
 
 function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count = 10 ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	// Retrieve MySQL data for the search words.
 	$search_query = wp_statistics_searchword_query( 'all' );

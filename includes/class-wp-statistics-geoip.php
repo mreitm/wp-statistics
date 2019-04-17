@@ -97,7 +97,6 @@ class GeoIP {
 	 * @return String
 	 */
 	public static function getDefaultCountryCode() {
-		global $WP_Statistics;
 
 		$opt = Option::get( 'private_country_code' );
 		if ( isset( $opt ) and ! empty( $opt ) ) {

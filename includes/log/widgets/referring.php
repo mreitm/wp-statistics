@@ -3,7 +3,7 @@
 use WP_STATISTICS\Referred;
 
 function wp_statistics_generate_referring_postbox_content( $count = 10 ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	//Get Top Referring
 	if ( false === ( $get_urls = get_transient( 'wps_top_referring' ) ) ) {

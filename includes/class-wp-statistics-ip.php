@@ -70,7 +70,6 @@ class IP {
 	 * Store User IP To Database
 	 */
 	public static function StoreIP() {
-		global $WP_Statistics;
 
 		//Get User ip
 		$user_ip = self::getIP();

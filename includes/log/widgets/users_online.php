@@ -3,7 +3,7 @@
 use WP_STATISTICS\Referred;
 
 function wp_statistics_generate_users_online_postbox_content( $ISOCountryCode ) {
-	global $wpdb, $WP_Statistics;
+	global $wpdb;
 
 	$result = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}statistics_useronline` ORDER BY `ID` DESC LIMIT 10" );
 	$i      = 0;
