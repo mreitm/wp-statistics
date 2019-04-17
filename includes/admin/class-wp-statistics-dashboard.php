@@ -195,7 +195,7 @@ class WP_Statistics_Dashboard {
 		$WP_Statistics->option->update_user_option( self::$dashboard_set, WP_STATISTICS_VERSION );
 
 		//Get Dashboard Option User Meta
-		$hidden_widgets = get_user_meta( $WP_Statistics->user->ID, $hidden_opt, true );
+		$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), $hidden_opt, true );
 		if ( ! is_array( $hidden_widgets ) ) {
 			$hidden_widgets = array();
 		}
@@ -207,7 +207,7 @@ class WP_Statistics_Dashboard {
 			}
 		}
 
-		update_user_meta( $WP_Statistics->user->ID, $hidden_opt, $hidden_widgets );
+		update_user_meta( \WP_STATISTICS\User::get_user_id(), $hidden_opt, $hidden_widgets );
 	}
 
 	/**

@@ -101,7 +101,7 @@ class Option {
 			return;
 		}
 
-		$this->user_options = get_user_meta( $GLOBALS['WP_Statistics']->user->ID, 'wp_statistics', true );
+		$this->user_options = get_user_meta( User::get_user_id(), 'wp_statistics', true );
 		if ( ! is_array( $this->user_options ) ) {
 			$this->user_options = array();
 		}
@@ -154,7 +154,7 @@ class Option {
 	 */
 	public function user( $option, $default = null ) {
 		// If the user id has not been set or no options array exists, return FALSE.
-		if ( $GLOBALS['WP_Statistics']->user->ID == 0 ) {
+		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
 		if ( ! is_array( $this->user_options ) ) {
@@ -200,7 +200,7 @@ class Option {
 	 */
 	public function update_user_option( $option, $value ) {
 		// If the user id has not been set return FALSE.
-		if ( $GLOBALS['WP_Statistics']->user->ID == 0 ) {
+		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
 
@@ -208,7 +208,7 @@ class Option {
 		$this->user_options[ $option ] = $value;
 
 		// Write the array to the database.
-		update_user_meta( $GLOBALS['WP_Statistics']->user->ID, self::$opt_name, $this->user_options );
+		update_user_meta( User::get_user_id(), self::$opt_name, $this->user_options );
 	}
 
 	/**
@@ -235,7 +235,7 @@ class Option {
 	 */
 	public function store_user_option( $option, $value ) {
 		// If the user id has not been set return FALSE.
-		if ( $GLOBALS['WP_Statistics']->user->ID == 0 ) {
+		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
 
@@ -255,11 +255,11 @@ class Option {
 	 * @return bool
 	 */
 	public function save_user_options() {
-		if ( $GLOBALS['WP_Statistics']->user->ID == 0 ) {
+		if ( User::get_user_id() == 0 ) {
 			return false;
 		}
 
-		update_user_meta( $GLOBALS['WP_Statistics']->user->ID, self::$opt_name, $this->user_options );
+		update_user_meta( User::get_user_id(), self::$opt_name, $this->user_options );
 	}
 
 	/**

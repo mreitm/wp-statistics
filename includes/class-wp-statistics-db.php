@@ -20,27 +20,65 @@ class DB {
 	);
 
 	/**
-	 * Table List Wp-statistics
+	 * WP-Statistics Table name Structure in Database
+	 *
+	 * @var string
+	 */
+	public static $tbl_name = '[prefix]statistics_[name]';
+
+	/**
+	 * Get WP-Statistics Table name
+	 *
+	 * @param $tbl
+	 * @return mixed
+	 */
+	public static function getTableName( $tbl ) {
+		global $wpdb;
+		return str_ireplace( array( "[prefix]", "[name]" ), array( $wpdb->prefix, $tbl ), self::$tbl_name );
+	}
+
+	/**
+	 * Check Exist Table in Database
+	 *
+	 * @param $tbl_name
+	 * @return bool
+	 */
+	public static function ExistTable( $tbl_name ) {
+		global $wpdb;
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$tbl_name'" ) == $tbl_name ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Table List WP-Statistics
 	 *
 	 * @param string $export
 	 * @param array $except
 	 * @return array|null
 	 */
 	public static function table( $export = 'all', $except = array() ) {
-		global $wpdb;
 
-		//Create Empty Object
+		# Create Empty Object
 		$list = array();
 
-		//List Of Table
+		# Convert except String to array
 		if ( is_string( $except ) ) {
 			$except = array( $except );
 		}
+
+		# Check Except List
 		$mysql_list_table = array_diff( self::$db_table, $except );
+
+		# Get List
 		foreach ( $mysql_list_table as $tbl ) {
-			$table_name = $wpdb->prefix . 'statistics_' . $tbl;
+
+			# WP-Statistics table name
+			$table_name = self::getTableName( $tbl );
+
 			if ( $export == "all" ) {
-				if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+				if ( self::ExistTable( $table_name ) ) {
 					$list[ $tbl ] = $table_name;
 				}
 			} else {
@@ -48,16 +86,8 @@ class DB {
 			}
 		}
 
-		//Export Data
-		if ( $export == 'all' ) {
-			return $list;
-		} else {
-			if ( array_key_exists( $export, $list ) ) {
-				return $list[ $export ];
-			}
-		}
-
-		return null;
+		# Export Data
+		return ( $export == 'all' ? $list : ( array_key_exists( $export, $list ) ? $list[ $export ] : null ) );
 	}
 
 }

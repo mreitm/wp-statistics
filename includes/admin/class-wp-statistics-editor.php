@@ -21,7 +21,7 @@ class WP_Statistics_Editor {
 		if ( ! $WP_Statistics->option->user( 'editor_set' ) ) {
 			$WP_Statistics->option->update_user_option( 'editor_set', WP_STATISTICS_VERSION );
 
-			$hidden_widgets = get_user_meta( $WP_Statistics->user->ID, 'metaboxhidden_post', true );
+			$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_post', true );
 			if ( ! is_array( $hidden_widgets ) ) {
 				$hidden_widgets = array();
 			}
@@ -30,9 +30,9 @@ class WP_Statistics_Editor {
 				$hidden_widgets[] = 'wp_statistics_editor_meta_box';
 			}
 
-			update_user_meta( $WP_Statistics->user->ID, 'metaboxhidden_post', $hidden_widgets );
+			update_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_post', $hidden_widgets );
 
-			$hidden_widgets = get_user_meta( $WP_Statistics->user->ID, 'metaboxhidden_page', true );
+			$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_page', true );
 			if ( ! is_array( $hidden_widgets ) ) {
 				$hidden_widgets = array();
 			}
@@ -41,7 +41,7 @@ class WP_Statistics_Editor {
 				$hidden_widgets[] = 'wp_statistics_editor_meta_box';
 			}
 
-			update_user_meta( $WP_Statistics->user->ID, 'metaboxhidden_page', $hidden_widgets );
+			update_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_page', $hidden_widgets );
 		}
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.

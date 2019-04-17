@@ -4,25 +4,11 @@ namespace WP_STATISTICS;
 
 class User {
 	/**
-	 * Current User ID in WordPress
-	 *
-	 * @var int
-	 */
-	public $ID;
-
-	/**
-	 * User constructor.
-	 */
-	public function __construct() {
-		$this->ID = $this->get_user_id();
-	}
-
-	/**
 	 * Check User is Logged in WordPress
 	 *
 	 * @return mixed
 	 */
-	public function is_login() {
+	public static function is_login() {
 		return is_user_logged_in();
 	}
 
@@ -31,9 +17,9 @@ class User {
 	 *
 	 * @return int
 	 */
-	public function get_user_id() {
+	public static function get_user_id() {
 		$user_id = 0;
-		if ( $this->is_login() === true ) {
+		if ( self::is_login() === true ) {
 			$user_id = get_current_user_id();
 		}
 
@@ -46,7 +32,7 @@ class User {
 	 * @param bool $user_id
 	 * @return array
 	 */
-	public function get( $user_id = false ) {
+	public static function get( $user_id = false ) {
 
 		# Get User ID
 		$user_id = $user_id ? $user_id : get_current_user_id();
@@ -75,10 +61,10 @@ class User {
 	 * @param $user_id
 	 * @return string
 	 */
-	public function get_name( $user_id ) {
+	public static function get_name( $user_id ) {
 
 		# Get User Info
-		$user_info = $this->get( $user_id );
+		$user_info = self::get( $user_id );
 
 		# check display name
 		if ( $user_info['display_name'] != "" ) {

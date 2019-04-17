@@ -125,7 +125,7 @@ class Frontend {
 		$params['page_uri'] = Pages::get_page_uri();
 
 		//Get User id
-		$params['user_id'] = $WP_Statistics->user->ID;
+		$params['user_id'] = User::get_user_id();
 
 		//return Json Data
 		return Helper::standard_json_encode( $params );

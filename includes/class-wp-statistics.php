@@ -265,7 +265,7 @@ final class WP_Statistics {
 		$this->container['country_codes'] = \WP_STATISTICS\Helper::get_country_codes();
 
 		# Get User Detail
-		$this->container['user'] = new \WP_STATISTICS\User();
+		$this->container['user_id'] = \WP_STATISTICS\User::get_user_id();
 
 		# Set Options
 		$this->container['option'] = new \WP_STATISTICS\Option();

@@ -36,7 +36,7 @@ class Exclusion {
 	 *
 	 * @return mixed
 	 */
-	public static function is_record_exclusion() {
+	public static function active() {
 		return $GLOBALS['WP_Statistics']->option->get( 'record_exclusions' );
 	}
 
@@ -48,8 +48,11 @@ class Exclusion {
 		// Create Default Object
 		$exclude = array( 'exclusion_match' => false, 'exclusion_reason' => '' );
 
+		// Get List Of Exclusion WP-Statistics
+		$exclusion_list = apply_filters( 'wp_statistics_exclusion_list', self::$exclusion_list );
+
 		// Check Exclusion
-		foreach ( self::$exclusion_list as $list ) {
+		foreach ( $exclusion_list as $list ) {
 			$method = 'exclusion_' . strtolower( str_replace( array( "-", " " ), "_", $list ) );
 			$check  = self::{$method}();
 			if ( $check === true ) {
@@ -70,7 +73,7 @@ class Exclusion {
 		global $wpdb;
 
 		// If we're not storing exclusions, just return.
-		if ( self::is_record_exclusion() != true ) {
+		if ( self::active() != true ) {
 			return;
 		}
 

@@ -145,7 +145,7 @@ class UserOnline {
 			'platform'  => $user_agent['platform'],
 			'version'   => $user_agent['version'],
 			'location'  => GeoIP::getDefaultCountryCode(),
-			'user_id'   => $WP_Statistics->user->ID, //TODO Convert To STD
+			'user_id'   => User::get_user_id(),
 			'page_id'   => $current_page['id'],
 			'type'      => $current_page['type']
 		);
@@ -174,7 +174,7 @@ class UserOnline {
 		$current_page = Pages::get_page_type();
 
 		// Get Current User ID
-		$user_id = $WP_Statistics->user->ID; //TODO Convert To STD
+		$user_id = User::get_user_id();
 
 		//Prepare User online Update data
 		$user_online = array(

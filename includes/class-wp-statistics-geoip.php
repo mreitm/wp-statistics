@@ -47,7 +47,7 @@ class GeoIP {
 	 * @return mixed
 	 */
 	public static function get_geo_ip_path( $pack ) {
-		return path_join( Helper::get_uploads_dir( WP_STATISTICS_UPLOADS_DIR ), self::$library[ $pack ]['file'] . '.' . self::$file_extension );
+		return path_join( Helper::get_uploads_dir( WP_STATISTICS_UPLOADS_DIR ), self::$library[ strtolower( $pack ) ]['file'] . '.' . self::$file_extension );
 	}
 
 	/**
@@ -56,10 +56,11 @@ class GeoIP {
 	 * @param bool $which
 	 * @return boolean
 	 */
-	public static function is_active( $which = false ) {
+	public static function active( $which = false ) {
 
 		//Default Geo-Ip Option name
 		$opt = ( $which == "city" ? 'geoip_city' : 'geoip' );
+		//TODO Check Exist DATABASE FILE
 
 		// Return
 		return $GLOBALS['WP_Statistics']->option->get( $opt );
@@ -147,9 +148,9 @@ class GeoIP {
 					$location = $record->country->{$return};
 				}
 			} catch ( AddressNotFoundException $e ) {
-				//Don't Staff
+				//Don't Stuff
 			} catch ( InvalidDatabaseException $e ) {
-				//Don't Staff
+				//Don't Stuff
 			}
 		}
 
