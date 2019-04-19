@@ -27,14 +27,21 @@ class DB {
 	public static $tbl_name = '[prefix]statistics_[name]';
 
 	/**
+	 * Get WordPress Table Prefix
+	 */
+	public static function prefix() {
+		global $wpdb;
+		return $wpdb->prefix;
+	}
+
+	/**
 	 * Get WP-Statistics Table name
 	 *
 	 * @param $tbl
 	 * @return mixed
 	 */
 	public static function getTableName( $tbl ) {
-		global $wpdb;
-		return str_ireplace( array( "[prefix]", "[name]" ), array( $wpdb->prefix, $tbl ), self::$tbl_name );
+		return str_ireplace( array( "[prefix]", "[name]" ), array( self::prefix(), $tbl ), self::$tbl_name );
 	}
 
 	/**

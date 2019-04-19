@@ -18,6 +18,16 @@ class Option {
 	public static $opt_prefix = 'wps_';
 
 	/**
+	 * Get Complete Option name with WP-Statistics Prefix
+	 *
+	 * @param $name
+	 * @return mixed
+	 */
+	public static function get_option_name( $name ) {
+		return self::$opt_prefix . $name;
+	}
+
+	/**
 	 * WP-Statistics Default Option
 	 *
 	 * @param null $option_name
