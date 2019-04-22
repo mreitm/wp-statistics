@@ -20,14 +20,18 @@ class IP {
 	public static $private_SubNets = array( '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/24', 'fc00::/7' );
 
 	/**
-	 * Get Real User IP in Whip Package
+	 * List Of Common $_SERVER for get Users IP
 	 *
-	 * @return false|string
+	 * @var array
 	 */
-	public static function get_Whip_ip() {
-		$whip = new \Vectorface\Whip\Whip( \Vectorface\Whip\Whip::PROXY_HEADERS | \Vectorface\Whip\Whip::REMOTE_ADDR );
-		return $whip->getValidIpAddress();
-	}
+	public static $ip_methods_server = array( 'REMOTE_ADDR', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'HTTP_X_REAL_IP', 'HTTP_X_CLUSTER_CLIENT_IP' );
+
+	/**
+	 * Default $_SERVER for Get User Real IP
+	 *
+	 * @var string
+	 */
+	public static $default_ip_method = 'REMOTE_ADDR';
 
 	/**
 	 * Returns the current IP address of the remote client.
@@ -39,13 +43,26 @@ class IP {
 		// Set Default
 		$ip = false;
 
-		// Get User IP
-		$user_ip = self::get_Whip_ip();
-		if ( $user_ip != false ) {
-			$ip = $user_ip;
+		// Get User IP Methods
+		$ip_method = self::getIPMethod();
+
+		// Check isset $_SERVER
+		if ( isset( $_SERVER[ $ip_method ] ) ) {
+			$ip = $_SERVER[ $ip_method ];
 		}
 
-		// If no valid ip address has been found, use 127.0.0.1 (aka localhost).
+		// This Filter Used For Custom $_SERVER String
+		$ip = apply_filters( 'wp_statistics_sanitize_user_ip', $ip );
+
+		// Sanitize For HTTP_X_FORWARDED
+		foreach ( explode( ',', $ip ) as $user_ip ) {
+			$user_ip = trim( $user_ip );
+			if ( self::isIP( $user_ip ) != false ) {
+				$ip = $user_ip;
+			}
+		}
+
+		// If no valid ip address has been found, use default ip.
 		if ( false === $ip ) {
 			$ip = self::$default_ip;
 		}
@@ -57,7 +74,7 @@ class IP {
 	 * Generate hash string
 	 */
 	public static function getHashIP() {
-		
+
 		// Check Enabled Options
 		if ( Option::get( 'hash_ips' ) == true ) {
 			return apply_filters( 'wp_statistics_hash_ip', '#hash#' . sha1( self::getIP() . ( UserAgent::getHttpUserAgent() == '' ? 'Unknown' : UserAgent::getHttpUserAgent() ) ) );
@@ -121,6 +138,24 @@ class IP {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check Validation IP
+	 *
+	 * @param $ip
+	 * @return bool
+	 */
+	public static function isIP( $ip ) {
+		return filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+	}
+
+	/**
+	 * what is Method $_SERVER for get User Real IP
+	 */
+	public static function getIPMethod() {
+		$ip_method = Option::get( 'ip_method' );
+		return ( $ip_method != false ? $ip_method : self::$default_ip_method );
 	}
 
 }

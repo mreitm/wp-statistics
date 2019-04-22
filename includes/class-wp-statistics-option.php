@@ -60,6 +60,7 @@ class Option {
 		$options['disable_se_ask']        = true;
 		$options['map_type']              = 'jqvmap';
 		$options['force_robot_update']    = true;
+		$options['ip_method']             = 'REMOTE_ADDR';
 
 		if ( $option_name and isset( $options[ $option_name ] ) ) {
 			return $options[ $option_name ];

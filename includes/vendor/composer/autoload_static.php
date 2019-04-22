@@ -11,12 +11,6 @@ class ComposerStaticInit5206856c1ff72d9f8bb6c057422509c9
         array (
             'WhichBrowser\\' => 13,
         ),
-        'V' => 
-        array (
-            'Vectorface\\Whip\\' => 16,
-            'Vectorface\\WhipTests\\' => 21,
-            'VectorFace\\Whip\\' => 16,
-        ),
         'P' => 
         array (
             'Psr\\Cache\\' => 10,
@@ -50,18 +44,6 @@ class ComposerStaticInit5206856c1ff72d9f8bb6c057422509c9
         array (
             0 => __DIR__ . '/..' . '/whichbrowser/parser/src',
             1 => __DIR__ . '/..' . '/whichbrowser/parser/tests/src',
-        ),
-        'Vectorface\\Whip\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vectorface/whip/src',
-        ),
-        'Vectorface\\WhipTests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vectorface/whip/tests',
-        ),
-        'VectorFace\\Whip\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vectorface/whip/src',
         ),
         'Psr\\Cache\\' => 
         array (
