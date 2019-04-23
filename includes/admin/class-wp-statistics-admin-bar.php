@@ -42,12 +42,12 @@ class AdminBar {
 			$admin_bar_list = array(
 				'wp-statistic-menu'                   => array(
 					'title' => '<span class="ab-icon"></span>',
-					'href'  => \WP_Statistics_Admin_Pages::admin_url( 'overview' )
+					'href'  => Admin_Helper::admin_url( 'overview' )
 				),
 				'wp-statistics-menu-useronline'       => array(
 					'parent' => 'wp-statistic-menu',
 					'title'  => __( 'Online User', 'wp-statistics' ) . ": " . wp_statistics_useronline(),
-					'href'   => \WP_Statistics_Admin_Pages::admin_url( 'online' )
+					'href'   => Admin_Helper::admin_url( 'online' )
 				),
 				'wp-statistics-menu-todayvisitor'     => array(
 					'parent' => 'wp-statistic-menu',
@@ -68,7 +68,7 @@ class AdminBar {
 				'wp-statistics-menu-viewstats'        => array(
 					'parent' => 'wp-statistic-menu',
 					'title'  => __( 'View Stats', 'wp-statistics' ),
-					'href'   => \WP_Statistics_Admin_Pages::admin_url( 'overview' )
+					'href'   => Admin_Helper::admin_url( 'overview' )
 				)
 			);
 

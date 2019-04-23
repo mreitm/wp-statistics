@@ -1,44 +1,42 @@
 <?php
 
-use WP_STATISTICS\GeoIP;
+namespace WP_STATISTICS;
 
-/**
- * Class WP_Statistics_Admin_Pages
- */
-class WP_Statistics_Admin_Pages {
+class Admin_Pages {
 
 	//Transient For Show Notice Setting
 	public static $setting_notice = '_show_notice_wp_statistics';
 
-
 	public function __construct() {
 		add_action( 'admin_init', array( $this, 'save_setting' ) );
+
+		add_action( 'admin_notices', array( $this, 'wp_statistics_notice_setting' ) );
 	}
 
 	/**
 	 * Load Overview Page
 	 */
-	static function overview() {
+	public static function overview() {
 
 		// Right side "wide" widgets
-		if ( WP_STATISTICS\Option::get( 'visits' ) ) {
+		if ( Option::get( 'visits' ) ) {
 			add_meta_box(
 				'wps_hits_postbox',
 				__( 'Hit Statistics', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'hits' )
 			);
 		}
 
-		if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
+		if ( Option::get( 'visitors' ) ) {
 			add_meta_box(
 				'wps_top_visitors_postbox',
 				__( 'Top Visitors', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'top.visitors' )
@@ -47,7 +45,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_search_postbox',
 				__( 'Search Engine Referrals', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'search' )
@@ -56,7 +54,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_words_postbox',
 				__( 'Latest Search Words', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'words' )
@@ -65,18 +63,18 @@ class WP_Statistics_Admin_Pages {
 				'wps_recent_postbox',
 				__( 'Recent Visitors', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'recent' )
 			);
 
-			if ( WP_STATISTICS\Option::get( 'geoip' ) ) {
+			if ( Option::get( 'geoip' ) ) {
 				add_meta_box(
 					'wps_map_postbox',
 					__( 'Today\'s Visitors Map', 'wp-statistics' ),
 					'wp_statistics_generate_overview_postbox_contents',
-					\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+					Admin_Menus::get_action_menu_slug( 'overview' ),
 					'normal',
 					null,
 					array( 'widget' => 'map' )
@@ -84,12 +82,12 @@ class WP_Statistics_Admin_Pages {
 			}
 		}
 
-		if ( WP_STATISTICS\Option::get( 'pages' ) ) {
+		if ( Option::get( 'pages' ) ) {
 			add_meta_box(
 				'wps_pages_postbox',
 				__( 'Top 10 Pages', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'normal',
 				null,
 				array( 'widget' => 'pages' )
@@ -97,12 +95,12 @@ class WP_Statistics_Admin_Pages {
 		}
 
 		// Left side "thin" widgets.
-		if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
+		if ( Option::get( 'visitors' ) ) {
 			add_meta_box(
 				'wps_summary_postbox',
 				__( 'Summary', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'side',
 				null,
 				array( 'widget' => 'summary' )
@@ -111,7 +109,7 @@ class WP_Statistics_Admin_Pages {
 				'wps_browsers_postbox',
 				__( 'Browsers', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'side',
 				null,
 				array( 'widget' => 'browsers' )
@@ -120,18 +118,18 @@ class WP_Statistics_Admin_Pages {
 				'wps_referring_postbox',
 				__( 'Top Referring Sites', 'wp-statistics' ),
 				'wp_statistics_generate_overview_postbox_contents',
-				\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+				Admin_Menus::get_action_menu_slug( 'overview' ),
 				'side',
 				null,
 				array( 'widget' => 'referring' )
 			);
 
-			if ( WP_STATISTICS\Option::get( 'geoip' ) ) {
+			if ( Option::get( 'geoip' ) ) {
 				add_meta_box(
 					'wps_countries_postbox',
 					__( 'Top 10 Countries', 'wp-statistics' ),
 					'wp_statistics_generate_overview_postbox_contents',
-					\WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ),
+					Admin_Menus::get_action_menu_slug( 'overview' ),
 					'side',
 					null,
 					array( 'widget' => 'countries' )
@@ -140,96 +138,15 @@ class WP_Statistics_Admin_Pages {
 		}
 
 		//Left Show User online table
-		if ( WP_STATISTICS\Option::get( 'useronline' ) ) {
-			add_meta_box( 'wps_users_online_postbox', __( 'Online Users', 'wp-statistics' ), 'wp_statistics_generate_overview_postbox_contents', \WP_STATISTICS\Admin_Menus::get_action_menu_slug( 'overview' ), 'side', null, array( 'widget' => 'users_online' ) );
+		if ( Option::get( 'useronline' ) ) {
+			add_meta_box( 'wps_users_online_postbox', __( 'Online Users', 'wp-statistics' ), 'wp_statistics_generate_overview_postbox_contents', Admin_Menus::get_action_menu_slug( 'overview' ), 'side', null, array( 'widget' => 'users_online' ) );
 		}
-	}
-
-	/**
-	 * Check in admin page
-	 *
-	 * @param $page | For Get List @see \WP_STATISTICS\WP_Statistics::$page
-	 * @return bool
-	 */
-	public static function in_page( $page ) {
-		global $pagenow;
-
-		//Check is custom page
-		if ( $pagenow == "admin.php" and isset( $_REQUEST['page'] ) and $_REQUEST['page'] == \WP_STATISTICS\Admin_Menus::get_page_slug( $page ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Show Page title
-	 * @param string $title
-	 */
-	public static function show_page_title( $title = '' ) {
-
-		//Check if $title not Set
-		if ( empty( $title ) and function_exists( 'get_admin_page_title' ) ) {
-			$title = get_admin_page_title();
-		}
-
-		//show Page title
-		echo '<img src="' . plugins_url( 'wp-statistics/assets/images/' ) . '/title-logo.png" class="wps_page_title"><h2 class="wps_title">' . $title . '</h2>';
-
-		//do_action after wp_statistics
-		do_action( 'wp_statistics_after_title' );
-	}
-
-	/**
-	 * Get Admin Url
-	 *
-	 * @param null $page
-	 * @param array $arg
-	 * @area is_admin
-	 * @return string
-	 */
-	public static function admin_url( $page = null, $arg = array() ) {
-
-		//Check If Pages is in Wp-statistics
-		if ( array_key_exists( $page, \WP_STATISTICS\Admin_Menus::get_admin_page_list() ) ) {
-			$page = \WP_STATISTICS\Admin_Menus::get_page_slug( $page );
-		}
-
-		return add_query_arg( array_merge( array( 'page' => $page ), $arg ), admin_url( 'admin.php' ) );
-	}
-
-	/**
-	 * Show MetaBox button Refresh/Direct Button Link in Top of Meta Box
-	 *
-	 * @param string $export
-	 * @return string
-	 */
-	public static function meta_box_button( $export = 'all' ) {
-
-		//Prepare button
-		$refresh = '</button><button class="handlediv button-link wps-refresh" type="button" id="{{refreshid}}">' . wp_statistics_icons( 'dashicons-update' ) . '<span class="screen-reader-text">' . __( 'Reload', 'wp-statistics' ) . '</span></button>';
-		$more    = '<button class="handlediv button-link wps-more" type="button" id="{{moreid}}">' . wp_statistics_icons( 'dashicons-external' ) . '<span class="screen-reader-text">' . __( 'More Details', 'wp-statistics' ) . '</span></button>';
-
-		//Export
-		if ( $export == 'all' ) {
-			return $refresh . $more;
-		} else {
-			return $$export;
-		}
-	}
-
-	/**
-	 * Show Loading Meta Box
-	 */
-	public static function loading_meta_box() {
-		$loading = '<div class="wps_loading_box"><img src=" ' . plugins_url( 'wp-statistics/assets/images/' ) . 'loading.svg" alt="' . __( 'Reloading...', 'wp-statistics' ) . '"></div>';
-		return $loading;
 	}
 
 	/**
 	 * Plugins
 	 */
-	static function plugins() {
+	public static function plugins() {
 		// Activate or deactivate the selected plugin
 		if ( isset( $_GET['action'] ) ) {
 			if ( $_GET['action'] == 'activate' ) {
@@ -270,25 +187,18 @@ class WP_Statistics_Admin_Pages {
 	}
 
 	/**
-	 * Donate
-	 */
-	static function donate() {
-		echo "<script>window.location.href='http://wp-statistics.com/donate';</script>";
-	}
-
-	/**
 	 * Loads the optimization page code.
 	 */
-	static function optimization() {
+	public static function optimization() {
 		global $wpdb;
 
 		// Check the current user has the rights to be here.
-		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
 		// Get the row count for each of the tables, we'll use this later on in the wps_optimization.php file.
-		$list_table = WP_STATISTICS\DB::table( 'all' );
+		$list_table = DB::table( 'all' );
 		$result     = array();
 		foreach ( $list_table as $tbl_key => $tbl_name ) {
 			$result[ $tbl_name ] = $wpdb->get_var( "SELECT COUNT(*) FROM `$tbl_name`" );
@@ -304,10 +214,10 @@ class WP_Statistics_Admin_Pages {
 		if ( array_key_exists( 'wp-statistics-nonce', $_POST ) ) {
 			if ( wp_verify_nonce( $_POST['wp-statistics-nonce'], 'update-options' ) ) {
 
-				$wp_statistics_options = \WP_STATISTICS\Option::getOptions();
+				$wp_statistics_options = \Option::getOptions();
 
 				// General Option
-				$selist                       = WP_STATISTICS\SearchEngine::getList( true );
+				$selist                       = SearchEngine::getList( true );
 				$permalink                    = get_option( 'permalink_structure' );
 				$disable_strip_uri_parameters = false;
 
@@ -379,7 +289,7 @@ class WP_Statistics_Admin_Pages {
 
 
 				// Prepare Exclusion List
-				foreach ( \WP_STATISTICS\User::get_role_list() as $role ) {
+				foreach ( \User::get_role_list() as $role ) {
 					$role_post = 'wps_exclude_' . str_replace( " ", "_", strtolower( $role ) );
 
 					if ( array_key_exists( $role_post, $_POST ) ) {
@@ -397,7 +307,7 @@ class WP_Statistics_Admin_Pages {
 						'post_type'    => 'page',
 						'post_title'   => __( 'WP Statistics Honey Pot Page', 'wp-statistics' ) .
 						                  ' [' .
-						                  \WP_STATISTICS\TimeZone::getCurrentDate() .
+						                  \TimeZone::getCurrentDate() .
 						                  ']',
 						'post_content' => __( 'This is the Honey Pot for WP Statistics to use, do not delete.', 'wp-statistics' ),
 						'post_status'  => 'publish',
@@ -458,11 +368,11 @@ class WP_Statistics_Admin_Pages {
 				if ( array_key_exists( 'wps_private_country_code', $_POST ) ) {
 					$_POST['wps_private_country_code'] = trim( strtoupper( $_POST['wps_private_country_code'] ) );
 				} else {
-					$_POST['wps_private_country_code'] = \WP_STATISTICS\GeoIP::$private_country;
+					$_POST['wps_private_country_code'] = \GeoIP::$private_country;
 				}
 
 				if ( $_POST['wps_private_country_code'] == '' ) {
-					$_POST['wps_private_country_code'] = \WP_STATISTICS\GeoIP::$private_country;
+					$_POST['wps_private_country_code'] = \GeoIP::$private_country;
 				}
 
 				foreach ( $wps_option_list as $option ) {
@@ -500,7 +410,7 @@ class WP_Statistics_Admin_Pages {
 				// We need to handle a change in the report schedule manually, so check to see it has been set.
 				if ( array_key_exists( 'wps_time_report', $_POST ) ) {
 					// If the report has been changed, we need to update the schedule.
-					if ( WP_STATISTICS\Option::get( 'time_report' ) != $_POST['wps_time_report'] ) {
+					if ( Option::get( 'time_report' ) != $_POST['wps_time_report'] ) {
 						// Remove the old schedule if it exists.
 						if ( wp_next_scheduled( 'report_hook' ) ) {
 							wp_unschedule_event( wp_next_scheduled( 'report_hook' ), 'report_hook' );
@@ -590,7 +500,7 @@ class WP_Statistics_Admin_Pages {
 
 				if ( array_key_exists( 'wps_reset_plugin', $_POST ) ) {
 
-					$default_options   = \WP_STATISTICS\Option::defaultOption();
+					$default_options   = \Option::defaultOption();
 					$excluded_defaults = array( 'force_robot_update', 'robot_list' );
 					$again_options     = array();
 
@@ -598,13 +508,13 @@ class WP_Statistics_Admin_Pages {
 					if ( is_multisite() ) {
 
 						// Loop through each of the sites.
-						$sites = WP_STATISTICS\Helper::get_wp_sites_list();
+						$sites = Helper::get_wp_sites_list();
 						foreach ( $sites as $blog_id ) {
 
 							switch_to_blog( $blog_id );
 
 							// Delete the wp_statistics option.
-							update_option( \WP_STATISTICS\Option::$opt_name, array() );
+							update_option( \Option::$opt_name, array() );
 
 							// Delete the user options.
 							$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
@@ -620,14 +530,14 @@ class WP_Statistics_Admin_Pages {
 							$again_options['first_show_welcome_page'] = true;
 							$again_options['show_welcome_page']       = false;
 
-							update_option( \WP_STATISTICS\Option::$opt_name, $again_options );
+							update_option( \Option::$opt_name, $again_options );
 						}
 
 						restore_current_blog();
 					} else {
 
 						// Delete the wp_statistics option.
-						update_option( \WP_STATISTICS\Option::$opt_name, array() );
+						update_option( \Option::$opt_name, array() );
 
 						// Delete the user options.
 						$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
@@ -643,17 +553,17 @@ class WP_Statistics_Admin_Pages {
 						$again_options['first_show_welcome_page'] = true;
 						$again_options['show_welcome_page']       = false;
 
-						update_option( \WP_STATISTICS\Option::$opt_name, $again_options );
+						update_option( \Option::$opt_name, $again_options );
 					}
 
 					// We need to reload the page after we reset the options but it's too late to do it through a HTTP redirect so do a
 					// JavaScript redirect instead.
-					wp_redirect( WP_Statistics_Admin_Pages::admin_url( 'settings' ) );
+					wp_redirect( Admin_Helper::admin_url( 'settings' ) );
 					exit;
 				}
 
-				\WP_STATISTICS\Option::save_options( $wp_statistics_options );
-				wp_redirect( WP_Statistics_Admin_Pages::admin_url( 'settings' ) );
+				\Option::save_options( $wp_statistics_options );
+				wp_redirect( Admin_Helper::admin_url( 'settings' ) );
 				exit;
 
 			}
@@ -664,44 +574,44 @@ class WP_Statistics_Admin_Pages {
 	/**
 	 * This function displays the HTML for the settings page.
 	 */
-	static function settings() {
+	public static function settings() {
 
 		// Check the current user has the rights to be here.
-		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'read_capability', 'manage_options' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_options' ) ) ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
 		// Check admin notices.
-		if ( WP_STATISTICS\Option::get( 'admin_notices' ) == true ) {
-			WP_STATISTICS\Option::update( 'disable_donation_nag', false );
-			WP_STATISTICS\Option::update( 'disable_suggestion_nag', false );
+		if ( Option::get( 'admin_notices' ) == true ) {
+			Option::update( 'disable_donation_nag', false );
+			Option::update( 'disable_suggestion_nag', false );
 		}
 
 		// Check User Access To Save Setting
 		$wps_admin = false;
-		if ( current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
+		if ( current_user_can( wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) ) ) ) {
 			$wps_admin = true;
 		}
 		if ( $wps_admin === false ) {
 			$wps_admin = 0;
 		}
-		$selist                       = WP_STATISTICS\SearchEngine::getList( true );
+		$selist                       = SearchEngine::getList( true );
 		$permalink                    = get_option( 'permalink_structure' );
 		$disable_strip_uri_parameters = false;
 		if ( $permalink == '' || strpos( $permalink, '?' ) !== false ) {
 			$disable_strip_uri_parameters = true;
 		}
-		$wp_statistics_options = \WP_STATISTICS\Option::getOptions();
+		$wp_statistics_options = Option::getOptions();
 
 		include WP_STATISTICS_DIR . "includes/admin/templates/settings.php";
 
 
 		//TODO Push To Setting Page Admin_init Hook
-		if ( WP_STATISTICS\Option::get( 'geoip' ) and isset( $_POST['update_geoip'] ) and isset( $_POST['geoip_name'] ) ) {
+		if ( Option::get( 'geoip' ) and isset( $_POST['update_geoip'] ) and isset( $_POST['geoip_name'] ) ) {
 
 			//Check Geo ip Exist in Database
 			if ( isset( GeoIP::$library[ $_POST['geoip_name'] ] ) ) {
-				$result = WP_Statistics_Updates::download_geoip( $_POST['geoip_name'], "update" );
+				$result = Updates::download_geoip( $_POST['geoip_name'], "update" );
 
 				if ( isset( $result['status'] ) and $result['status'] === false ) {
 					add_filter( "wp_statistics_redirect_setting", function ( $redirect ) {
@@ -723,7 +633,7 @@ class WP_Statistics_Admin_Pages {
 				$upload_dir = wp_upload_dir();
 				$file       = $upload_dir['basedir'] . '/wp-statistics/' . GeoIP::$library[ $geo_name ]['file'] . '.mmdb';
 				if ( ! file_exists( $file ) ) {
-					$result = WP_Statistics_Updates::download_geoip( $geo_name );
+					$result = Updates::download_geoip( $geo_name );
 					if ( isset( $result['status'] ) and $result['status'] === false ) {
 						add_filter( "wp_statistics_redirect_setting", function ( $redirect ) {
 							$redirect = true;
@@ -747,35 +657,35 @@ class WP_Statistics_Admin_Pages {
 	 * @param string $type
 	 */
 	public static function set_admin_notice( $text, $type = 'error' ) {
-		$get = get_transient( WP_Statistics_Admin_Pages::$setting_notice );
+		$get = get_transient( Admin_Pages::$setting_notice );
 		if ( $get != false ) {
 			$results = $get;
 		}
-		delete_transient( WP_Statistics_Admin_Pages::$setting_notice );
+		delete_transient( Admin_Pages::$setting_notice );
 		$results[] = array( "text" => $text, "type" => $type );
-		set_transient( WP_Statistics_Admin_Pages::$setting_notice, $results, 1 * HOUR_IN_SECONDS );
+		set_transient( Admin_Pages::$setting_notice, $results, 1 * HOUR_IN_SECONDS );
 	}
 
 	/**
 	 * Notification Setting
 	 */
-	public static function wp_statistics_notice_setting() {
+	public function wp_statistics_notice_setting() {
 		global $pagenow;
 
 		//Show Notice By Plugin
-		$get = get_transient( WP_Statistics_Admin_Pages::$setting_notice );
+		$get = get_transient( Admin_Pages::$setting_notice );
 		if ( $get != false ) {
 			foreach ( $get as $item ) {
 				wp_statistics_admin_notice_result( $item['type'], $item['text'] );
 			}
-			delete_transient( WP_Statistics_Admin_Pages::$setting_notice );
+			delete_transient( Admin_Pages::$setting_notice );
 		}
 
 		//Check referring Spam Update
-		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and $_GET['page'] == \WP_STATISTICS\Admin_Menus::get_page_slug( 'settings' ) and isset( $_GET['update-referrerspam'] ) ) {
+		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and $_GET['page'] == Admin_Menus::get_page_slug( 'settings' ) and isset( $_GET['update-referrerspam'] ) ) {
 
 			// Update referrer spam
-			$update_spam = WP_Statistics_Updates::download_referrerspam();
+			$update_spam = Updates::download_referrerspam();
 			if ( $update_spam === true ) {
 				wp_statistics_admin_notice_result( 'success', __( 'Updated Matomo Referrer Spam.', 'wp-statistics' ) );
 			} else {
@@ -798,63 +708,63 @@ class WP_Statistics_Admin_Pages {
 	/**
 	 * @param string $log_type Log Type
 	 */
-	static function log( $log_type = "" ) {
+	public static function log( $log_type = "" ) {
 		global $wpdb, $plugin_page;
 
 		switch ( $plugin_page ) {
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'browser' ):
+			case Admin_Menus::get_page_slug( 'browser' ):
 				$log_type = 'all-browsers';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'countries' ):
+			case Admin_Menus::get_page_slug( 'countries' ):
 				$log_type = 'top-countries';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'exclusions' ):
+			case Admin_Menus::get_page_slug( 'exclusions' ):
 				$log_type = 'exclusions';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'hits' ):
+			case Admin_Menus::get_page_slug( 'hits' ):
 				$log_type = 'hit-statistics';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'online' ):
+			case Admin_Menus::get_page_slug( 'online' ):
 				$log_type = 'online';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'pages' ):
+			case Admin_Menus::get_page_slug( 'pages' ):
 				$log_type = 'top-pages';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'categories' ):
+			case Admin_Menus::get_page_slug( 'categories' ):
 				$log_type = 'categories';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'tags' ):
+			case Admin_Menus::get_page_slug( 'tags' ):
 				$log_type = 'tags';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'authors' ):
+			case Admin_Menus::get_page_slug( 'authors' ):
 				$log_type = 'authors';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'referrers' ):
+			case Admin_Menus::get_page_slug( 'referrers' ):
 				$log_type = 'top-referring-site';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'searches' ):
+			case Admin_Menus::get_page_slug( 'searches' ):
 				$log_type = 'search-statistics';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'words' ):
+			case Admin_Menus::get_page_slug( 'words' ):
 				$log_type = 'last-all-search';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'top-visitors' ):
+			case Admin_Menus::get_page_slug( 'top-visitors' ):
 				$log_type = 'top-visitors';
 
 				break;
-			case \WP_STATISTICS\Admin_Menus::get_page_slug( 'visitors' ):
+			case Admin_Menus::get_page_slug( 'visitors' ):
 				$log_type = 'last-all-visitor';
 
 				break;
@@ -870,7 +780,7 @@ class WP_Statistics_Admin_Pages {
 		// Verify the user has the rights to see the statistics.
 		if ( ! current_user_can(
 			wp_statistics_validate_capability(
-				WP_STATISTICS\Option::get(
+				Option::get(
 					'read_capability',
 					'manage_option'
 				)
@@ -887,7 +797,7 @@ class WP_Statistics_Admin_Pages {
 
 		if ( $result != 7 ) {
 
-			$get_bloginfo_url = WP_Statistics_Admin_Pages::admin_url( 'optimization', array( 'tab' => 'database' ) );
+			$get_bloginfo_url = Admin_Helper::admin_url( 'optimization', array( 'tab' => 'database' ) );
 			$missing_tables   = array();
 
 			$result = $wpdb->query(
@@ -986,7 +896,7 @@ class WP_Statistics_Admin_Pages {
 
 				break;
 			default:
-				if ( get_current_screen()->parent_base == \WP_STATISTICS\Admin_Menus::get_page_slug( 'overview' ) ) {
+				if ( get_current_screen()->parent_base == Admin_Menus::get_page_slug( 'overview' ) ) {
 
 					wp_enqueue_style( 'wpstatistics-jqvmap-css', WP_STATISTICS_URL . 'assets/jqvmap/jqvmap.css', true, '1.5.1' );
 					wp_enqueue_script( 'wpstatistics-jquery-vmap', WP_STATISTICS_URL . 'assets/jqvmap/jquery.vmap.js', true, '1.5.1' );

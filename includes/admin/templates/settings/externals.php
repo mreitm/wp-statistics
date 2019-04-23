@@ -1,7 +1,9 @@
 <table class="form-table">
     <tbody>
     <tr valign="top">
-        <th scope="row" colspan="2"><h3><?php _e( 'GeoIP settings', 'wp-statistics' ); ?></h3></th>
+        <th scope="row" colspan="2"><h3><?php use WP_STATISTICS\Admin_Helper;
+
+		        _e( 'GeoIP settings', 'wp-statistics' ); ?></h3></th>
     </tr>
 
     <tr valign="top">
@@ -219,7 +221,7 @@
         </th>
 
         <td>
-            <a href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'settings', array( 'tab' => 'externals-settings', 'update-referrerspam' => 'yes' ) ) ?>" class="button"><?php _e( 'Update', 'wp-staitsitcs' ); ?></a>
+            <a href="<?php echo Admin_Helper::admin_url( 'settings', array( 'tab' => 'externals-settings', 'update-referrerspam' => 'yes' ) ) ?>" class="button"><?php _e( 'Update', 'wp-staitsitcs' ); ?></a>
             <p class="description"><?php _e( 'Click button to download the update.', 'wp-statistics' ); ?></p>
         </td>
     </tr>

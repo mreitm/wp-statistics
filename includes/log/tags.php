@@ -4,7 +4,9 @@
     });
 </script>
 <div class="wrap wps-wrap">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Tag Statistics', 'wp-statistics' ) ); ?>
+	<?php use WP_STATISTICS\Admin_Helper;
+
+	Admin_Helper::show_page_title( __( 'Tag Statistics', 'wp-statistics' ) ); ?>
 	<?php
 	//Set Default Time Picker Option
 	list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();

@@ -4,9 +4,10 @@
     });
 </script>
 <div class="wrap wps-wrap">
-	<?php use WP_STATISTICS\Referred;
+	<?php use WP_STATISTICS\Admin_Helper;
+	use WP_STATISTICS\Referred;
 
-	WP_Statistics_Admin_Pages::show_page_title( __( 'Online Users', 'wp-statistics' ) ); ?>
+	Admin_Helper::show_page_title( __( 'Online Users', 'wp-statistics' ) ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">
             <div class="meta-box-sortables">
@@ -69,7 +70,7 @@
 									$map_string = "";
 								} else {
 									$ip_string  = "{$items->ip}";
-									$map_string = "<a class='wps-text-muted' href='" . WP_Statistics_Admin_Pages::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>" . wp_statistics_icons( 'dashicons-visibility', 'visibility' ) . "</a><a class='show-map wps-text-muted' href='http://www.geoiptool.com/en/?IP={$items->ip}' target='_blank' title='" . __( 'Map', 'wp-statistics' ) . "'>" . wp_statistics_icons( 'dashicons-location-alt', 'map' ) . "</a>";
+									$map_string = "<a class='wps-text-muted' href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>" . wp_statistics_icons( 'dashicons-visibility', 'visibility' ) . "</a><a class='show-map wps-text-muted' href='http://www.geoiptool.com/en/?IP={$items->ip}' target='_blank' title='" . __( 'Map', 'wp-statistics' ) . "'>" . wp_statistics_icons( 'dashicons-location-alt', 'map' ) . "</a>";
 								}
 
 								echo "<tr>";
@@ -81,7 +82,7 @@
 								} else {
 									$agent = wp_statistics_icons( 'dashicons-editor-help', 'unknown' );
 								}
-								echo "<a href='" . WP_Statistics_Admin_Pages::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
+								echo "<a href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 								echo "</td>";
 
 								//Show Country

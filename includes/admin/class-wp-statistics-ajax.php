@@ -1,9 +1,8 @@
 <?php
 
-/**
- * Class WP_Statistics_Ajax
- */
-class WP_Statistics_Ajax {
+namespace WP_STATISTICS;
+
+class Ajax {
 
 	/**
 	 * WP_Statistics_Ajax constructor.
@@ -43,21 +42,21 @@ class WP_Statistics_Ajax {
 	public function close_notice_action_callback() {
 
 		$manage_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
+			Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) and isset( $_REQUEST['notice'] ) ) {
 			switch ( $_REQUEST['notice'] ) {
 				case 'donate':
-					WP_STATISTICS\Option::update( 'disable_donation_nag', true );
+					Option::update( 'disable_donation_nag', true );
 					break;
 
 				case 'suggestion':
-					WP_STATISTICS\Option::update( 'disable_suggestion_nag', true );
+					Option::update( 'disable_suggestion_nag', true );
 					break;
 			}
 
-			WP_STATISTICS\Option::update( 'admin_notices', false );
+			Option::update( 'admin_notices', false );
 		}
 
 		wp_die();
@@ -70,7 +69,7 @@ class WP_Statistics_Ajax {
 		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
+			Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -108,7 +107,7 @@ class WP_Statistics_Ajax {
 		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
+			Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -145,7 +144,7 @@ class WP_Statistics_Ajax {
 		global $wpdb;
 
 		$manage_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
+			Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -188,14 +187,14 @@ class WP_Statistics_Ajax {
 
 		//Check Valid Table name
 		$table_name    = sanitize_text_field( $_POST['table-name'] );
-		$list_db_table = WP_STATISTICS\DB::table( 'all', 'historical' );
+		$list_db_table = DB::table( 'all', 'historical' );
 		if ( ! array_key_exists( $table_name, $list_db_table ) ) {
 			_e( 'Access denied!', 'wp-statistics' );
 			exit;
 		}
 
 		//Check User Cap
-		$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 
 		if ( current_user_can( $manage_cap ) ) {
 
@@ -206,10 +205,10 @@ class WP_Statistics_Ajax {
 					$x_tbl ++;
 				}
 			} else {
-				echo wp_statitiscs_empty_table( WP_STATISTICS\DB::table( $table_name ) );
+				echo wp_statitiscs_empty_table( DB::table( $table_name ) );
 			}
 
-			\WP_STATISTICS\Install::Primary_Values();
+			Install::Primary_Values();
 		} else {
 			_e( 'Access denied!', 'wp-statistics' );
 		}
@@ -222,7 +221,7 @@ class WP_Statistics_Ajax {
 	 */
 	public function purge_data_action_callback() {
 
-		$manage_cap = wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' ) );
+		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 		if ( current_user_can( $manage_cap ) ) {
 			$purge_days = 0;
 
@@ -231,7 +230,7 @@ class WP_Statistics_Ajax {
 				$purge_days = intval( $_POST['purge-days'] );
 			}
 
-			echo WP_STATISTICS\Purge::purge_data( $purge_days );
+			echo Purge::purge_data( $purge_days );
 		} else {
 			_e( 'Access denied!', 'wp-statistics' );
 		}
@@ -245,7 +244,7 @@ class WP_Statistics_Ajax {
 	public function purge_visitor_hits_action_callback() {
 
 		$manage_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'manage_capability', 'manage_options' )
+			Option::get( 'manage_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $manage_cap ) ) {
@@ -259,7 +258,7 @@ class WP_Statistics_Ajax {
 			if ( $purge_hits < 10 ) {
 				_e( 'Number of hits must be greater than or equal to 10!', 'wp-statistics' );
 			} else {
-				echo WP_STATISTICS\Purge::purge_visitor_hits( $purge_hits );
+				echo Purge::purge_visitor_hits( $purge_hits );
 			}
 		} else {
 			_e( 'Access denied!', 'wp-statistics' );
@@ -301,7 +300,7 @@ class WP_Statistics_Ajax {
 		}
 
 		$view_cap = wp_statistics_validate_capability(
-			WP_STATISTICS\Option::get( 'read_capability', 'manage_options' )
+			Option::get( 'read_capability', 'manage_options' )
 		);
 
 		if ( current_user_can( $view_cap ) ) {
@@ -328,8 +327,8 @@ class WP_Statistics_Ajax {
 				wp_die();
 			}
 
-			$ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
-			$search_engines = WP_STATISTICS\SearchEngine::getList();
+			$ISOCountryCode = Helper::get_country_codes();
+			$search_engines = SearchEngine::getList();
 
 			require( WP_STATISTICS_DIR . 'includes/log/widgets/' . $widget . '.php' );
 

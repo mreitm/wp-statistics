@@ -1,4 +1,7 @@
 <?php
+
+use WP_STATISTICS\Admin_Helper;
+
 function wp_statistics_generate_summary_postbox_content( $search_engines, $search = true, $time = true ) {
 	global $wpdb;
 	$show_visitors = WP_STATISTICS\Option::get( 'visitor' );
@@ -9,7 +12,7 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Online Users:', 'wp-statistics' ); ?></th>
                 <th colspan="2" id="th-colspan">
-                    <span><a href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'online' ); ?>"><?php echo wp_statistics_useronline(); ?></a></span>
+                    <span><a href="<?php echo Admin_Helper::admin_url( 'online' ); ?>"><?php echo wp_statistics_useronline(); ?></a></span>
                 </th>
             </tr>
 		<?php }
@@ -33,12 +36,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Today:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'today', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'today', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'today' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'today' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
@@ -47,12 +50,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Yesterday:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'yesterday', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'yesterday', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'yesterday' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 1 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'yesterday' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
@@ -61,12 +64,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Last 7 Days:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 7 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'week', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 7 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'week', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 7 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'week' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 7 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'week' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
@@ -75,12 +78,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Last 30 Days:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 30 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'month', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 30 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'month', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 30 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'month' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 30 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'month' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
@@ -89,12 +92,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Last 365 Days:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'year', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'year', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'year' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'year' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
@@ -103,12 +106,12 @@ function wp_statistics_generate_summary_postbox_content( $search_engines, $searc
             <tr>
                 <th><?php _e( 'Total:', 'wp-statistics' ); ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visitors' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'total', null, true ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'visitors', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visitor( 'total', null, true ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>
                 <th class="th-center"><?php if ( WP_STATISTICS\Option::get( 'visits' ) ) {
-						echo '<a href="' . WP_Statistics_Admin_Pages::admin_url( 'hits', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'total' ) ) . '</span></a>';
+						echo '<a href="' . Admin_Helper::admin_url( 'hits', array( 'hitdays' => 365 ) ) . '"><span>' . number_format_i18n( wp_statistics_visit( 'total' ) ) . '</span></a>';
 					} else {
 						echo '';
 					} ?></th>

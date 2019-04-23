@@ -4,6 +4,9 @@
     });
 </script>
 <?php
+
+use WP_STATISTICS\Admin_Helper;
+
 $search_engines = WP_STATISTICS\SearchEngine::getList();
 
 //Set Default Time Picker Option
@@ -37,7 +40,7 @@ for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
 }
 ?>
 <div class="wrap wps-wrap">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Search Engine Referral Statistics', 'wp-statistics' ) ); ?>
+	<?php Admin_Helper::show_page_title( __( 'Search Engine Referral Statistics', 'wp-statistics' ) ); ?>
 	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('searches'), $daysToDisplay ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">

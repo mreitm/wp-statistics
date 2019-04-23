@@ -1,5 +1,8 @@
 <?php
 global $wpdb, $WP_Statistics;
+
+use WP_STATISTICS\Admin_Helper;
+
 $wp_prefix = $wpdb->prefix;
 
 if ( ! is_super_admin() ) {
@@ -8,7 +11,7 @@ if ( ! is_super_admin() ) {
 
 if ( array_key_exists( 'populate', $_GET ) ) {
 	if ( intval( $_GET['populate'] ) == 1 ) {
-		echo WP_Statistics_Updates::populate_geoip_info();
+		echo Updates::populate_geoip_info();
 	}
 }
 
@@ -228,7 +231,7 @@ if ( array_key_exists( 'search', $_GET ) ) {
 }
 ?>
 <div class="wrap wps-wrap wp-statistics-settings">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Optimization', 'wp-statistics' ) ); ?>
+	<?php Admin_Helper::show_page_title( __( 'Optimization', 'wp-statistics' ) ); ?>
 
     <div id="poststuff">
         <div id="post-body" class="metabox-holder columns-2">

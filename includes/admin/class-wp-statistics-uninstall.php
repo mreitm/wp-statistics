@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Class WP_Statistics_Uninstall
- */
-class WP_Statistics_Uninstall {
+namespace WP_STATISTICS;
 
-	/**
-	 * WP_Statistics_Uninstall constructor.
-	 */
+class Uninstall {
+
 	function __construct() {
 		if ( is_admin() ) {
 
@@ -15,7 +11,7 @@ class WP_Statistics_Uninstall {
 			if ( is_multisite() ) {
 
 				// Loop through each of the sites.
-				$sites = WP_STATISTICS\Helper::get_wp_sites_list();
+				$sites = Helper::get_wp_sites_list();
 				foreach ( $sites as $blog_id ) {
 					switch_to_blog( $blog_id );
 					$this->wp_statistics_site_removal();
@@ -51,7 +47,7 @@ class WP_Statistics_Uninstall {
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key LIKE 'wp_statistics%'" );
 
 		// Drop the tables
-		foreach ( \WP_STATISTICS\DB::table() as $tbl ) {
+		foreach ( DB::table() as $tbl ) {
 			$wpdb->query( "DROP TABLE IF EXISTS {$tbl}" );
 		}
 	}

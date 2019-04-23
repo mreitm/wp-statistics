@@ -1,6 +1,8 @@
 <div class="wrap wps-wrap about-wrap full-width-layout">
     <div class="wp-statistics-welcome">
-        <h1><?php printf( __( 'Welcome to WP-Statistics&nbsp;%s', 'wp-statistics' ), WP_STATISTICS_VERSION ); ?></h1>
+        <h1><?php use WP_STATISTICS\Admin_Helper;
+
+	        printf( __( 'Welcome to WP-Statistics&nbsp;%s', 'wp-statistics' ), WP_STATISTICS_VERSION ); ?></h1>
 
         <p class="about-text">
 			<?php printf( __( 'Thank you for updating to the latest version! We encourage you to submit a %srating and review%s over at WordPress.org. Your feedback is greatly appreciated!', 'wp-statistics' ), '<a href="https://wordpress.org/support/plugin/wp-statistics/reviews/?rate=5#new-post" target="_blank">', '</a>' ); ?>
@@ -142,7 +144,7 @@
         </div>
         <hr style="clear: both;">
         <div class="wps-return-to-dashboard">
-            <a href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'overview' ); ?>"><?php _e( 'Go to Statistics &rarr; Overview', 'wp-statistics' ); ?></a>
+            <a href="<?php echo Admin_Helper::admin_url( 'overview' ); ?>"><?php _e( 'Go to Statistics &rarr; Overview', 'wp-statistics' ); ?></a>
         </div>
     </div>
 </div>

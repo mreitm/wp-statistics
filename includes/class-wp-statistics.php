@@ -141,10 +141,12 @@ final class WP_Statistics {
 		// Admin classes
 		if ( is_admin() ) {
 
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-helper.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-meta-box.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-pages.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-ajax.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-dashboard.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-dashboard.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-editor.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-export.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-uninstall.php';
@@ -287,13 +289,28 @@ final class WP_Statistics {
 		if ( is_admin() ) {
 
 		    // TODO Seperate All Classes
-			new WP_Statistics_Admin;
+			new \WP_STATISTICS\Admin;
+
+			# Admin Pages
+			new \WP_STATISTICS\Admin_Pages();
 
 			# Admin Menu
-			$this->container['admin_menu'] = new \WP_STATISTICS\Admin_Menus;
+			new \WP_STATISTICS\Admin_Menus;
 
 			# Admin Asset
 			new \WP_STATISTICS\Admin_Assets;
+
+			# Admin Export Class
+			new \WP_STATISTICS\Export;
+
+			# Admin Ajax
+			new \WP_STATISTICS\Ajax;
+
+			# Admin Meta Box
+			new \WP_STATISTICS\Admin_Meta_Boxes;
+
+			# Admin Dashboard Widget
+			new \WP_STATISTICS\Admin_Dashboard;
 
 			# MultiSite Admin
 			if ( is_multisite() ) {

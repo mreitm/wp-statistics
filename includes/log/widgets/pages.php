@@ -1,4 +1,7 @@
 <?php
+
+use WP_STATISTICS\Admin_Helper;
+
 function wp_statistics_generate_pages_postbox_content() {
 	global $wpdb;
 
@@ -41,7 +44,7 @@ function wp_statistics_generate_pages_postbox_content() {
 		echo "<td style=\"text-align: left\">" . $counter . "</td>";
 		echo "<td style=\"text-align: left\">" . $title . "</td>";
 		echo '<td style="text-align: left"><a href="' . $page_link . '" target="_blank">' . htmlentities( urldecode( $item->uri ), ENT_QUOTES ) . '</a></td>';
-		echo '<td style="text-align: left"><a href="' . WP_Statistics_Admin_Pages::admin_url( 'pages', array( 'page-uri' => htmlentities( $item->uri, ENT_QUOTES ) ) ) . '">' . number_format_i18n( $item->count_sum ) . '</a></td>';
+		echo '<td style="text-align: left"><a href="' . Admin_Helper::admin_url( 'pages', array( 'page-uri' => htmlentities( $item->uri, ENT_QUOTES ) ) ) . '">' . number_format_i18n( $item->count_sum ) . '</a></td>';
 		echo '</tr>';
 
 	}

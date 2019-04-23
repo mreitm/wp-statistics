@@ -1,7 +1,8 @@
 <?php
 
+namespace WP_STATISTICS;
 
-class WP_Statistics_Dashboard {
+class Admin_Dashboard {
 	/**
 	 * User Meta Set Dashboard Option name
      *
@@ -10,7 +11,7 @@ class WP_Statistics_Dashboard {
 	public static $dashboard_set = 'dashboard_set';
 
 	/**
-	 * WP_Statistics_Dashboard constructor.
+	 * Admin_Dashboard constructor.
 	 */
 	public function __construct() {
 
@@ -134,7 +135,7 @@ class WP_Statistics_Dashboard {
 	/**
 	 * This function Register Wp-statistics Dashboard to wordpress Admin
 	 */
-	public static function register_dashboard_widget() {
+	public function register_dashboard_widget() {
 
 		//Check Dashboard Widget
 		if ( ! function_exists( 'wp_add_dashboard_widget' ) ) {
@@ -147,7 +148,7 @@ class WP_Statistics_Dashboard {
 
 			//Register Dashboard Widget
 			if ( wp_statistics_check_option_require( $dashboard ) === true ) {
-				wp_add_dashboard_widget( self::widget_setup_key( $widget_key ), $dashboard['name'], 'WP_Statistics_Dashboard::generate_postbox_contents', $control_callback = null, array( 'widget' => $widget_key ) );
+				wp_add_dashboard_widget( self::widget_setup_key( $widget_key ), $dashboard['name'], array( $this, 'generate_postbox_contents'), $control_callback = null, array( 'widget' => $widget_key ) );
 			}
 
 		}
@@ -157,22 +158,22 @@ class WP_Statistics_Dashboard {
 	 * Load Dashboard Widget
 	 * This Function add_action to `wp_dashboard_setup`
 	 */
-	public static function load_dashboard_widget() {
+	public function load_dashboard_widget() {
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.
-		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'read_capability', 'manage_option' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_option' ) ) ) ) {
 			return;
 		}
 
 		//Check Hidden User Dashboard Option
-		$user_dashboard = WP_STATISTICS\Option::getUserOption( self::$dashboard_set );
+		$user_dashboard = Option::getUserOption( self::$dashboard_set );
 		if ( $user_dashboard === false || $user_dashboard != WP_STATISTICS_VERSION ) {
 			self::set_user_hidden_dashboard_option();
 		}
 
 		// If the admin has disabled the widgets, don't display them.
-		if ( ! WP_STATISTICS\Option::get( 'disable_dashboard' ) ) {
-			self::register_dashboard_widget();
+		if ( ! Option::get( 'disable_dashboard' ) ) {
+			$this->register_dashboard_widget();
 		}
 
 	}
@@ -187,10 +188,10 @@ class WP_Statistics_Dashboard {
 		$hidden_opt     = 'metaboxhidden_dashboard';
 
 		//Create Empty Option and save in User meta
-		WP_STATISTICS\Option::update_user_option( self::$dashboard_set, WP_STATISTICS_VERSION );
+		Option::update_user_option( self::$dashboard_set, WP_STATISTICS_VERSION );
 
 		//Get Dashboard Option User Meta
-		$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), $hidden_opt, true );
+		$hidden_widgets = get_user_meta( User::get_user_id(), $hidden_opt, true );
 		if ( ! is_array( $hidden_widgets ) ) {
 			$hidden_widgets = array();
 		}
@@ -202,7 +203,7 @@ class WP_Statistics_Dashboard {
 			}
 		}
 
-		update_user_meta( \WP_STATISTICS\User::get_user_id(), $hidden_opt, $hidden_widgets );
+		update_user_meta( User::get_user_id(), $hidden_opt, $hidden_widgets );
 	}
 
 	/**
@@ -214,7 +215,7 @@ class WP_Statistics_Dashboard {
 		wp_enqueue_style( 'wpstatistics-log-css', WP_STATISTICS_URL . 'assets/css/log.css', true, '1.2' );
 
 		// Load the map code.
-		if ( ! WP_STATISTICS\Option::get( 'disable_dashboard' ) ) {
+		if ( ! Option::get( 'disable_dashboard' ) ) {
 			wp_enqueue_style( 'jqvmap-css', WP_STATISTICS_URL . 'assets/jqvmap/jqvmap.css', true, '1.5.1' );
 			wp_enqueue_script( 'jquery-vmap', WP_STATISTICS_URL . 'assets/jqvmap/jquery.vmap.js', true, '1.5.1' );
 			wp_enqueue_script( 'jquery-vmap-world', WP_STATISTICS_URL . 'assets/jqvmap/maps/jquery.vmap.world.js', true, '1.5.1' );
@@ -230,9 +231,9 @@ class WP_Statistics_Dashboard {
 
 		// Load our custom widgets handling javascript.
 		if ( 'post' == $screen->id || 'page' == $screen->id ) {
-			wp_enqueue_script( 'wp_statistics_editor', WP_STATISTICS_URL . 'assets/js/editor.js' );
+			wp_enqueue_script( 'Editor', WP_STATISTICS_URL . 'assets/js/editor.js' );
 		} else {
-			wp_enqueue_script( 'wp_statistics_dashboard', WP_STATISTICS_URL . 'assets/js/dashboard.js' );
+			wp_enqueue_script( 'Admin_Dashboard', WP_STATISTICS_URL . 'assets/js/dashboard.js' );
 		}
 	}
 
@@ -249,26 +250,26 @@ class WP_Statistics_Dashboard {
 		}
 
 		//Load Of Require Jquery Library Function
-		WP_Statistics_Dashboard::load_widget_css_and_scripts();
+		Admin_Dashboard::load_widget_css_and_scripts();
 
 		//Prepare List Of Dashboard
 		$page_urls  = array();
 		$dashboards = self::widget_list();
 		foreach ( $dashboards as $widget_key => $dashboard ) {
 			if ( array_key_exists( 'page_url', $dashboard ) ) {
-				$page_urls[ 'wp-statistics-' . $widget_key . '-widget_more_button' ] = WP_Statistics_Admin_Pages::admin_url( $dashboard['page_url'] );
+				$page_urls[ 'wp-statistics-' . $widget_key . '-widget_more_button' ] = Admin_Helper::admin_url( $dashboard['page_url'] );
 			}
 		}
 
 		//Add Extra Pages For Overview Page
 		foreach ( array( 'exclusions' => 'exclusions', 'users_online' => 'online' ) as $p_key => $p_link ) {
-			$page_urls[ 'wp-statistics-' . $p_key . '-widget_more_button' ] = WP_Statistics_Admin_Pages::admin_url( $p_link );
+			$page_urls[ 'wp-statistics-' . $p_key . '-widget_more_button' ] = Admin_Helper::admin_url( $p_link );
 		}
 
 		?>
         <script type="text/javascript">
             var wp_statistics_destinations = <?php echo json_encode( $page_urls ); ?>;
-            var wp_statistics_loading_image = '<?php echo WP_Statistics_Admin_Pages::loading_meta_box(); ?>';
+            var wp_statistics_loading_image = '<?php echo Admin_Helper::loading_meta_box(); ?>';
 
             function wp_statistics_wait_for_postboxes() {
 
@@ -295,11 +296,11 @@ class WP_Statistics_Dashboard {
 
                     var temp_html = temp.html();
                     if (temp_id == '<?php echo self::widget_setup_key( 'summary' ); ?>') {
-                        new_text = '<?php echo WP_Statistics_Admin_Pages::meta_box_button( 'refresh' );?>';
+                        new_text = '<?php echo Admin_Helper::meta_box_button( 'refresh' );?>';
                         new_text = new_text.replace('{{refreshid}}', temp_id + '_refresh_button');
                         temp_html = temp_html.replace('</button>', new_text);
                     } else {
-                        new_text = '<?php echo WP_Statistics_Admin_Pages::meta_box_button();?>';
+                        new_text = '<?php echo Admin_Helper::meta_box_button();?>';
                         new_text = new_text.replace('{{refreshid}}', temp_id + '_refresh_button');
                         new_text = new_text.replace('{{moreid}}', temp_id + '_more_button');
                         temp_html = temp_html.replace('</button>', new_text);
@@ -321,11 +322,11 @@ class WP_Statistics_Dashboard {
 	 * @param $post
 	 * @param $args
 	 */
-	static function generate_postbox_contents( $post, $args ) {
+	public function generate_postbox_contents( $post, $args ) {
 		$widget       = $args['args']['widget'];
 		$container_id = 'wp-statistics-' . str_replace( '.', '-', $widget ) . '-div';
 
-		echo '<div id="' . $container_id . '">' . WP_Statistics_Admin_Pages::loading_meta_box() . '</div>';
+		echo '<div id="' . $container_id . '">' . Admin_Helper::loading_meta_box() . '</div>';
 		wp_statistics_generate_widget_load_javascript( $widget, $container_id );
 	}
 

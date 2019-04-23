@@ -5,6 +5,8 @@
 </script>
 <?php
 //Set Default Time Picker Option
+use WP_STATISTICS\Admin_Helper;
+
 list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();
 list( $daysToDisplay, $rangestart_utime, $rangeend_utime ) = wp_statistics_date_range_calculator(
 	$daysToDisplay,
@@ -37,7 +39,7 @@ for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
 }
 ?>
 <div class="wrap wps-wrap">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Top Pages', 'wp-statistics' ) ); ?>
+	<?php Admin_Helper::show_page_title( __( 'Top Pages', 'wp-statistics' ) ); ?>
 	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('pages'), $daysToDisplay ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">
@@ -150,7 +152,7 @@ for ( $i = $daysToDisplay; $i >= 0; $i -- ) {
 									echo "<td style=\"text-align: left\">" . $count . "</td>";
 									echo "<td style=\"text-align: left\">" . $uri[3] . "</td>";
 									echo "<td style=\"text-align: left\"><a dir='ltr' href='" . $uri[4] . "' target='_blank'>" . htmlentities( urldecode( $uri[0] ), ENT_QUOTES ) . "</a></td>";
-									echo "<td style=\"text-align: left\"><a href='" . WP_Statistics_Admin_Pages::admin_url( 'pages', $arg ) . "'>" . number_format_i18n( $uri[1] ) . "</a></td>";
+									echo "<td style=\"text-align: left\"><a href='" . Admin_Helper::admin_url( 'pages', $arg ) . "'>" . number_format_i18n( $uri[1] ) . "</a></td>";
 								}
 
 								if ( $count == $start + 10 ) {

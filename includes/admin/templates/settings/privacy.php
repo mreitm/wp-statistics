@@ -1,11 +1,13 @@
 <table class="form-table">
     <tbody>
     <tr valign="top">
-        <th scope="row" colspan="2"><h3><?php _e( 'Privacy and Data Protection', 'wp-statistics' ); ?></h3></th>
+        <th scope="row" colspan="2"><h3><?php use WP_STATISTICS\Admin_Helper;
+
+		        _e( 'Privacy and Data Protection', 'wp-statistics' ); ?></h3></th>
     </tr>
 
     <tr valign="top">
-        <td scope="row" colspan="2"><?php echo sprintf( __( 'If you want to delete visitor data, please <a href="%s">click here</a>.', 'wp-statistics' ), WP_Statistics_Admin_Pages::admin_url( 'optimization', array( 'tab' => 'purging' ) ) ); ?></td>
+        <td scope="row" colspan="2"><?php echo sprintf( __( 'If you want to delete visitor data, please <a href="%s">click here</a>.', 'wp-statistics' ), Admin_Helper::admin_url( 'optimization', array( 'tab' => 'purging' ) ) ); ?></td>
     </tr>
 
     <tr valign="top">

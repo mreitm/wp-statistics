@@ -5,6 +5,7 @@
 </script>
 <?php
 //Set Default Time Picker Option
+use WP_STATISTICS\Admin_Helper;
 use WP_STATISTICS\Referred;
 
 list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();
@@ -25,7 +26,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 		$country_name = $ISOCountryCode[ $_REQUEST['country'] ];
 		$total        = $wpdb->get_var( "SELECT COUNT(`location`) AS `count` FROM `{$wpdb->prefix}statistics_visitor` WHERE `location` = '" . $_REQUEST['country'] . "'" );
 	} else {
-		echo '<script>window.location.href = "' . WP_Statistics_Admin_Pages::admin_url( 'countries' ) . '";</script>';
+		echo '<script>window.location.href = "' . Admin_Helper::admin_url( 'countries' ) . '";</script>';
 	}
 }
 
@@ -34,19 +35,19 @@ if ( isset( $_REQUEST['country'] ) ) {
 	<?php
 	//Show Time Range only in all list
 	if ( ! isset( $_REQUEST['country'] ) ) {
-		WP_Statistics_Admin_Pages::show_page_title( __( 'Top Countries', 'wp-statistics' ) );
+		Admin_Helper::show_page_title( __( 'Top Countries', 'wp-statistics' ) );
 		wp_statistics_date_range_selector(\WP_STATISTICS\Admin_Menus::get_page_slug('countries'), $daysToDisplay );
 	} else {
-		WP_Statistics_Admin_Pages::show_page_title( $country_name . ' ' . __( 'Visitors', 'wp-statistics' ) );
+		Admin_Helper::show_page_title( $country_name . ' ' . __( 'Visitors', 'wp-statistics' ) );
 		?>
         <br/>
         <ul class="subsubsub">
             <li class="all">
-                <a href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'countries' ); ?>"><?php _e( 'All', 'wp-statistics' ); ?></a>
+                <a href="<?php echo Admin_Helper::admin_url( 'countries' ); ?>"><?php _e( 'All', 'wp-statistics' ); ?></a>
             </li>
             |
             <li>
-                <a class="current" href="<?php echo WP_Statistics_Admin_Pages::admin_url( 'countries', array( 'country' => $_REQUEST['country'] ) ) ?>">
+                <a class="current" href="<?php echo Admin_Helper::admin_url( 'countries', array( 'country' => $_REQUEST['country'] ) ) ?>">
 					<?php echo $country_name; ?>
                     <span class="count">(<?php echo number_format_i18n( $total ); ?>)</span></a>
             </li>
@@ -104,7 +105,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 									echo "<td>$i</td>";
 									echo "<td style=\"text-align: center;\"><img src='" . plugins_url( 'wp-statistics/assets/images/flags/' . $item->location . '.png' ) . "' title='{$ISOCountryCode[$item->location]}'/></td>";
 									echo "<td style='text-align: left; padding-" . ( is_rtl() === true ? 'right' : 'left' ) . ": 12.8%;'>{$ISOCountryCode[$item->location]}</td>";
-									echo "<td style=\"text-align: center;\"><a href='" . WP_Statistics_Admin_Pages::admin_url( 'countries', array( 'country' => $item->location ) ) . "'>" . number_format_i18n( $item->count ) . "</a></td>";
+									echo "<td style=\"text-align: center;\"><a href='" . Admin_Helper::admin_url( 'countries', array( 'country' => $item->location ) ) . "'>" . number_format_i18n( $item->count ) . "</a></td>";
 									echo "</tr>";
 								}
 								?>
@@ -154,7 +155,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 								} else {
 									$agent = wp_statistics_icons( 'dashicons-editor-help', 'unknown' );
 								}
-								echo "<a href='" . WP_Statistics_Admin_Pages::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
+								echo "<a href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 								echo "</td>";
 								$city = '';
 								if ( WP_STATISTICS\Option::get( 'geoip_city' ) ) {
@@ -192,7 +193,7 @@ if ( isset( $_REQUEST['country'] ) ) {
 								if ( substr( $items->ip, 0, 6 ) == '#hash#' ) {
 									$ip_string = __( '#hash#', 'wp-statistics' );
 								} else {
-									$ip_string = "<a href='" . WP_Statistics_Admin_Pages::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
+									$ip_string = "<a href='" . Admin_Helper::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
 								}
 								echo $ip_string;
 								echo "</td>";

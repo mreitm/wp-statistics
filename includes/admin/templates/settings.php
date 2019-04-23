@@ -1,5 +1,7 @@
 <div class="wrap wps-wrap wp-statistics-settings">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Settings', 'wp-statistics' ) ); ?>
+	<?php use WP_STATISTICS\Admin_Helper;
+
+	Admin_Helper::show_page_title( __( 'Settings', 'wp-statistics' ) ); ?>
 
     <div id="poststuff">
         <div id="post-body" class="metabox-holder columns-2">

@@ -68,7 +68,7 @@ class Admin_Menus {
 
 		// Get the read/write capabilities required to view/manage the plugin as set by the user.
 		// TODO Push To Helper Class with own Function -> wp_statistics_validate_capability
-		$read_cap   = wp_statistics_validate_capability(Option::get( 'read_capability', 'manage_options' ) );
+		$read_cap   = wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_options' ) );
 		$manage_cap = wp_statistics_validate_capability( Option::get( 'manage_capability', 'manage_options' ) );
 
 		/**
@@ -282,21 +282,21 @@ class Admin_Menus {
 
 				//Check Conditions For Show Menu
 				if ( wp_statistics_check_option_require( $menu ) === true ) {
-					add_submenu_page( self::get_page_slug( $menu['sub'] ), $menu['title'], $name, $capability, self::get_page_slug( $menu['page_url'] ), 'WP_Statistics_Admin_Pages::' . $method );
+					add_submenu_page( self::get_page_slug( $menu['sub'] ), $menu['title'], $name, $capability, self::get_page_slug( $menu['page_url'] ), array( '\WP_STATISTICS\Admin_Pages', $method ) );
 				}
 
 				//Check if add Break Line
 				if ( array_key_exists( 'break', $menu ) ) {
-					add_submenu_page( self::get_page_slug( $menu['sub'] ), '', '', $capability, 'wps_break_menu', 'WP_Statistics_Admin_Pages::' . $method );
+					add_submenu_page( self::get_page_slug( $menu['sub'] ), '', '', $capability, 'wps_break_menu', array( '\WP_STATISTICS\Admin_Pages', $method ) );
 				}
 			} else {
-				add_menu_page( $menu['title'], $name, $capability, self::get_page_slug( $menu['page_url'] ), "WP_Statistics_Admin_Pages::" . $method, $menu['icon'] );
+				add_menu_page( $menu['title'], $name, $capability, self::get_page_slug( $menu['page_url'] ), array( '\WP_STATISTICS\Admin_Pages', $method ), $menu['icon'] );
 			}
 		}
 
 		// Add action to load the meta boxes to the overview page.
 		// TODO Push to OrverView Page Class
-		add_action( 'load-' . self::get_action_menu_slug( 'overview' ), 'WP_Statistics_Admin_Pages::overview' );
+		add_action( 'load-' . self::get_action_menu_slug( 'overview' ), array( '\WP_STATISTICS\Admin_Pages', 'overview' ) );
 	}
 
 }

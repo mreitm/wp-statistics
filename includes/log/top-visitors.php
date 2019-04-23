@@ -4,11 +4,14 @@
     });
 </script>
 <?php
+
+use WP_STATISTICS\Admin_Helper;
+
 $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 include( WP_STATISTICS_DIR . 'includes/log/widgets/top.visitors.php' );
 ?>
 <div class="wrap wps-wrap">
-	<?php WP_Statistics_Admin_Pages::show_page_title( __( 'Top 100 Visitors Today', 'wp-statistics' ) ); ?>
+	<?php Admin_Helper::show_page_title( __( 'Top 100 Visitors Today', 'wp-statistics' ) ); ?>
 	<?php
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_register_style( 'jquery-ui-smoothness-css', WP_STATISTICS_URL . 'assets/css/jquery-ui-smoothness.min.css' );

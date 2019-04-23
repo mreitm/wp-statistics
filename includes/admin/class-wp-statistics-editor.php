@@ -1,23 +1,20 @@
 <?php
 
-use WP_STATISTICS\Helper;
+namespace WP_STATISTICS;
 
-/**
- * Class WP_Statistics_Editor
- */
-class WP_Statistics_Editor {
+class Editor {
 
 	/**
 	 * Adds a box to the main column on the Post and Page edit screens.
 	 */
-	static function add_meta_box() {
+	public static function add_meta_box() {
 
 		// We need to fudge the display settings for first time users so not all of the widgets are displayed, we only want to do this on
 		// the first time they visit the dashboard though so check to see if we've been here before.
-		if ( ! WP_STATISTICS\Option::getUserOption( 'editor_set' ) ) {
-			WP_STATISTICS\Option::update_user_option( 'editor_set', WP_STATISTICS_VERSION );
+		if ( ! Option::getUserOption( 'editor_set' ) ) {
+			Option::update_user_option( 'editor_set', WP_STATISTICS_VERSION );
 
-			$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_post', true );
+			$hidden_widgets = get_user_meta( User::get_user_id(), 'metaboxhidden_post', true );
 			if ( ! is_array( $hidden_widgets ) ) {
 				$hidden_widgets = array();
 			}
@@ -26,9 +23,9 @@ class WP_Statistics_Editor {
 				$hidden_widgets[] = 'wp_statistics_editor_meta_box';
 			}
 
-			update_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_post', $hidden_widgets );
+			update_user_meta( User::get_user_id(), 'metaboxhidden_post', $hidden_widgets );
 
-			$hidden_widgets = get_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_page', true );
+			$hidden_widgets = get_user_meta( User::get_user_id(), 'metaboxhidden_page', true );
 			if ( ! is_array( $hidden_widgets ) ) {
 				$hidden_widgets = array();
 			}
@@ -37,21 +34,21 @@ class WP_Statistics_Editor {
 				$hidden_widgets[] = 'wp_statistics_editor_meta_box';
 			}
 
-			update_user_meta( \WP_STATISTICS\User::get_user_id(), 'metaboxhidden_page', $hidden_widgets );
+			update_user_meta( User::get_user_id(), 'metaboxhidden_page', $hidden_widgets );
 		}
 
 		// If the user does not have at least read access to the status plugin, just return without adding the widgets.
-		if ( ! current_user_can( wp_statistics_validate_capability( WP_STATISTICS\Option::get( 'read_capability', 'manage_option' ) ) ) ) {
+		if ( ! current_user_can( wp_statistics_validate_capability( Option::get( 'read_capability', 'manage_option' ) ) ) ) {
 			return;
 		}
 
 		// If the admin has disabled the widgets don't display them.
-		if ( WP_STATISTICS\Option::get( 'disable_editor' ) ) {
+		if ( Option::get( 'disable_editor' ) ) {
 			return;
 		}
 
 		// If the admin has disabled the Hit Post MetaBox.
-		if ( ! WP_STATISTICS\Option::get( 'hit_post_metabox' ) ) {
+		if ( ! Option::get( 'hit_post_metabox' ) ) {
 			return;
 		}
 
@@ -76,7 +73,7 @@ class WP_Statistics_Editor {
 		}
 
 		add_action( 'admin_footer', 'WP_Statistics_Editor::inline_javascript' );
-		WP_Statistics_Editor::generate_postbox_contents( $post->ID, array( 'args' => array( 'widget' => 'page' ) ) );
+		Editor::generate_postbox_contents( $post->ID, array( 'args' => array( 'widget' => 'page' ) ) );
 	}
 
 	static function generate_postbox_contents( $post, $args ) {
@@ -92,7 +89,7 @@ class WP_Statistics_Editor {
 		} else {
 			$widget       = $args['args']['widget'];
 			$container_id = 'wp-statistics-' . str_replace( '.', '-', $widget ) . '-div';
-			echo '<div id="' . $container_id . '">' . WP_Statistics_Admin_Pages::loading_meta_box() . '</div>';
+			echo '<div id="' . $container_id . '">' . Admin_Helper::loading_meta_box() . '</div>';
 			echo '<script type="text/javascript">var wp_statistics_current_id = \'' . $post . '\';</script>';
 			wp_statistics_generate_widget_load_javascript( $widget, $container_id );
 		}
@@ -106,8 +103,8 @@ class WP_Statistics_Editor {
 			return;
 		}
 
-		WP_Statistics_Dashboard::load_widget_css_and_scripts();
-		$loading_img = WP_Statistics_Admin_Pages::loading_meta_box();
+		Admin_Dashboard::load_widget_css_and_scripts();
+		$loading_img = Admin_Helper::loading_meta_box();
 		$new_buttons = '</button>';
 
 		//If Classic Editor
@@ -119,7 +116,7 @@ class WP_Statistics_Editor {
 
 		$admin_url                                              = get_admin_url() . "/admin.php?page=";
 		$page_urls                                              = array();
-		$page_urls['wp_statistics_editor_meta_box_more_button'] = $admin_url . \WP_STATISTICS\Admin_Menus::get_page_slug('pages') . '&page-id=';
+		$page_urls['wp_statistics_editor_meta_box_more_button'] = $admin_url . Admin_Menus::get_page_slug('pages') . '&page-id=';
 
 		//Button for Gutenberg
 		$btn_more_action = 'wp_statistics_goto_more';
