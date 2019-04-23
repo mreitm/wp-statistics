@@ -1,6 +1,7 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Menus;
 use WP_STATISTICS\Referred;
 
 function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count = 10 ) {
@@ -70,7 +71,7 @@ function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count =
 			} else {
 				$agent = wp_statistics_icons( 'dashicons-editor-help', 'unknown' );
 			}
-			echo "<a href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
+			echo "<a href='" . Admin_Menus::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 			echo "</td>";
 			$city = '';
 			if ( WP_STATISTICS\Option::get( 'geoip_city' ) ) {
@@ -108,7 +109,7 @@ function wp_statistics_generate_words_postbox_content( $ISOCountryCode, $count =
 			if ( substr( $items->ip, 0, 6 ) == '#hash#' ) {
 				$ip_string = __( '#hash#', 'wp-statistics' );
 			} else {
-				$ip_string = "<a href='" . Admin_Helper::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
+				$ip_string = "<a href='" . Admin_Menus::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
 			}
 			echo $ip_string;
 			echo "</td>";

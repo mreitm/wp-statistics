@@ -6,6 +6,7 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Templates;
 
 if ( array_key_exists( 'page-uri', $_GET ) ) {
 	$pageuri = $_GET['page-uri'];
@@ -66,7 +67,7 @@ $html .= ' <input type="submit" value="' . __( 'Select', 'wp-statistics' ) . '" 
 $html .= '<br>';
 ?>
 <div class="wrap wps-wrap">
-	<?php Admin_Helper::show_page_title( sprintf( __( 'Page Trend for Post ID %s', 'wp-statistics' ), $pageid ) . ' - ' . $title ); ?>
+	<?php Admin_Templates::show_page_title( sprintf( __( 'Page Trend for Post ID %s', 'wp-statistics' ), $pageid ) . ' - ' . $title ); ?>
 	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('pages'), $daysToDisplay, null, null, $url_fields, $html ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">

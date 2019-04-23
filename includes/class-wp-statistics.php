@@ -141,24 +141,24 @@ final class WP_Statistics {
 		// Admin classes
 		if ( is_admin() ) {
 
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-helper.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-templates.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-meta-box.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-pages.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-ajax.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-ajax.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-dashboard.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-editor.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-export.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-uninstall.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-updates.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-editor.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-export.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-uninstall.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-updates.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-welcome.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-network.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-purge.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-purge.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-menus.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-assets.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-notices.php';
-			require_once WP_STATISTICS_DIR . 'includes/admin/TinyMCE/class-wp-statistics-tinymce.php';
 			require_once WP_STATISTICS_DIR . 'includes/admin/class-wp-statistics-admin-bar.php';
+			require_once WP_STATISTICS_DIR . 'includes/admin/TinyMCE/class-wp-statistics-tinymce.php';
 		}
 
 		// Front Class.

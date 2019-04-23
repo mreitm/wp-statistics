@@ -6,8 +6,9 @@
 
 <div class="wrap wps-wrap">
 	<?php use WP_STATISTICS\Admin_Helper;
+	use WP_STATISTICS\Admin_Templates;
 
-	Admin_Helper::show_page_title( __( 'Author Statistics', 'wp-statistics' ) ); ?>
+	Admin_Templates::show_page_title( __( 'Author Statistics', 'wp-statistics' ) ); ?>
 	<?php
 	//Set Default Time Picker Option
 	list( $daysToDisplay, $rangestart, $rangeend ) = wp_statistics_prepare_range_time_picker();

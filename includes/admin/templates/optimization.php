@@ -2,6 +2,7 @@
 global $wpdb, $WP_Statistics;
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Templates;
 
 $wp_prefix = $wpdb->prefix;
 
@@ -231,7 +232,7 @@ if ( array_key_exists( 'search', $_GET ) ) {
 }
 ?>
 <div class="wrap wps-wrap wp-statistics-settings">
-	<?php Admin_Helper::show_page_title( __( 'Optimization', 'wp-statistics' ) ); ?>
+	<?php Admin_Templates::show_page_title( __( 'Optimization', 'wp-statistics' ) ); ?>
 
     <div id="poststuff">
         <div id="post-body" class="metabox-holder columns-2">

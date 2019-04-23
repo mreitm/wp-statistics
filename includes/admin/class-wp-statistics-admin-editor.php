@@ -89,7 +89,7 @@ class Editor {
 		} else {
 			$widget       = $args['args']['widget'];
 			$container_id = 'wp-statistics-' . str_replace( '.', '-', $widget ) . '-div';
-			echo '<div id="' . $container_id . '">' . Admin_Helper::loading_meta_box() . '</div>';
+			echo '<div id="' . $container_id . '">' . Admin_Templates::loading_meta_box() . '</div>';
 			echo '<script type="text/javascript">var wp_statistics_current_id = \'' . $post . '\';</script>';
 			wp_statistics_generate_widget_load_javascript( $widget, $container_id );
 		}
@@ -104,7 +104,7 @@ class Editor {
 		}
 
 		Admin_Dashboard::load_widget_css_and_scripts();
-		$loading_img = Admin_Helper::loading_meta_box();
+		$loading_img = Admin_Templates::loading_meta_box();
 		$new_buttons = '</button>';
 
 		//If Classic Editor

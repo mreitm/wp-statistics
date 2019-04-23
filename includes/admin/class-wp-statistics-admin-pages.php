@@ -558,12 +558,12 @@ class Admin_Pages {
 
 					// We need to reload the page after we reset the options but it's too late to do it through a HTTP redirect so do a
 					// JavaScript redirect instead.
-					wp_redirect( Admin_Helper::admin_url( 'settings' ) );
+					wp_redirect( Admin_Menus::admin_url( 'settings' ) );
 					exit;
 				}
 
 				\Option::save_options( $wp_statistics_options );
-				wp_redirect( Admin_Helper::admin_url( 'settings' ) );
+				wp_redirect( Admin_Menus::admin_url( 'settings' ) );
 				exit;
 
 			}
@@ -797,7 +797,7 @@ class Admin_Pages {
 
 		if ( $result != 7 ) {
 
-			$get_bloginfo_url = Admin_Helper::admin_url( 'optimization', array( 'tab' => 'database' ) );
+			$get_bloginfo_url = Admin_Menus::admin_url( 'optimization', array( 'tab' => 'database' ) );
 			$missing_tables   = array();
 
 			$result = $wpdb->query(

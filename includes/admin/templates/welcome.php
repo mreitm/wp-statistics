@@ -1,6 +1,7 @@
 <div class="wrap wps-wrap about-wrap full-width-layout">
     <div class="wp-statistics-welcome">
         <h1><?php use WP_STATISTICS\Admin_Helper;
+	        use WP_STATISTICS\Admin_Menus;
 
 	        printf( __( 'Welcome to WP-Statistics&nbsp;%s', 'wp-statistics' ), WP_STATISTICS_VERSION ); ?></h1>
 
@@ -144,7 +145,7 @@
         </div>
         <hr style="clear: both;">
         <div class="wps-return-to-dashboard">
-            <a href="<?php echo Admin_Helper::admin_url( 'overview' ); ?>"><?php _e( 'Go to Statistics &rarr; Overview', 'wp-statistics' ); ?></a>
+            <a href="<?php echo Admin_Menus::admin_url( 'overview' ); ?>"><?php _e( 'Go to Statistics &rarr; Overview', 'wp-statistics' ); ?></a>
         </div>
     </div>
 </div>

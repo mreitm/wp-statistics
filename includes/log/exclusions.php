@@ -6,6 +6,7 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Templates;
 
 if ( WP_STATISTICS\Option::get( 'record_exclusions' ) != 1 ) {
 	echo "<div class='updated settings-error'><p><strong>" .
@@ -158,7 +159,7 @@ foreach ( $excluded_reasons as $reason ) {
 }
 ?>
 <div class="wrap wps-wrap">
-	<?php Admin_Helper::show_page_title( __( 'Exclusions Statistics', 'wp-statistics' ) ); ?>
+	<?php Admin_Templates::show_page_title( __( 'Exclusions Statistics', 'wp-statistics' ) ); ?>
 	<?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('exclusions'), $daysToDisplay ); ?>
     <div class="postbox-container" id="last-log">
         <div class="metabox-holder">

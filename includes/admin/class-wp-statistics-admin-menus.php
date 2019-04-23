@@ -62,6 +62,41 @@ class Admin_Menus {
 	}
 
 	/**
+	 * Check in admin page
+	 *
+	 * @param $page | For Get List
+	 * @return bool
+	 */
+	public static function in_page( $page ) {
+		global $pagenow;
+
+		//Check is custom page
+		if ( $pagenow == "admin.php" and isset( $_REQUEST['page'] ) and $_REQUEST['page'] == Admin_Menus::get_page_slug( $page ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get Admin Url
+	 *
+	 * @param null $page
+	 * @param array $arg
+	 * @area is_admin
+	 * @return string
+	 */
+	public static function admin_url( $page = null, $arg = array() ) {
+
+		//Check If Pages is in Wp-statistics
+		if ( array_key_exists( $page, self::get_admin_page_list() ) ) {
+			$page = self::get_page_slug( $page );
+		}
+
+		return add_query_arg( array_merge( array( 'page' => $page ), $arg ), admin_url( 'admin.php' ) );
+	}
+
+	/**
 	 * Get Menu List
 	 */
 	public static function get_menu_list() {

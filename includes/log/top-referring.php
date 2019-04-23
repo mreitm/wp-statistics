@@ -6,6 +6,8 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Menus;
+use WP_STATISTICS\Admin_Templates;
 use WP_STATISTICS\Referred;
 
 $date_args = '';
@@ -76,7 +78,7 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 
 ?>
 <div class="wrap wps-wrap">
-	<?php Admin_Helper::show_page_title( __( 'Top Referring Sites', 'wp-statistics' ) ); ?>
+	<?php Admin_Templates::show_page_title( __( 'Top Referring Sites', 'wp-statistics' ) ); ?>
     <div><?php wp_statistics_date_range_selector( \WP_STATISTICS\Admin_Menus::get_page_slug('referrers'), $daysToDisplay, null, null, $referr_field ); ?></div>
     <br class="clear"/>
 
@@ -156,7 +158,7 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 											$map_string = "";
 										} else {
 											$ip_string  = "{$items->ip}";
-											$map_string = "<a class='wps-text-muted' href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>" . wp_statistics_icons( 'dashicons-visibility', 'visibility' ) . "</a><a class='show-map wps-text-muted' href='http://www.geoiptool.com/en/?IP={$items->ip}' target='_blank' title='" . __( 'Map', 'wp-statistics' ) . "'>" . wp_statistics_icons( 'dashicons-location-alt', 'map' ) . "</a>";
+											$map_string = "<a class='wps-text-muted' href='" . Admin_Menus::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>" . wp_statistics_icons( 'dashicons-visibility', 'visibility' ) . "</a><a class='show-map wps-text-muted' href='http://www.geoiptool.com/en/?IP={$items->ip}' target='_blank' title='" . __( 'Map', 'wp-statistics' ) . "'>" . wp_statistics_icons( 'dashicons-location-alt', 'map' ) . "</a>";
 										}
 
 										echo "<tr>";
@@ -178,7 +180,7 @@ $ISOCountryCode = \WP_STATISTICS\Helper::get_country_codes();
 										} else {
 											$agent = wp_statistics_icons( 'dashicons-editor-help', 'unknown' );
 										}
-										echo "<a href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
+										echo "<a href='" . Admin_Menus::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 										echo "</td>";
 
 										//Show Country

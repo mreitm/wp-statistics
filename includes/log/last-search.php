@@ -6,6 +6,8 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Menus;
+use WP_STATISTICS\Admin_Templates;
 use WP_STATISTICS\Referred;
 
 $search_engines = WP_STATISTICS\SearchEngine::getList();
@@ -29,7 +31,7 @@ if ( array_key_exists( 'referred', $_GET ) ) {
 $total = $search_result[ $referred ];
 ?>
 <div class="wrap wps-wrap">
-	<?php Admin_Helper::show_page_title( __( 'Latest Search Words', 'wp-statistics' ) ); ?>
+	<?php Admin_Templates::show_page_title( __( 'Latest Search Words', 'wp-statistics' ) ); ?>
     <br/>
     <ul class="subsubsub">
 		<?php
@@ -60,7 +62,7 @@ $total = $search_result[ $referred ];
 				$current = 'class="current" ';
 			}
 
-			echo "<li><a {$current} href='" . ( $name == 'All' ? Admin_Helper::admin_url( 'words' ) : Admin_Helper::admin_url( 'words', array( 'referred' => $tag ) ) ) . "'>" . $translate . " <span class='count'>(" . number_format_i18n( $value ) . ")</span></a></li>{$separator}";
+			echo "<li><a {$current} href='" . ( $name == 'All' ? Admin_Menus::admin_url( 'words' ) : Admin_Menus::admin_url( 'words', array( 'referred' => $tag ) ) ) . "'>" . $translate . " <span class='count'>(" . number_format_i18n( $value ) . ")</span></a></li>{$separator}";
 		}
 		?>
     </ul>
@@ -158,7 +160,7 @@ $total = $search_result[ $referred ];
 									} else {
 										$agent = wp_statistics_icons( 'dashicons-editor-help', 'unknown' );
 									}
-									echo "<a href='" . Admin_Helper::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
+									echo "<a href='" . Admin_Menus::admin_url( 'overview', array( 'type' => 'last-all-visitor', 'agent' => $items->agent ) ) . "'>{$agent}</a>";
 									echo "</td>";
 									$city = '';
 									if ( WP_STATISTICS\Option::get( 'geoip_city' ) ) {
@@ -196,7 +198,7 @@ $total = $search_result[ $referred ];
 									if ( substr( $items->ip, 0, 6 ) == '#hash#' ) {
 										$ip_string = __( '#hash#', 'wp-statistics' );
 									} else {
-										$ip_string = "<a href='" . Admin_Helper::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
+										$ip_string = "<a href='" . Admin_Menus::admin_url( 'visitors', array( 'type' => 'last-all-visitor', 'ip' => $items->ip ) ) . "'>{$items->ip}</a>";
 									}
 									echo $ip_string;
 									echo "</td>";

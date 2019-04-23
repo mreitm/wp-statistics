@@ -257,19 +257,19 @@ class Admin_Dashboard {
 		$dashboards = self::widget_list();
 		foreach ( $dashboards as $widget_key => $dashboard ) {
 			if ( array_key_exists( 'page_url', $dashboard ) ) {
-				$page_urls[ 'wp-statistics-' . $widget_key . '-widget_more_button' ] = Admin_Helper::admin_url( $dashboard['page_url'] );
+				$page_urls[ 'wp-statistics-' . $widget_key . '-widget_more_button' ] = Admin_Menus::admin_url( $dashboard['page_url'] );
 			}
 		}
 
 		//Add Extra Pages For Overview Page
 		foreach ( array( 'exclusions' => 'exclusions', 'users_online' => 'online' ) as $p_key => $p_link ) {
-			$page_urls[ 'wp-statistics-' . $p_key . '-widget_more_button' ] = Admin_Helper::admin_url( $p_link );
+			$page_urls[ 'wp-statistics-' . $p_key . '-widget_more_button' ] = Admin_Menus::admin_url( $p_link );
 		}
 
 		?>
         <script type="text/javascript">
             var wp_statistics_destinations = <?php echo json_encode( $page_urls ); ?>;
-            var wp_statistics_loading_image = '<?php echo Admin_Helper::loading_meta_box(); ?>';
+            var wp_statistics_loading_image = '<?php echo Admin_Templates::loading_meta_box(); ?>';
 
             function wp_statistics_wait_for_postboxes() {
 
@@ -296,11 +296,11 @@ class Admin_Dashboard {
 
                     var temp_html = temp.html();
                     if (temp_id == '<?php echo self::widget_setup_key( 'summary' ); ?>') {
-                        new_text = '<?php echo Admin_Helper::meta_box_button( 'refresh' );?>';
+                        new_text = '<?php echo Admin_Templates::meta_box_button( 'refresh' );?>';
                         new_text = new_text.replace('{{refreshid}}', temp_id + '_refresh_button');
                         temp_html = temp_html.replace('</button>', new_text);
                     } else {
-                        new_text = '<?php echo Admin_Helper::meta_box_button();?>';
+                        new_text = '<?php echo Admin_Templates::meta_box_button();?>';
                         new_text = new_text.replace('{{refreshid}}', temp_id + '_refresh_button');
                         new_text = new_text.replace('{{moreid}}', temp_id + '_more_button');
                         temp_html = temp_html.replace('</button>', new_text);
@@ -326,7 +326,7 @@ class Admin_Dashboard {
 		$widget       = $args['args']['widget'];
 		$container_id = 'wp-statistics-' . str_replace( '.', '-', $widget ) . '-div';
 
-		echo '<div id="' . $container_id . '">' . Admin_Helper::loading_meta_box() . '</div>';
+		echo '<div id="' . $container_id . '">' . Admin_Templates::loading_meta_box() . '</div>';
 		wp_statistics_generate_widget_load_javascript( $widget, $container_id );
 	}
 

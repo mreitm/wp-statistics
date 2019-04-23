@@ -1,11 +1,13 @@
 <?php
 
 use WP_STATISTICS\Admin_Helper;
+use WP_STATISTICS\Admin_Menus;
+use WP_STATISTICS\Admin_Templates;
 
 $nag_html = '';
 
 if ( ! WP_STATISTICS\Option::get( 'geoip' ) ) {
-	$nag_html .= '<div class="notice notice-warning"><p>' . sprintf( __( 'GeoIP collection is not enabled. Please go to <a href="%s">setting page</a> to enable GeoIP for getting more information and location (country) from the visitor.', 'wp-statistics' ), Admin_Helper::admin_url( 'settings', array( 'tab' => 'externals-settings' ) ) ) . '</p></div>';
+	$nag_html .= '<div class="notice notice-warning"><p>' . sprintf( __( 'GeoIP collection is not enabled. Please go to <a href="%s">setting page</a> to enable GeoIP for getting more information and location (country) from the visitor.', 'wp-statistics' ), Admin_Menus::admin_url( 'settings', array( 'tab' => 'externals-settings' ) ) ) . '</p></div>';
 }
 
 if ( ! WP_STATISTICS\Option::get( 'disable_donation_nag', false ) ) {
@@ -26,14 +28,14 @@ function wp_statistics_generate_overview_postbox_contents( $post, $args ) {
 	$widget       = $args['args']['widget'];
 	$container_id = str_replace( '.', '_', $widget . '_postbox' );
 
-	echo '<div id="' . $container_id . '">' . Admin_Helper::loading_meta_box() . '</div>';
+	echo '<div id="' . $container_id . '">' . Admin_Templates::loading_meta_box() . '</div>';
 	wp_statistics_generate_widget_load_javascript( $widget, $container_id );
 }
 
 ?>
 <div class="wrap wps-wrap">
 	<?php echo $nag_html; ?>
-	<?php Admin_Helper::show_page_title(); ?>
+	<?php Admin_Templates::show_page_title(); ?>
 	<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 	<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 
@@ -55,18 +57,18 @@ $widget_list = array( 'browsers', 'countries', 'hits', 'pages', 'referring', 'se
 $all_widget  = \WP_STATISTICS\Admin_Dashboard::widget_list();
 foreach ( $widget_list as $widget ) {
 	if ( array_key_exists( $widget, $all_widget ) ) {
-		$page_urls[ 'wps_' . str_replace( "-", "_", $widget ) . '_more_button' ] = Admin_Helper::admin_url( $all_widget[ $widget ]['page_url'] );
+		$page_urls[ 'wps_' . str_replace( "-", "_", $widget ) . '_more_button' ] = Admin_Menus::admin_url( $all_widget[ $widget ]['page_url'] );
 	}
 }
 
 //Add Extra Pages For Overview Page
 foreach ( array( 'exclusions' => 'exclusions', 'users_online' => 'online' ) as $p_key => $p_link ) {
-	$page_urls[ 'wps_' . $p_key . '_more_button' ] = Admin_Helper::admin_url( $p_link );
+	$page_urls[ 'wps_' . $p_key . '_more_button' ] = Admin_Menus::admin_url( $p_link );
 }
 ?>
 <script type="text/javascript">
     var wp_statistics_destinations = <?php echo json_encode( $page_urls ); ?>;
-    var wp_statistics_loading_image = '<?php echo Admin_Helper::loading_meta_box(); ?>'
+    var wp_statistics_loading_image = '<?php echo Admin_Templates::loading_meta_box(); ?>'
 
     jQuery(document).ready(function () {
 
@@ -77,13 +79,13 @@ foreach ( array( 'exclusions' => 'exclusions', 'users_online' => 'online' ) as $
             var temp_html = temp.html();
             if (temp_id == 'wps_summary_postbox' || temp_id == 'wps_map_postbox' || temp_id == 'wps_about_postbox') {
                 if (temp_id != 'wps_about_postbox') {
-                    new_text = '<?php echo Admin_Helper::meta_box_button( 'refresh' );?>';
+                    new_text = '<?php echo Admin_Templates::meta_box_button( 'refresh' );?>';
                     new_text = new_text.replace('{{refreshid}}', temp_id.replace('_postbox', '_refresh_button'));
 
                     temp_html = temp_html.replace('</button>', new_text);
                 }
             } else {
-                new_text = '<?php echo Admin_Helper::meta_box_button();?>';
+                new_text = '<?php echo Admin_Templates::meta_box_button();?>';
                 new_text = new_text.replace('{{refreshid}}', temp_id.replace('_postbox', '_refresh_button'));
                 new_text = new_text.replace('{{moreid}}', temp_id.replace('_postbox', '_more_button'));
 
